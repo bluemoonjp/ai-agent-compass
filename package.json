@@ -11,7 +11,8 @@
     "check": "node scripts/check.mjs",
     "check:fast": "node scripts/check.mjs --fast",
     "test": "node --test",
-    "gen": "node scripts/gen.mjs"
+    "gen": "node scripts/gen.mjs",
+    "check:paste": "node scripts/check-paste.mjs"
   },
   "devDependencies": {
     "ajv": "8.17.1",

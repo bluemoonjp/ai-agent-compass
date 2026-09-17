@@ -1,0 +1,44 @@
+name: Public surface
+
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created, edited]
+  pull_request:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  check-paste:
+    # Skip M0/M1 issues: their content predates the public-surface check and
+    # is out of scope for this workflow. issue_comment carries the milestone
+    # under github.event.issue.milestone even when the comment is on a PR.
+    if: |
+      !startsWith(github.event.issue.milestone.title || github.event.pull_request.milestone.title || '', 'M0') &&
+      !startsWith(github.event.issue.milestone.title || github.event.pull_request.milestone.title || '', 'M1')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Run check:paste
+        id: paste
+        continue-on-error: true
+        env:
+          COMPASS_PASTE_BODY: ${{ github.event.comment.body || github.event.issue.body || github.event.pull_request.body }}
+          COMPASS_PRIVATE_PATTERNS: ${{ secrets.COMPASS_PRIVATE_PATTERNS }}
+        run: node scripts/check-paste.mjs
+      - name: Flag needs-redaction
+        if: steps.paste.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
+        run: |
+          gh api "repos/${{ github.repository }}/issues/${NUMBER}/labels" -f "labels[]=needs-redaction"
+          gh api "repos/${{ github.repository }}/issues/${NUMBER}/comments" -f "body=この本文に、固有情報らしき文字列(パス・メールアドレス等)と一致する箇所が見つかりました。内容を確認し、必要なら編集または削除してください。一致した文字列や行番号はこのコメントには含めていません。"
