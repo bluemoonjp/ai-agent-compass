@@ -17,6 +17,15 @@
       "fixture": true,
       "protects": "Repository text and commit messages in the PR range must not contain filesystem paths, email addresses, or maintainer-private strings, since a public repository cannot redact history after the fact.",
       "enforces": []
+    },
+    {
+      "id": "adr-check",
+      "script": "scripts/checks/adr-check.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "Each ADR file must follow the docs/adr/NNNN-slug.md naming scheme, declare one of the four valid Status values, and reference other ADRs by ID only, since a broken or ambiguous decision record cannot be trusted the next time it is read.",
+      "enforces": []
     }
   ]
 }
