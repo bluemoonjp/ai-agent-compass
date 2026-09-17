@@ -1,0 +1,20 @@
+{
+  "name": "ai-agent-compass",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@12.4.2",
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "check:fast": "node scripts/check.mjs --fast",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "ajv": "8.17.1",
+    "markdownlint-cli2": "0.14.0",
+    "yaml": "2.6.1"
+  }
+}

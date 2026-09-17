@@ -1,0 +1,13 @@
+{
+  "checks": [
+    {
+      "id": "no-line-refs",
+      "script": "scripts/checks/no-line-refs.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "Markdown and template files must not reference a specific line number, since the reference silently drifts out of sync the moment either file is edited.",
+      "enforces": []
+    }
+  ]
+}

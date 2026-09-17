@@ -1,0 +1,113 @@
+import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import { test } from 'node:test'
+
+import { loadChecksRegistry, loadRepoFiles, runCheck, walkDir } from './lib/runner.mjs'
+
+const root = process.cwd()
+const checksDir = path.join(root, 'scripts', 'checks')
+const fixturesRoot = path.join(checksDir, 'fixtures')
+const checks = loadChecksRegistry(root)
+
+function fixturesFor(checkId) {
+  const dir = path.join(fixturesRoot, checkId)
+  if (!existsSync(dir)) return { dir, positive: [], negative: [] }
+  const all = walkDir(dir).filter((p) => p.endsWith('.fixture'))
+  const positive = all.filter((p) => !p.startsWith('negative/'))
+  const negative = all.filter((p) => p.startsWith('negative/'))
+  return { dir, positive, negative }
+}
+
+function expand(dir, relFixturePaths) {
+  const tmp = mkdtempSync(path.join(os.tmpdir(), 'compass-fixture-'))
+  const files = []
+  for (const rel of relFixturePaths) {
+    const destRel = rel.slice(0, -'.fixture'.length)
+    const dest = path.join(tmp, destRel)
+    mkdirSync(path.dirname(dest), { recursive: true })
+    const text = readFileSync(path.join(dir, rel), 'utf8').replace(/\r\n/g, '\n')
+    writeFileSync(dest, text)
+    files.push({ path: destRel.split(path.sep).join('/'), text })
+  }
+  return { tmp, files }
+}
+
+test('every scripts/checks/*.mjs script is registered in checks.json', () => {
+  const registered = new Set(checks.map((c) => path.resolve(root, c.script)))
+  for (const entry of readdirSync(checksDir, { withFileTypes: true })) {
+    if (entry.isFile() && entry.name.endsWith('.mjs')) {
+      const abs = path.join(checksDir, entry.name)
+      assert.ok(registered.has(abs), `${entry.name} is not registered in checks.json`)
+    }
+  }
+})
+
+test('package.json declares at most 3 devDependencies', () => {
+  const pkg = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'))
+  const count = Object.keys(pkg.devDependencies ?? {}).length
+  assert.ok(count <= 3, `devDependencies has ${count} packages, expected at most 3`)
+})
+
+test('every blocking check has at least one positive fixture', () => {
+  for (const check of checks) {
+    if (!check.blocking) continue
+    const { positive } = fixturesFor(check.id)
+    assert.ok(positive.length > 0, `${check.id} is blocking but has no positive fixture`)
+  }
+})
+
+for (const check of checks) {
+  const { dir, positive, negative } = fixturesFor(check.id)
+
+  if (positive.length > 0) {
+    test(`${check.id}: positive fixtures produce findings`, async () => {
+      const { tmp, files } = expand(dir, positive)
+      try {
+        const { findings } = await runCheck(root, check, { files, messages: [] })
+        assert.ok(findings.length > 0, `expected findings from ${check.id} positive fixtures`)
+      } finally {
+        rmSync(tmp, { recursive: true, force: true })
+      }
+    })
+  }
+
+  if (negative.length > 0) {
+    test(`${check.id}: negative fixtures produce no findings`, async () => {
+      const { tmp, files } = expand(dir, negative)
+      try {
+        const { findings } = await runCheck(root, check, { files, messages: [] })
+        assert.equal(findings.length, 0, `expected no findings from ${check.id} negative fixtures`)
+      } finally {
+        rmSync(tmp, { recursive: true, force: true })
+      }
+    })
+  }
+}
+
+test('blocking checks find nothing in the repository itself', async () => {
+  const files = loadRepoFiles(root)
+  for (const check of checks) {
+    if (!check.blocking) continue
+    const { findings } = await runCheck(root, check, { files, messages: [] })
+    assert.equal(
+      findings.length,
+      0,
+      `${check.id} found issues in the repository: ${JSON.stringify(findings)}`,
+    )
+  }
+})
+
+test('fixture files use a .fixture suffix and never a live instruction filename', () => {
+  const out = execFileSync('git', ['ls-files', 'scripts/checks/fixtures'], {
+    cwd: root,
+    encoding: 'utf8',
+  })
+  const liveNames = new Set(['CLAUDE.md', 'AGENTS.md', 'SKILL.md'])
+  for (const f of out.split('\n').filter(Boolean)) {
+    assert.ok(f.endsWith('.fixture'), `${f} does not end with .fixture`)
+    assert.ok(!liveNames.has(path.basename(f)), `${f} has a live instruction filename`)
+  }
+})
