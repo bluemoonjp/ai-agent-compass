@@ -48,10 +48,10 @@
     {
       "id": "no-empty-groups",
       "script": "scripts/checks/no-empty-groups.mjs",
-      "blocking": false,
+      "blocking": true,
       "fast": true,
       "fixture": true,
-      "protects": "Every topic in the closed topic enum must have at least one active practice, since an empty topic is either dead taxonomy or content nobody finished. Non-blocking until the pilot content lands (#15).",
+      "protects": "Every topic in the closed topic enum must have at least one active practice, since an empty topic is either dead taxonomy or content nobody finished.",
       "enforces": []
     },
     {

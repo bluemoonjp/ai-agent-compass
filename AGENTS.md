@@ -25,7 +25,9 @@ Write an ADR only when deleting the decision would let someone repeat the mistak
 
 | Path | Contents |
 | --- | --- |
+| `antipatterns/` | Sourced antipatterns: what to avoid and why |
 | `docs/adr/` | Architecture decision records |
 | `docs/maintain/` | Maintainer setup instructions |
+| `practices/` | Sourced best practices for AI coding agents |
 | `schemas/` | JSON Schemas for practice and antipattern frontmatter |
 | `scripts/` | The check toolchain: runner, checks, and their fixtures |
