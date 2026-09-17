@@ -23,6 +23,10 @@ function readJson(root, relPath, fallback) {
   }
 }
 
+// not_applicable.json keys are full paths ("practices/0002", "antipatterns/0001"),
+// not bare ids: practice and antipattern ids both start counting from 0001, so a
+// bare-id key would silently resolve the wrong content the moment both used the
+// same number.
 export function run({ root, files }) {
   const findings = []
 
@@ -30,13 +34,19 @@ export function run({ root, files }) {
   const enforcedIds = new Set(checks.flatMap((c) => c.enforces ?? []))
 
   const notApplicable = readJson(root, 'scripts/checks/data/not_applicable.json', {})
-  const notApplicableIds = new Set(Object.keys(notApplicable))
+  const notApplicableKeys = new Set(Object.keys(notApplicable))
 
-  const practiceFiles = files.filter((f) => f.path.startsWith('practices/') && f.path.endsWith('.md'))
-  for (const file of practiceFiles) {
+  const contentFiles = files.filter(
+    (f) => (f.path.startsWith('practices/') || f.path.startsWith('antipatterns/')) && f.path.endsWith('.md'),
+  )
+
+  for (const file of contentFiles) {
     const data = extractFrontmatter(file.text)
     if (!data || data.status !== 'active' || typeof data.id !== 'string') continue
-    if (!enforcedIds.has(data.id) && !notApplicableIds.has(data.id)) {
+    const kind = file.path.startsWith('practices/') ? 'practices' : 'antipatterns'
+    const resolvedByEnforces = kind === 'practices' && enforcedIds.has(data.id)
+    const resolvedByNotApplicable = notApplicableKeys.has(`${kind}/${data.id}`)
+    if (!resolvedByEnforces && !resolvedByNotApplicable) {
       findings.push({ path: file.path, line: 1, ruleId: `${RULE_ID}:unresolved` })
     }
   }

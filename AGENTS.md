@@ -17,7 +17,7 @@ This repository has two layers (ADR-0001): the deliverable (layer A: `practices/
 - Never narrate this repository's own history in prose. (ci: no-history-words)
 - Never write filesystem paths, email addresses, or other private information. (ci: forbidden-patterns)
 - Cite a source with a summary and a link, not a bare claim. (ci: frontmatter-schema)
-- Until CI is wired (#14), run `pnpm check --strict` before every push. (none)
+- Run `pnpm check --strict` before every push, so a private-pattern miss surfaces locally, not in CI. (none)
 
 Write an ADR only when deleting the decision would let someone repeat the mistake, and re-deciding it would need reconstructing an incident or a long investigation.
 
