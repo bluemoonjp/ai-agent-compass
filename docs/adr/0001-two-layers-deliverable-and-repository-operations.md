@@ -1,6 +1,6 @@
 # ADR-0001: Two layers: deliverable (A) and repository operations (B)
 
-Status: accepted
+Status: amended by ADR-0004
 
 Issue: #9
 Date: 2026-09-17

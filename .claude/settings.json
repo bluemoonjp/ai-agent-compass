@@ -1,15 +1,36 @@
 {
   "permissions": {
     "deny": [
-      "Bash(gh pr merge*)",
-      "Bash(gh pr ready*)",
-      "Bash(gh api -X PUT*)",
-      "Bash(gh api -X PATCH*)",
-      "Bash(gh api -X DELETE*)",
-      "Bash(gh secret*)",
-      "Bash(gh release*)",
-      "Bash(git tag*)",
-      "Bash(git push*--tags*)"
+      "Bash(gh pr merge *)",
+      "PowerShell(gh pr merge *)",
+      "Bash(gh pr ready *)",
+      "PowerShell(gh pr ready *)",
+      "Bash(gh release *)",
+      "PowerShell(gh release *)",
+      "Bash(gh secret *)",
+      "PowerShell(gh secret *)",
+      "Bash(gh repo edit *)",
+      "PowerShell(gh repo edit *)",
+      "Bash(gh repo delete *)",
+      "PowerShell(gh repo delete *)",
+      "Bash(gh api graphql*)",
+      "PowerShell(gh api graphql*)",
+      "Bash(gh api *pulls/*/merge*)",
+      "PowerShell(gh api *pulls/*/merge*)",
+      "Bash(gh api *releases*)",
+      "PowerShell(gh api *releases*)",
+      "Bash(gh api *secrets*)",
+      "PowerShell(gh api *secrets*)",
+      "Bash(gh api *git/refs*)",
+      "PowerShell(gh api *git/refs*)",
+      "Bash(gh api *git/tags*)",
+      "PowerShell(gh api *git/tags*)",
+      "Bash(git tag *)",
+      "PowerShell(git tag *)",
+      "Bash(git push *--tags*)",
+      "PowerShell(git push *--tags*)",
+      "Bash(git push *--follow-tags*)",
+      "PowerShell(git push *--follow-tags*)"
     ]
   }
 }
