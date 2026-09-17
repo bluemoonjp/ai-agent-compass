@@ -7,6 +7,7 @@ import {
 
 const root = process.cwd()
 const fastOnly = process.argv.includes('--fast')
+const strict = process.argv.includes('--strict')
 
 async function main() {
   const checks = loadChecksRegistry(root)
@@ -18,7 +19,10 @@ async function main() {
 
   for (const check of checks) {
     if (fastOnly && !check.fast) continue
-    const { findings } = await runCheck(root, check, { files, messages })
+    const { findings, notices } = await runCheck(root, check, { files, messages, strict })
+    for (const notice of notices) {
+      console.log(notice)
+    }
     for (const finding of findings) {
       console.log(`${finding.path}:${finding.line} ${finding.ruleId}`)
     }

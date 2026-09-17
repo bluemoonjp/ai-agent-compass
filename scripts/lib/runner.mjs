@@ -87,10 +87,11 @@ export async function loadCheckModule(root, scriptRelPath) {
   return import(pathToFileURL(abs).href)
 }
 
-export async function runCheck(root, check, { files, messages }) {
+export async function runCheck(root, check, { files, messages, strict = false }) {
   const mod = await loadCheckModule(root, check.script)
   if (typeof mod.run !== 'function') {
     throw new Error(`${check.script} does not export a run() function`)
   }
-  return mod.run({ root, files, messages })
+  const result = mod.run({ root, files, messages, strict })
+  return { findings: [], notices: [], ...result }
 }

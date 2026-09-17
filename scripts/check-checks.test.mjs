@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { test } from 'node:test'
+import { after, before, test } from 'node:test'
 
 import { loadChecksRegistry, loadRepoFiles, runCheck, walkDir } from './lib/runner.mjs'
 
@@ -11,6 +11,23 @@ const root = process.cwd()
 const checksDir = path.join(root, 'scripts', 'checks')
 const fixturesRoot = path.join(checksDir, 'fixtures')
 const checks = loadChecksRegistry(root)
+
+// This file only exercises the generic findings>0 / findings===0 contract. A
+// check's own environment-variable-driven behavior (e.g. forbidden-patterns'
+// CI / COMPASS_PRIVATE_PATTERNS handling) is covered by that check's own
+// *.test.mjs, run as a subprocess. Neutralize both here so this file's
+// results do not depend on the environment it happens to run in.
+const savedEnv = { CI: process.env.CI, COMPASS_PRIVATE_PATTERNS: process.env.COMPASS_PRIVATE_PATTERNS }
+before(() => {
+  delete process.env.CI
+  delete process.env.COMPASS_PRIVATE_PATTERNS
+})
+after(() => {
+  for (const [key, value] of Object.entries(savedEnv)) {
+    if (value === undefined) delete process.env[key]
+    else process.env[key] = value
+  }
+})
 
 function fixturesFor(checkId) {
   const dir = path.join(fixturesRoot, checkId)
@@ -38,7 +55,7 @@ function expand(dir, relFixturePaths) {
 test('every scripts/checks/*.mjs script is registered in checks.json', () => {
   const registered = new Set(checks.map((c) => path.resolve(root, c.script)))
   for (const entry of readdirSync(checksDir, { withFileTypes: true })) {
-    if (entry.isFile() && entry.name.endsWith('.mjs')) {
+    if (entry.isFile() && entry.name.endsWith('.mjs') && !entry.name.endsWith('.test.mjs')) {
       const abs = path.join(checksDir, entry.name)
       assert.ok(registered.has(abs), `${entry.name} is not registered in checks.json`)
     }
