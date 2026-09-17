@@ -8,6 +8,15 @@
       "fixture": true,
       "protects": "Markdown and template files must not reference a specific line number, since the reference silently drifts out of sync the moment either file is edited.",
       "enforces": []
+    },
+    {
+      "id": "forbidden-patterns",
+      "script": "scripts/checks/forbidden-patterns.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "Repository text and commit messages in the PR range must not contain filesystem paths, email addresses, or maintainer-private strings, since a public repository cannot redact history after the fact.",
+      "enforces": []
     }
   ]
 }
