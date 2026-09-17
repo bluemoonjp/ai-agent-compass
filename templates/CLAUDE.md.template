@@ -1,0 +1,5 @@
+@AGENTS.md
+
+## Claude-specific notes
+
+- An `@path` import here loads into context at launch, not lazily when needed. (none)
