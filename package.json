@@ -10,7 +10,8 @@
   "scripts": {
     "check": "node scripts/check.mjs",
     "check:fast": "node scripts/check.mjs --fast",
-    "test": "node --test"
+    "test": "node --test",
+    "gen": "node scripts/gen.mjs"
   },
   "devDependencies": {
     "ajv": "8.17.1",
