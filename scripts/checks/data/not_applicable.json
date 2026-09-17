@@ -1,4 +1,8 @@
 {
   "practices/0002": "No automated check enforces README/AGENTS.md content boundaries; this is a documentation convention followed by review, not a mechanically-checkable rule.",
-  "antipatterns/0001": "No automated check can reliably detect a repository-overview section by structure alone; enforcement is left to review, since a heuristic strict enough to catch it would also catch legitimate architectural documentation."
+  "practices/0003": "No automated check can distinguish an @import an author correctly treats as eager from one they mistakenly assume is lazy; enforcement is left to review, since the gap is in an author's belief, not the file's structure.",
+  "practices/0004": "No automated check can detect a contradiction in meaning between two instructions; enforcement is left to review, since spotting a substantive conflict requires understanding what each rule says, not just its shape.",
+  "practices/0005": "No automated check can tell whether a SKILL.md's body and reference files actually follow relevance-gated loading and one level of reference depth; enforcement is left to review, since that requires reading what the files say, not just that they exist.",
+  "antipatterns/0001": "No automated check can reliably detect a repository-overview section by structure alone; enforcement is left to review, since a heuristic strict enough to catch it would also catch legitimate architectural documentation.",
+  "antipatterns/0002": "No automated check can reliably count how much emphasis is too much in prose; enforcement is left to review, since a heuristic strict enough to catch pervasive emphasis would also flag the sparing, single-line use this repository's own sourced guidance recommends."
 }
