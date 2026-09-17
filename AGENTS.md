@@ -13,7 +13,7 @@ This repository has two layers (ADR-0001): the deliverable (layer A: `practices/
 - Work only through pull requests. (none)
 - PR titles match `#N: summary`. (none)
 - Run `pnpm check` before opening a PR. (none)
-- Regenerate generated files with `pnpm gen`; never hand-edit them. (none)
+- Regenerate generated files with `pnpm gen`; never hand-edit them. (ci: generated-fresh)
 - Never narrate this repository's own history in prose. (ci: no-history-words)
 - Never write filesystem paths, email addresses, or other private information. (ci: forbidden-patterns)
 - Cite a source with a summary and a link, not a bare claim. (ci: frontmatter-schema)
@@ -26,7 +26,7 @@ Write an ADR only when deleting the decision would let someone repeat the mistak
 | --- | --- |
 | `antipatterns/` | Sourced antipatterns: what to avoid and why |
 | `docs/adr/` | Architecture decision records |
-| `docs/maintain/` | Maintainer setup instructions |
+| `docs/maintain/` | Maintainer setup, authoring, and review instructions |
 | `practices/` | Sourced best practices for AI coding agents |
 | `schemas/` | JSON Schemas for practice and antipattern frontmatter |
 | `scripts/` | The check toolchain: runner, checks, and their fixtures |
