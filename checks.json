@@ -53,6 +53,33 @@
       "fixture": true,
       "protects": "Every topic in the closed topic enum must have at least one active practice, since an empty topic is either dead taxonomy or content nobody finished. Non-blocking until the pilot content lands (#15).",
       "enforces": []
+    },
+    {
+      "id": "no-history-words",
+      "script": "scripts/checks/no-history-words.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "Practice, template, adapter, plugin SKILL.md, AGENTS.md, and CLAUDE.md bodies must not narrate their own history or restate a known false premise, since prose that records how a rule changed decays the moment it changes again.",
+      "enforces": []
+    },
+    {
+      "id": "no-addendum-sections",
+      "script": "scripts/checks/no-addendum-sections.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "Instruction and content files must not grow an Addendum/Updates/Changelog heading, since an appended section is where narrated history accumulates outside of version control.",
+      "enforces": []
+    },
+    {
+      "id": "links-one-way",
+      "script": "scripts/checks/links-one-way.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "A practice file must not link to antipatterns/, since a practice pointing at its own rebuttal is the antipattern's link to make, not the other way around.",
+      "enforces": []
     }
   ]
 }

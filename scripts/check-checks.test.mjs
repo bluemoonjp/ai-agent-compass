@@ -123,6 +123,18 @@ test('blocking checks find nothing in the repository itself', async () => {
   }
 })
 
+test('fast checks do not import git or network modules', () => {
+  const forbiddenImport = /from\s+['"]node:(child_process|https?|dns|net|tls)['"]/
+  for (const check of checks) {
+    if (!check.fast) continue
+    const src = readFileSync(path.join(root, check.script), 'utf8')
+    assert.ok(
+      !forbiddenImport.test(src),
+      `${check.id} is marked fast but imports a git/network-capable module`,
+    )
+  }
+})
+
 test('fixture files use a .fixture suffix and never a live instruction filename', () => {
   const out = execFileSync('git', ['ls-files', 'scripts/checks/fixtures'], {
     cwd: root,
