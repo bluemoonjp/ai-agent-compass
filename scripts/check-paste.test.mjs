@@ -17,6 +17,17 @@ const PRIVATE_PATTERNS_ENV = JSON.stringify({ patterns: [SECRET_PATTERN], probe:
 // its own tracked files.
 const FAKE_WINDOWS_PATH = ['C:', 'Users', 'nobody', 'file.txt'].join('\\')
 
+// `::add-mask::<value>` is a GitHub Actions workflow command: the runner
+// scrubs that value from every subsequent line of the *rendered* log, but a
+// raw stdout capture (as in this test) still shows the command line itself.
+// Strip those lines before asserting, mirroring forbidden-patterns.test.mjs.
+function stripMaskCommands(output) {
+  return output
+    .split('\n')
+    .filter((line) => !line.startsWith('::add-mask::'))
+    .join('\n')
+}
+
 function runCheckPaste(body, extraEnv = {}) {
   const env = {
     ...process.env,
@@ -46,8 +57,9 @@ test('never leaks the matched string or the private pattern value', () => {
   const result = runCheckPaste(`secret: ${SECRET_PATTERN}, path: ${FAKE_WINDOWS_PATH}`)
   assert.equal(result.status, 1)
   for (const stream of [result.stdout, result.stderr]) {
-    assert.doesNotMatch(stream, new RegExp(SECRET_PATTERN))
-    assert.doesNotMatch(stream, /nobody/)
+    const rendered = stripMaskCommands(stream)
+    assert.doesNotMatch(rendered, new RegExp(SECRET_PATTERN))
+    assert.doesNotMatch(rendered, /nobody/)
   }
 })
 
