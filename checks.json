@@ -143,6 +143,15 @@
       "fixture": true,
       "protects": "Every H2 heading in templates/AGENTS.md.template must also appear in the root AGENTS.md's H2 set, since a template making a structural claim this repository's own file doesn't follow is advice this repository does not itself practice.",
       "enforces": []
+    },
+    {
+      "id": "readme-sections-paired",
+      "script": "scripts/checks/readme-sections-paired.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "README.md's English and 日本語 sections must have the same number of H3 subsections, since a reader following one language must find every section the other language has.",
+      "enforces": []
     }
   ]
 }
