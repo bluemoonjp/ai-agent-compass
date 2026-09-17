@@ -135,6 +135,18 @@ test('fast checks do not import git or network modules', () => {
   }
 })
 
+test('.claude/settings.json declares a non-empty permissions.deny list', () => {
+  const settings = JSON.parse(readFileSync(path.join(root, '.claude', 'settings.json'), 'utf8'))
+  assert.ok(Array.isArray(settings.permissions?.deny) && settings.permissions.deny.length > 0)
+})
+
+test("AGENTS.md's working rules each end in (ci: ...) or (none)", () => {
+  const text = readFileSync(path.join(root, 'AGENTS.md'), 'utf8')
+  const bulletLines = text.split('\n').filter((line) => line.startsWith('- '))
+  const annotatedLines = bulletLines.filter((line) => /\((ci: [a-z-]+|none)\)$/.test(line))
+  assert.equal(annotatedLines.length, bulletLines.length, 'every working-rule bullet must end in (ci: <id>) or (none)')
+})
+
 test('fixture files use a .fixture suffix and never a live instruction filename', () => {
   const out = execFileSync('git', ['ls-files', 'scripts/checks/fixtures'], {
     cwd: root,

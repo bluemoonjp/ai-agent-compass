@@ -80,6 +80,24 @@
       "fixture": true,
       "protects": "A practice file must not link to antipatterns/, since a practice pointing at its own rebuttal is the antipattern's link to make, not the other way around.",
       "enforces": []
+    },
+    {
+      "id": "instruction-limits",
+      "script": "scripts/checks/instruction-limits.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "Root AGENTS.md must stay at or under 40 lines, root CLAUDE.md at or under 10 lines with @AGENTS.md as its first line, since an unbounded always-loaded file is exactly the antipattern this repository documents.",
+      "enforces": ["0001"]
+    },
+    {
+      "id": "layer-b-no-a-content",
+      "script": "scripts/checks/layer-b-no-a-content.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "AGENTS.md, CLAUDE.md, and docs/maintain/ must not restate a practice's id or title, since that is layer A content leaking into layer B (ADR-0001). This is a coarse proxy: it only catches the mechanically-detectable shape of a practice id or a verbatim title, not every restatement.",
+      "enforces": []
     }
   ]
 }
