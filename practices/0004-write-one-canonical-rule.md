@@ -5,7 +5,7 @@ status: active
 topic: instruction-files
 applies_to:
   - claude-code
-rule: Write and maintain one canonical rule per topic; if two instructions contradict each other, the agent may pick one arbitrarily rather than flag the conflict.
+rule: Write and maintain one canonical rule per topic; remove any instruction that contradicts another instead of leaving the agent to pick one.
 license: CC-BY-4.0
 sources:
   - url: https://docs.claude.com/en/docs/claude-code/memory
@@ -32,4 +32,4 @@ Applies to a single instruction file, and to how nested CLAUDE.md files, imports
 
 ## Conflicting guidance
 
-Sources disagree about whether "arbitrary" is even the right description of how a contradiction resolves. Claude Code's documentation calls the outcome arbitrary. OpenAI's own documentation of Codex's `AGENTS.md` discovery describes a deterministic merge instead: files are concatenated from the project root down, and a file closer to the working directory overrides earlier guidance because it appears later in the combined prompt — position, not chance, decides which side wins. Either way the fix is the same: write one canonical rule per topic instead of relying on either mechanism, since neither an arbitrary pick nor a positional override is something an author should design around.
+The two primary sources describe different resolution mechanisms for the same situation: two instructions in scope that disagree. Claude Code's documentation says the outcome is arbitrary. OpenAI's own documentation of Codex's `AGENTS.md` discovery describes a deterministic merge instead: files are concatenated from the project root down, and a file closer to the working directory overrides earlier guidance because it appears later in the combined prompt — position, not chance, decides which side wins there. An author who assumes one tool's mechanism is relying on behavior the other tool does not share. Either way the fix is the same: write one canonical rule per topic instead of depending on how a specific tool breaks the tie.

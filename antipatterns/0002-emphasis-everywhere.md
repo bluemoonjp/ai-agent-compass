@@ -21,7 +21,7 @@ sources:
 
 ## Symptom
 
-Many lines of an instruction file carry emphasis markers — ALL CAPS, bold text, "IMPORTANT", "CRITICAL", "MUST" — spread across most of the file's content instead of reserved for a single line.
+Many lines of an instruction file carry emphasis — bold text, "IMPORTANT," or a similar marker — spread across most of the file's content instead of reserved for the single line the agent actually keeps skipping.
 
 ## Cause
 

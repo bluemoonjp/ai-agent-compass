@@ -22,4 +22,4 @@ Claude Code's own memory documentation describes an `@path/to/file` import as te
 
 ## When it applies
 
-Applies to any `@path/to/file` import inside a CLAUDE.md (or CLAUDE.local.md) file that Claude Code reads, including an import nested inside another imported file. It does not apply to a path merely mentioned in backticks, which the same documentation treats as literal text rather than an import, and it makes no claim about how another tool's own include or reference mechanism behaves.
+Applies to any `@path/to/file` import inside a CLAUDE.md (or CLAUDE.local.md) file that Claude Code reads, including an import nested inside another imported file, up to the source's documented four-hop depth; past that depth an import silently does not load, which this rule alone does not guard against. It does not apply to a path merely mentioned in backticks, which the same documentation treats as literal text rather than an import, and it makes no claim about how another tool's own include or reference mechanism behaves.
