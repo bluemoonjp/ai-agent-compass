@@ -26,6 +26,33 @@
       "fixture": true,
       "protects": "Each ADR file must follow the docs/adr/NNNN-slug.md naming scheme, declare one of the four valid Status values, and reference other ADRs by ID only, since a broken or ambiguous decision record cannot be trusted the next time it is read.",
       "enforces": []
+    },
+    {
+      "id": "frontmatter-schema",
+      "script": "scripts/checks/frontmatter-schema.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "Every practice and antipattern file's frontmatter must validate against its JSON Schema, its id must match its file name, and its body may only use the fixed set of H2 headings for its kind, since ungoverned metadata is what lets a single unsupported claim, an uncited quote, or a dangling relates_to pass as settled guidance.",
+      "enforces": []
+    },
+    {
+      "id": "self-check-resolves",
+      "script": "scripts/checks/self-check-resolves.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "Every active practice must be named in some check's enforces list or in scripts/checks/data/not_applicable.json with a reason, since a practice nobody enforces and nobody has excused is silently unchecked.",
+      "enforces": []
+    },
+    {
+      "id": "no-empty-groups",
+      "script": "scripts/checks/no-empty-groups.mjs",
+      "blocking": false,
+      "fast": true,
+      "fixture": true,
+      "protects": "Every topic in the closed topic enum must have at least one active practice, since an empty topic is either dead taxonomy or content nobody finished. Non-blocking until the pilot content lands (#15).",
+      "enforces": []
     }
   ]
 }
