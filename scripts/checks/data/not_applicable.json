@@ -1,0 +1,4 @@
+{
+  "practices/0002": "No automated check enforces README/AGENTS.md content boundaries; this is a documentation convention followed by review, not a mechanically-checkable rule.",
+  "antipatterns/0001": "No automated check can reliably detect a repository-overview section by structure alone; enforcement is left to review, since a heuristic strict enough to catch it would also catch legitimate architectural documentation."
+}

@@ -42,7 +42,13 @@ function expand(dir, relFixturePaths) {
   const tmp = mkdtempSync(path.join(os.tmpdir(), 'compass-fixture-'))
   const files = []
   for (const rel of relFixturePaths) {
-    const destRel = rel.slice(0, -'.fixture'.length)
+    // `negative/` is a classification prefix, not part of the file's real
+    // repository path — a negative fixture for practices/0001.md lives at
+    // negative/practices/0001.md.fixture but must expand back to
+    // practices/0001.md, or checks that gate on a path prefix (practices/,
+    // docs/adr/, ...) silently skip the fixture instead of validating it.
+    const withoutClassifier = rel.startsWith('negative/') ? rel.slice('negative/'.length) : rel
+    const destRel = withoutClassifier.slice(0, -'.fixture'.length)
     const dest = path.join(tmp, destRel)
     mkdirSync(path.dirname(dest), { recursive: true })
     const text = readFileSync(path.join(dir, rel), 'utf8').replace(/\r\n/g, '\n')
@@ -83,7 +89,7 @@ for (const check of checks) {
     test(`${check.id}: positive fixtures produce findings`, async () => {
       const { tmp, files } = expand(dir, positive)
       try {
-        const { findings } = await runCheck(root, check, { files, messages: [] })
+        const { findings } = await runCheck(root, check, { root: tmp, files, messages: [] })
         assert.ok(findings.length > 0, `expected findings from ${check.id} positive fixtures`)
       } finally {
         rmSync(tmp, { recursive: true, force: true })
@@ -95,7 +101,7 @@ for (const check of checks) {
     test(`${check.id}: negative fixtures produce no findings`, async () => {
       const { tmp, files } = expand(dir, negative)
       try {
-        const { findings } = await runCheck(root, check, { files, messages: [] })
+        const { findings } = await runCheck(root, check, { root: tmp, files, messages: [] })
         assert.equal(findings.length, 0, `expected no findings from ${check.id} negative fixtures`)
       } finally {
         rmSync(tmp, { recursive: true, force: true })
@@ -115,6 +121,30 @@ test('blocking checks find nothing in the repository itself', async () => {
       `${check.id} found issues in the repository: ${JSON.stringify(findings)}`,
     )
   }
+})
+
+test('fast checks do not import git or network modules', () => {
+  const forbiddenImport = /from\s+['"]node:(child_process|https?|dns|net|tls)['"]/
+  for (const check of checks) {
+    if (!check.fast) continue
+    const src = readFileSync(path.join(root, check.script), 'utf8')
+    assert.ok(
+      !forbiddenImport.test(src),
+      `${check.id} is marked fast but imports a git/network-capable module`,
+    )
+  }
+})
+
+test('.claude/settings.json declares a non-empty permissions.deny list', () => {
+  const settings = JSON.parse(readFileSync(path.join(root, '.claude', 'settings.json'), 'utf8'))
+  assert.ok(Array.isArray(settings.permissions?.deny) && settings.permissions.deny.length > 0)
+})
+
+test("AGENTS.md's working rules each end in (ci: ...) or (none)", () => {
+  const text = readFileSync(path.join(root, 'AGENTS.md'), 'utf8')
+  const bulletLines = text.split('\n').filter((line) => line.startsWith('- '))
+  const annotatedLines = bulletLines.filter((line) => /\((ci: [a-z-]+|none)\)$/.test(line))
+  assert.equal(annotatedLines.length, bulletLines.length, 'every working-rule bullet must end in (ci: <id>) or (none)')
 })
 
 test('fixture files use a .fixture suffix and never a live instruction filename', () => {

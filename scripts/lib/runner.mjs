@@ -87,8 +87,12 @@ export async function loadCheckModule(root, scriptRelPath) {
   return import(pathToFileURL(abs).href)
 }
 
-export async function runCheck(root, check, { files, messages, strict = false }) {
-  const mod = await loadCheckModule(root, check.script)
+// scriptRoot locates check.script on disk and is always the real repository
+// root. root is what the check's own run() sees as its working root — for a
+// fixture test this is a temporary directory standing in for the repository,
+// so it defaults to scriptRoot but callers exercising a fixture override it.
+export async function runCheck(scriptRoot, check, { root = scriptRoot, files, messages, strict = false }) {
+  const mod = await loadCheckModule(scriptRoot, check.script)
   if (typeof mod.run !== 'function') {
     throw new Error(`${check.script} does not export a run() function`)
   }

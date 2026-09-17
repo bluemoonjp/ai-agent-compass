@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(gh pr merge*)",
+      "Bash(gh pr ready*)",
+      "Bash(gh api -X PUT*)",
+      "Bash(gh api -X PATCH*)",
+      "Bash(gh api -X DELETE*)",
+      "Bash(gh secret*)",
+      "Bash(gh release*)",
+      "Bash(git tag*)",
+      "Bash(git push*--tags*)"
+    ]
+  }
+}

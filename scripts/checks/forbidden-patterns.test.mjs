@@ -1,12 +1,29 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
 import path from 'node:path'
-import { test } from 'node:test'
+import { after, before, test } from 'node:test'
 
 import { runCheck } from '../lib/runner.mjs'
 
 const root = process.cwd()
 const check = { id: 'forbidden-patterns', script: 'scripts/checks/forbidden-patterns.mjs', blocking: true }
+
+// The tests below that call runCheck() in-process (not through runCli's
+// spawnSync, which builds its own env explicitly) must not inherit this
+// process's CI/COMPASS_PRIVATE_PATTERNS — a CI runner sets CI=true itself,
+// which would make the private-patterns branch fire for reasons unrelated
+// to what these tests check.
+const savedEnv = { CI: process.env.CI, COMPASS_PRIVATE_PATTERNS: process.env.COMPASS_PRIVATE_PATTERNS }
+before(() => {
+  delete process.env.CI
+  delete process.env.COMPASS_PRIVATE_PATTERNS
+})
+after(() => {
+  for (const [key, value] of Object.entries(savedEnv)) {
+    if (value === undefined) delete process.env[key]
+    else process.env[key] = value
+  }
+})
 
 const SECRET_PATTERN = 'COMPASS_TEST_SECRET_PATTERN_9F3K2LQZ'
 const SECRET_PROBE = 'COMPASS_TEST_SECRET_PROBE_7XJ4MNBV'
