@@ -1,0 +1,130 @@
+# instruction-files
+
+Generated from `practices/*.md` and `antipatterns/*.md` by `pnpm gen`; do not edit.
+
+## Practices
+
+### 0001: Keep always-loaded instructions minimal
+
+Rule: Keep CLAUDE.md and AGENTS.md minimal; convert anything that must happen every time with zero exceptions into a hook instead of prose.
+
+Applies to: claude-code
+
+#### Why
+
+An always-loaded instruction file competes for context on every turn. Anthropic's own guidance for Claude Code observes that a long `CLAUDE.md` causes the agent to ignore its actual instructions, and separately distinguishes `CLAUDE.md`'s advisory rules from a hook's deterministic guarantee. Together these point at the same fix: keep the always-loaded file to what genuinely needs to be always loaded, and move anything that must happen with zero exceptions into a hook, where the harness enforces it instead of prose merely requesting it.
+
+#### When it applies
+
+Applies to Claude Code's `CLAUDE.md` and, by the same reasoning, to any other tool's always-loaded instruction file paired with an equivalent deterministic mechanism (a pre-commit hook, a linter, a required CI check). It does not apply to guidance that is genuinely conditional or exploratory, since a hook can only enforce a fixed, deterministic action.
+
+Sources:
+- Anthropic's Claude Code best-practices guide recommends keeping CLAUDE.md concise, since a bloated always-loaded file causes Claude to ignore its actual instructions. (https://www.anthropic.com/engineering/claude-code-best-practices)
+- The same guide distinguishes CLAUDE.md's advisory instructions from hooks, which run deterministically and are guaranteed to happen. (https://www.anthropic.com/engineering/claude-code-best-practices)
+
+### 0003: @import does not defer loading
+
+Rule: An @path import in CLAUDE.md is expanded into context at launch alongside the file that references it; it does not load lazily when the agent later needs it.
+
+Applies to: claude-code
+
+#### Why
+
+Claude Code's own memory documentation describes an `@path/to/file` import as text that is expanded and loaded into context at launch, alongside the CLAUDE.md file that references it. Nothing about the import is deferred until the agent needs that file for a specific task; the imported content is already present in context from the first turn, the same as if it had been pasted inline. An import is a way to organize an always-loaded file across multiple files, not a way to make part of it load only when relevant.
+
+#### When it applies
+
+Applies to any `@path/to/file` import inside a CLAUDE.md (or CLAUDE.local.md) file that Claude Code reads, including an import nested inside another imported file, up to the source's documented four-hop depth; past that depth an import silently does not load, which this rule alone does not guard against. It does not apply to a path merely mentioned in backticks, which the same documentation treats as literal text rather than an import, and it makes no claim about how another tool's own include or reference mechanism behaves.
+
+Sources:
+- Claude Code's memory documentation states that @path imports are expanded and loaded into context at launch alongside the referencing CLAUDE.md, not deferred until the agent later needs the imported file. (https://docs.claude.com/en/docs/claude-code/memory)
+
+### 0004: Write one canonical rule; contradictions may be resolved arbitrarily
+
+Rule: Write and maintain one canonical rule per topic; remove any instruction that contradicts another instead of leaving the agent to pick one.
+
+Applies to: claude-code
+
+#### Why
+
+Claude Code's memory documentation offers no tie-breaker for two contradictory rules beyond chance: it states that when two rules contradict each other, Claude may pick one arbitrarily, and it recommends periodically reviewing instruction files to remove the conflict rather than trusting the agent to favor one side consistently. A file with two rules that disagree is not a file with a predictable fallback; its actual behavior on a given task only reveals itself at run time, and can change between sessions.
+
+#### When it applies
+
+Applies to a single instruction file, and to how nested CLAUDE.md files, imports, and `.claude/rules/` entries combine into one context. Restating a rule more forcefully in a second location does not settle which one governs; it creates the exact ambiguity the source describes. It does not apply to two rules that are correctly scoped to disjoint situations, such as a path-specific rule and a general rule that never both fire on the same file, since that is not a contradiction.
+
+#### Conflicting guidance
+
+The two primary sources describe different resolution mechanisms for the same situation: two instructions in scope that disagree. Claude Code's documentation says the outcome is arbitrary. OpenAI's own documentation of Codex's `AGENTS.md` discovery describes a deterministic merge instead: files are concatenated from the project root down, and a file closer to the working directory overrides earlier guidance because it appears later in the combined prompt — position, not chance, decides which side wins there. An author who assumes one tool's mechanism is relying on behavior the other tool does not share. Either way the fix is the same: write one canonical rule per topic instead of depending on how a specific tool breaks the tie.
+
+Sources:
+- Claude Code's memory documentation states that when two CLAUDE.md rules contradict each other, Claude may pick one arbitrarily, and recommends removing the conflict rather than relying on a consistent resolution. (https://docs.claude.com/en/docs/claude-code/memory)
+- OpenAI's Codex documentation describes a deterministic merge instead of an arbitrary pick, AGENTS.md files concatenate from the project root down, and a file closer to the working directory overrides earlier guidance by position. (https://developers.openai.com/codex/guides/agents-md)
+
+### 0005: Progressive disclosure: name and description at startup, body on demand, references one level deep
+
+Rule: Keep a skill's name and description as the only startup-loaded metadata, its body loaded on demand, and reference files linked no more than one level deep from SKILL.md.
+
+Applies to: claude-code, general
+
+#### Why
+
+Anthropic's own description of Agent Skills lays out progressive disclosure as staged, relevance-gated loading: at startup, the agent pre-loads only a skill's `name` and `description` into its system prompt, and loads the skill's full body only once it judges that skill relevant to the current task. A further tier exists for files a `SKILL.md` links out to, and Anthropic's best-practices guidance adds a constraint the first source does not spell out on its own: those reference files should link directly from `SKILL.md`, one level deep, because an agent following a chain of nested references may only partially read a file instead of loading it whole, losing information the author assumed would arrive complete.
+
+#### When it applies
+
+Applies to authoring any `SKILL.md`-based skill for an agent that supports this progressive-disclosure model, and to deciding what belongs in the top-level file versus a linked reference file. It does not apply to content an agent loads eagerly regardless of relevance, such as an always-loaded instruction file, and it does not forbid a skill from bundling many reference files — only from chaining them through each other instead of linking each one directly from `SKILL.md`.
+
+Sources:
+- Anthropic's Agent Skills engineering post describes progressive disclosure, a skill's name and description load into the system prompt at startup, and its full SKILL.md body loads only if Claude judges the skill relevant to the task. (https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
+- Anthropic's Agent Skills best-practices docs recommend keeping reference files one level deep from SKILL.md, since Claude may only partially read a file reached through a chain of nested references. (https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
+
+## Antipatterns
+
+### 0001: A repository-overview section in the instruction file
+
+Rule: Do not add a repository-overview section to an instruction file; a controlled study found it does not help while context files overall raised inference cost.
+
+Classification: harmful
+
+Applies to: general
+
+#### Symptom
+
+The instruction file opens with a section describing the repository's purpose, architecture, or module layout, largely duplicating what a README's project-description section already covers.
+
+#### Cause
+
+Repository overviews are popular and recommended by several model providers as a way to orient an agent before it starts working, on the assumption that more upfront context yields better task performance.
+
+#### Remedy
+
+Drop the repository-overview section. The same "would removing this cause a mistake" test that argues for keeping always-loaded instructions minimal in general (see the sibling practice on that topic) applies here specifically: an agent that needs architectural detail can read the code, and the measured evidence is that a repository overview does not move task success while it does raise cost.
+
+Sources:
+- A 2026 study of AGENTS.md-style context files found that repository-overview sections specifically, despite being popular and recommended by model providers, were not helpful, while context files overall raised inference cost by more than 20% without a general gain in task success. (https://arxiv.org/abs/2602.11988)
+
+### 0002: Emphasis everywhere
+
+Rule: Do not add emphasis such as "IMPORTANT" to many lines of an instruction file; emphasizing everything leaves none of it standing out.
+
+Classification: harmful
+
+Applies to: claude-code
+
+#### Symptom
+
+Many lines of an instruction file carry emphasis — bold text, "IMPORTANT," or a similar marker — spread across most of the file's content instead of reserved for the single line the agent actually keeps skipping.
+
+#### Cause
+
+Emphasis reads as a lever: when the agent skips an instruction, adding emphasis to that line looks like the fix, and it appears to work in isolation. An author who reaches for that lever once per skipped instruction ends up applying it wherever an instruction matters, which in most instruction files is nearly everywhere.
+
+#### Remedy
+
+Reserve emphasis for the one instruction the agent actually keeps skipping, and leave the rest of the file at normal weight. Anthropic's own CLAUDE.md guidance is explicit that emphasizing many lines leaves none of them standing out — emphasis only works as a contrast against a plain background, and a file that is emphasis-everywhere has no background left to contrast against. See the sibling practice on keeping always-loaded instructions minimal for the companion problem of length, distinct from the density of emphasis addressed here.
+
+Sources:
+- Anthropic's Claude Code best-practices guide warns that emphasizing many lines in CLAUDE.md backfires, recommending emphasis such as "IMPORTANT" be reserved for the single line an agent keeps skipping. (https://www.anthropic.com/engineering/claude-code-best-practices)
+
+This file's content is drawn from `practices/` and `antipatterns/`, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

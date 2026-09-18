@@ -114,7 +114,7 @@
       "blocking": true,
       "fast": true,
       "fixture": true,
-      "protects": "docs/maintain/authoring.md's generated check table, practices/index.md, and README.md's generated blocks must match what pnpm gen produces from checks.json and practices/*.md, since a hand-edited copy silently drifts from the source it claims to summarize.",
+      "protects": "docs/maintain/authoring.md's generated check table, practices/index.md, README.md's generated blocks, every plugins/*/skills/*/references/<topic>.md file a SKILL.md's metadata.topics currently declares, and the compass-instruction-file skill's references/templates/ copy of templates/*.template must match what pnpm gen produces from checks.json, practices/*.md, antipatterns/*.md, and templates/*.template, since a hand-edited or missing copy silently drifts from the source it claims to summarize. This only verifies currently-declared topics and named template files; a references/<topic>.md left behind after its topic is removed from metadata.topics is not detected.",
       "enforces": []
     },
     {
