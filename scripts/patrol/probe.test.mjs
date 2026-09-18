@@ -3,16 +3,16 @@ import { test } from 'node:test'
 
 import { matchedPatternLabels, probeUrl } from './probe.mjs'
 
-function mockResponse(body, { etag = null } = {}) {
+function mockResponse(status, body, { etag = null } = {}) {
   return {
-    status: 200,
+    status,
     headers: { get: (name) => (name.toLowerCase() === 'etag' ? etag : null) },
     text: async () => body,
   }
 }
 
 function queueFetch(bodies) {
-  return async () => mockResponse(bodies.shift())
+  return async () => mockResponse(200, bodies.shift())
 }
 
 test('identical bodies across both fetches are not volatile, and recommend md5', async () => {
@@ -28,18 +28,30 @@ test('a mock embedding the current timestamp on each fetch is volatile', async (
   assert.equal(result.volatile, true)
 })
 
-test('a volatile URL with an ETag header recommends etag', async () => {
+test('a body-volatile URL whose ETag survives a conditional GET is not volatile, and recommends etag', async () => {
   let call = 0
-  const fetchImpl = async () => {
+  const fetchImpl = async (url, options) => {
+    if (options.headers['If-None-Match'] === '"stable-etag"') return mockResponse(304, '')
     call += 1
-    return mockResponse(call === 1 ? 'body one' : 'body two', { etag: '"stable-etag"' })
+    return mockResponse(200, `body embeds a fresh nonce ${call}`, { etag: '"stable-etag"' })
   }
   const result = await probeUrl('https://example.com/feed', { fetchImpl, sleepImpl: async () => {} })
-  assert.equal(result.volatile, true)
+  assert.equal(result.volatile, false)
   assert.equal(result.recommendedMethod, 'etag')
 })
 
-test('a volatile URL with no ETag header recommends none', async () => {
+test('a body-volatile URL whose ETag also changes stays volatile and recommends none', async () => {
+  let call = 0
+  const fetchImpl = async () => {
+    call += 1
+    return mockResponse(200, `body ${call}`, { etag: `"etag-${call}"` })
+  }
+  const result = await probeUrl('https://example.com/feed', { fetchImpl, sleepImpl: async () => {} })
+  assert.equal(result.volatile, true)
+  assert.equal(result.recommendedMethod, 'none')
+})
+
+test('a volatile URL with no ETag header recommends none, without a third fetch', async () => {
   const fetchImpl = queueFetch(['body one', 'body two'])
   const result = await probeUrl('https://example.com/feed', { fetchImpl, sleepImpl: async () => {} })
   assert.equal(result.volatile, true)

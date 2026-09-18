@@ -17,20 +17,26 @@ export function matchedPatternLabels(text) {
     .map(([label]) => label)
 }
 
-async function getOnce(url, fetchImpl) {
+async function getOnce(url, fetchImpl, extraHeaders = {}) {
   const res = await fetchImpl(url, {
     redirect: 'follow',
-    headers: { 'User-Agent': USER_AGENT },
+    headers: { 'User-Agent': USER_AGENT, ...extraHeaders },
     signal: AbortSignal.timeout(TIMEOUT_MS),
   })
   const body = await res.text()
   return { status: res.status, etag: res.headers.get('etag'), body }
 }
 
-// volatile is decided empirically (does the same URL return different bytes
-// two fetches apart), not by pattern presence alone: a page can contain the
-// literal word "nonce" in static markup and still be byte-stable across
-// requests, and pattern-only detection would wrongly block registering it.
+// "volatile" answers "can this URL be tracked reliably", not "does its raw
+// body ever change" — those are different questions once a conditional GET
+// is available. A page whose raw body changes every request (a nonce, a
+// per-request id) can still be perfectly trackable if its ETag stays valid
+// across that same window, which is why a body-volatile URL gets one more
+// conditional fetch before being called volatile: true. Body volatility
+// itself is decided empirically (does the same URL return different bytes
+// two fetches apart), not by pattern presence alone — a page can contain the
+// literal word "nonce" in static markup and still be byte-stable, and
+// pattern-only detection would wrongly block registering it.
 export async function probeUrl(
   url,
   { fetchImpl = fetch, waitMs = 3000, sleepImpl = (ms) => new Promise((r) => setTimeout(r, ms)) } = {},
@@ -39,9 +45,18 @@ export async function probeUrl(
   await sleepImpl(waitMs)
   const second = await getOnce(url, fetchImpl)
 
-  const volatile = md5Hex(first.body) !== md5Hex(second.body)
-  const recommendedMethod = volatile ? (first.etag ? 'etag' : 'none') : 'md5'
-  const patterns = volatile ? matchedPatternLabels(first.body) : []
+  const bodyVolatile = md5Hex(first.body) !== md5Hex(second.body)
+
+  let etagStable = false
+  if (bodyVolatile && first.etag) {
+    await sleepImpl(waitMs)
+    const third = await getOnce(url, fetchImpl, { 'If-None-Match': first.etag })
+    etagStable = third.status === 304
+  }
+
+  const volatile = bodyVolatile && !etagStable
+  const recommendedMethod = !bodyVolatile ? 'md5' : etagStable ? 'etag' : 'none'
+  const patterns = bodyVolatile ? matchedPatternLabels(first.body) : []
 
   return { url, volatile, recommendedMethod, patterns }
 }
