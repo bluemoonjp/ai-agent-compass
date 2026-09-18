@@ -20,6 +20,10 @@ alpha. The skeleton, checks, and a pilot set of content exist; broader content a
 
 Clone this repository, then copy `templates/AGENTS.md.template` and `templates/CLAUDE.md.template` into your own project, stripping the `.template` suffix as each file instructs.
 
+<!-- gen:start:how-to-use-en -->
+_Generated from `practices/*.md` by `pnpm gen`; do not edit this block._ **5** active practices are indexed in [`practices/index.md`](practices/index.md), licensed under [CC BY 4.0](LICENSE-DOCS).
+<!-- gen:end:how-to-use-en -->
+
 ### Layout
 
 See the Map table in this repository's own [AGENTS.md](AGENTS.md) for what each top-level directory holds.
@@ -57,6 +61,10 @@ alpha。骨格・検査・パイロット内容は揃っています。より広
 ### How to use
 
 このリポジトリを clone し、`templates/AGENTS.md.template` と `templates/CLAUDE.md.template` を自分のプロジェクトにコピーしてください。各ファイルの指示どおり `.template` 拡張子を外します。
+
+<!-- gen:start:how-to-use-ja -->
+_`practices/*.md` から `pnpm gen` で生成。このブロックは編集しないこと。_ **5** 件の active な practice を [`practices/index.md`](practices/index.md) に索引化(ライセンス: [CC BY 4.0](LICENSE-DOCS))。
+<!-- gen:end:how-to-use-ja -->
 
 ### Layout
 

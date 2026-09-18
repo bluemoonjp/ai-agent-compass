@@ -114,7 +114,7 @@
       "blocking": true,
       "fast": true,
       "fixture": true,
-      "protects": "docs/maintain/authoring.md's generated check table must match what pnpm gen produces from checks.json, since a hand-edited table silently drifts from the check registry it claims to summarize.",
+      "protects": "docs/maintain/authoring.md's generated check table, practices/index.md, and README.md's generated blocks must match what pnpm gen produces from checks.json and practices/*.md, since a hand-edited copy silently drifts from the source it claims to summarize.",
       "enforces": []
     },
     {

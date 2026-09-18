@@ -30,6 +30,6 @@ Write an ADR only when deleting the decision would let someone repeat the mistak
 | `docs/maintain/` | Maintainer setup, authoring, and review instructions |
 | `plugins/` | The Claude Code plugin this repository distributes itself as |
 | `practices/` | Sourced best practices for AI coding agents |
-| `schemas/` | JSON Schemas for practice and antipattern frontmatter |
+| `schemas/` | JSON Schemas for practice, antipattern, and skill frontmatter |
 | `scripts/` | The check toolchain: runner, checks, and their fixtures |
 | `templates/` | Copyable starter files for another project's AGENTS.md/CLAUDE.md |

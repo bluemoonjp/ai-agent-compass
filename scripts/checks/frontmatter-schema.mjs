@@ -32,7 +32,11 @@ const ANTIPATTERN_H2 = new Set([
   'What to do now',
 ])
 
+// A generated file such as practices/index.md lives under practices/ but is
+// not itself a practice instance — only a file whose basename matches the
+// numbered-id shape is.
 function kindOf(filePath) {
+  if (!FILENAME_ID.test(path.basename(filePath))) return null
   if (filePath.startsWith('practices/')) return 'practice'
   if (filePath.startsWith('antipatterns/')) return 'antipattern'
   return null
