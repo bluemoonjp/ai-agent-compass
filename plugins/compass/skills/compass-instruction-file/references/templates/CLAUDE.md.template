@@ -2,6 +2,6 @@
 
 ## Claude-specific notes
 
-- An `@path` import here loads into context at launch, not lazily when needed, and only up to four hops of nesting; deeper imports silently do not load.
+- An `@path` import here loads into context at launch, not lazily when needed, and only up to four hops of nesting.
 
 Strip the `.template` suffix when you copy this file into your project; place it at `CLAUDE.md`, not `CLAUDE.md.template`.
