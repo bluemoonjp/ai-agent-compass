@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parse as parseYaml } from 'yaml'
@@ -178,6 +178,17 @@ export function parseSkillTopics(skillFile) {
   return parsed?.data?.metadata?.topics ?? []
 }
 
+// Pure: given the names (extension stripped) of a skill's existing
+// references/*.md files and the topics its SKILL.md currently declares,
+// returns the names that name no declared topic — orphans left behind after
+// a topic is removed from metadata.topics. Depth-1 only: a caller passes
+// names from references/ itself, never from a nested directory such as
+// references/templates/, which is a different generator's output.
+export function listOrphanReferenceNames(existingNames, topics) {
+  const declared = new Set(topics)
+  return existingNames.filter((name) => !declared.has(name))
+}
+
 export function stripAdaptersNote(text) {
   const idx = text.indexOf(ADAPTERS_NOTE_MARKER)
   return idx === -1 ? text : `${text.slice(0, idx)}\n`
@@ -233,7 +244,7 @@ function listSkillFilesFromDisk(root) {
   return files
 }
 
-function generateReferences(root) {
+export function generateReferences(root) {
   const practices = parsePracticeDetails(listContentFiles(root, PRACTICES_DIR))
   const antipatterns = parseAntipatternDetails(listContentFiles(root, ANTIPATTERNS_DIR))
 
@@ -241,9 +252,17 @@ function generateReferences(root) {
     const skillDir = path.dirname(skillFile.path)
     const referencesAbs = path.join(root, skillDir, 'references')
     mkdirSync(referencesAbs, { recursive: true })
-    for (const topic of parseSkillTopics(skillFile)) {
+    const topics = parseSkillTopics(skillFile)
+    for (const topic of topics) {
       const outAbs = path.join(referencesAbs, `${topic}.md`)
       writeFileSync(outAbs, renderReferenceFile(topic, practices, antipatterns).replace(/\r\n/g, '\n'))
+    }
+
+    const existingNames = readdirSync(referencesAbs, { withFileTypes: true })
+      .filter((e) => e.isFile() && e.name.endsWith('.md'))
+      .map((e) => e.name.slice(0, -'.md'.length))
+    for (const orphan of listOrphanReferenceNames(existingNames, topics)) {
+      unlinkSync(path.join(referencesAbs, `${orphan}.md`))
     }
   }
 }

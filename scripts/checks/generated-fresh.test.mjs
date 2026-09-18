@@ -1,10 +1,13 @@
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 
 import {
+  generateReferences,
   INSTRUCTION_FILE_SKILL_DIR,
+  listOrphanReferenceNames,
   parseAntipatternDetails,
   parsePracticeDetails,
   parsePracticeRows,
@@ -248,6 +251,74 @@ test('fresh skill references/<topic>.md produces no finding', () => {
   ]
   const result = run({ files })
   assert.equal(result.findings.length, 0)
+})
+
+test('an orphaned references/<name>.md (topic removed from metadata.topics) produces a reference-orphan finding', () => {
+  const practices = parsePracticeDetails([{ path: 'practices/0001-active-one.md', text: SAMPLE_PRACTICE }])
+  const antipatterns = parseAntipatternDetails([
+    { path: 'antipatterns/0001-bad-pattern.md', text: SAMPLE_ANTIPATTERN },
+  ])
+  const rendered = renderReferenceFile('instruction-files', practices, antipatterns)
+
+  const files = [
+    { path: 'practices/0001-active-one.md', text: SAMPLE_PRACTICE },
+    { path: 'antipatterns/0001-bad-pattern.md', text: SAMPLE_ANTIPATTERN },
+    { path: 'plugins/compass/skills/sample-skill/SKILL.md', text: SAMPLE_SKILL },
+    { path: 'plugins/compass/skills/sample-skill/references/instruction-files.md', text: rendered },
+    { path: 'plugins/compass/skills/sample-skill/references/leftover-topic.md', text: 'leftover content\n' },
+  ]
+  const { findings, notices } = run({ files })
+  assert.deepEqual(
+    findings.map((f) => f.ruleId),
+    ['generated-fresh:reference-orphan'],
+  )
+  assert.ok(notices.some((n) => n.includes('references/leftover-topic.md') && n.includes('run: pnpm gen')))
+})
+
+test('a references/templates/ copy is never mistaken for an orphaned topic file', () => {
+  const files = [
+    { path: `${INSTRUCTION_FILE_SKILL_DIR}/SKILL.md`, text: SAMPLE_SKILL_NO_TOPICS },
+    { path: 'templates/AGENTS.md.template', text: 'source template\n' },
+    {
+      path: `${INSTRUCTION_FILE_SKILL_DIR}/references/templates/AGENTS.md.template`,
+      text: stripAdaptersNote('source template\n'),
+    },
+    {
+      path: `${INSTRUCTION_FILE_SKILL_DIR}/references/templates/README.md`,
+      text: renderTemplateReferenceReadme(),
+    },
+  ]
+  const { findings } = run({ files })
+  assert.ok(!findings.some((f) => f.ruleId === 'generated-fresh:reference-orphan'))
+})
+
+test('listOrphanReferenceNames returns only names absent from the declared topic set', () => {
+  assert.deepEqual(listOrphanReferenceNames(['a', 'b'], ['a']), ['b'])
+  assert.deepEqual(listOrphanReferenceNames(['a'], ['a']), [])
+  assert.deepEqual(listOrphanReferenceNames([], ['a']), [])
+})
+
+test('generateReferences() deletes an orphaned references/<name>.md while regenerating one that matches a declared topic', () => {
+  const tmp = mkdtempSync(path.join(os.tmpdir(), 'compass-gen-'))
+  try {
+    mkdirSync(path.join(tmp, 'practices'), { recursive: true })
+    writeFileSync(path.join(tmp, 'practices', '0001-active-one.md'), SAMPLE_PRACTICE)
+    mkdirSync(path.join(tmp, 'antipatterns'), { recursive: true })
+    const skillDir = path.join(tmp, 'plugins', 'sample', 'skills', 'sample-skill')
+    mkdirSync(path.join(skillDir, 'references'), { recursive: true })
+    writeFileSync(path.join(skillDir, 'SKILL.md'), SAMPLE_SKILL)
+    const declaredAbs = path.join(skillDir, 'references', 'instruction-files.md')
+    writeFileSync(declaredAbs, 'stale content\n')
+    const orphanAbs = path.join(skillDir, 'references', 'leftover-topic.md')
+    writeFileSync(orphanAbs, 'leftover content\n')
+
+    generateReferences(tmp)
+
+    assert.ok(!existsSync(orphanAbs))
+    assert.ok(readFileSync(declaredAbs, 'utf8').includes('0001'))
+  } finally {
+    rmSync(tmp, { recursive: true, force: true })
+  }
 })
 
 test('renderReferenceFile only includes an antipattern whose relates_to names an included practice', () => {
