@@ -2,6 +2,7 @@ import {
   applyBlock,
   INSTRUCTION_FILE_SKILL_DIR,
   INSTRUCTION_FILE_TEMPLATE_NAMES,
+  listOrphanReferenceNames,
   listSkillFiles,
   parseAntipatternDetails,
   parsePracticeDetails,
@@ -24,6 +25,21 @@ const README_PATH = 'README.md'
 
 function normalize(text) {
   return text.replace(/\r\n/g, '\n')
+}
+
+// The .md files directly inside dirPath — depth-1 only, so a nested
+// directory such as a skill's references/templates/ (a different
+// generator's output, syncInstructionFileTemplates) is never included.
+function directChildMdNames(files, dirPath) {
+  const prefix = `${dirPath}/`
+  const names = []
+  for (const f of files) {
+    if (!f.path.startsWith(prefix)) continue
+    const rest = f.path.slice(prefix.length)
+    if (rest.includes('/') || !rest.endsWith('.md')) continue
+    names.push(rest.slice(0, -'.md'.length))
+  }
+  return names
 }
 
 function markerLine(text, marker) {
@@ -85,7 +101,8 @@ export function run({ files }) {
   // never equals a non-empty expected string.
   for (const skillFile of listSkillFiles(files)) {
     const skillDir = skillFile.path.slice(0, -'/SKILL.md'.length)
-    for (const topic of parseSkillTopics(skillFile)) {
+    const topics = parseSkillTopics(skillFile)
+    for (const topic of topics) {
       const refPath = `${skillDir}/references/${topic}.md`
       const refFile = files.find((f) => f.path === refPath)
       const actual = refFile ? normalize(refFile.text) : null
@@ -94,6 +111,14 @@ export function run({ files }) {
         findings.push({ path: refPath, line: 1, ruleId: `${RULE_ID}:reference-stale` })
         notices.push(`${RULE_ID}: ${refPath} is stale — run: pnpm gen`)
       }
+    }
+
+    const referencesDir = `${skillDir}/references`
+    const existingNames = directChildMdNames(files, referencesDir)
+    for (const orphan of listOrphanReferenceNames(existingNames, topics)) {
+      const orphanPath = `${referencesDir}/${orphan}.md`
+      findings.push({ path: orphanPath, line: 1, ruleId: `${RULE_ID}:reference-orphan` })
+      notices.push(`${RULE_ID}: ${orphanPath} is an orphaned reference file — run: pnpm gen`)
     }
   }
 
