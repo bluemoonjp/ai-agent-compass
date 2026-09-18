@@ -2,8 +2,8 @@ name: Patrol
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: "0 3 * * 1" # Monday 03:00 UTC / Monday 12:00 JST
+  schedule:
+    - cron: "0 3 * * 1" # Monday 03:00 UTC / Monday 12:00 JST
 
 permissions:
   contents: write
