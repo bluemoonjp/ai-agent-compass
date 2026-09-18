@@ -28,8 +28,18 @@ claude plugin validate ./plugins/compass --strict
 ## 3. Run the eval suite
 
 ```bash
-claude plugin eval ./plugins/compass --trust-plugin --no-publish --max-cost-usd 3 --judge-model haiku --json <output-path>
+claude plugin eval ./plugins/compass --trust-plugin --no-publish --max-cost-usd 3 --judge-model claude-sonnet-5 --json <output-path>
 ```
+
+`--judge-model` defaults to `haiku`; always pass `--judge-model
+claude-sonnet-5` explicitly instead. `haiku` graded `bloated-agents-md`'s
+`llm` graders unreliably (see ADR-0007). An `llm`-graded case's `runs`
+should be at least 3, for the same reason ADR-0007 gives; a `tool_used`-only
+case (no judge model involved) is unaffected. A case cannot grant the
+`with` arm read access to the skill's own `references/` material outside
+its own directory (see ADR-0007) — a known, currently-unresolved gap
+between what the eval exercises and what the skill's full reference
+material provides.
 
 Review the result for a fired-when-expected / silent-when-expected pattern
 that matches the case names in `plugins/compass/evals/`, since a skill

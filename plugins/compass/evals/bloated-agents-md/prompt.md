@@ -2,7 +2,7 @@
 name: bloated-agents-md
 description: A bloated AGENTS.md with a repository-overview section, heavy emphasis, and a contradictory rule; the skill should fire and give a single triaged recommendation per line.
 tags: [smoke, positive]
-runs: 1
+runs: 3
 ---
 
 Our project's `AGENTS.md` has grown unwieldy. Here is its current content:
