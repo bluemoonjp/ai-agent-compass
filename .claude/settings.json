@@ -1,5 +1,11 @@
 {
   "permissions": {
+    "allow": [
+      "Bash(pnpm check *)",
+      "PowerShell(pnpm check *)",
+      "Bash(pnpm check:paste)",
+      "PowerShell(pnpm check:paste)"
+    ],
     "deny": [
       "Bash(gh secret *)",
       "PowerShell(gh secret *)",
