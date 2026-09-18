@@ -29,21 +29,21 @@ test('http: null renders as a bare dash, not the string "null"', () => {
 test('a poison value on a disallowed field never reaches the output', () => {
   const poisoned = {
     ...VALID,
-    rawBody: '<script>alert(1)</script>\n| injected | markdown |\nC:\\Users\\victim\\secret.txt',
+    rawBody: '<script>alert(1)</script>\n| injected | markdown |\nsecret-token-should-not-leak',
     note: 'line one\nline two\x00\x1b[31m',
   }
   const line = formatLine(poisoned)
   assert.match(line, LINE_PATTERN)
   assert.ok(!line.includes('script'))
   assert.ok(!line.includes('injected'))
-  assert.ok(!line.includes('victim'))
+  assert.ok(!line.includes('secret-token'))
   assert.ok(!line.includes('\n'))
 })
 
 test('formatLines ignores disallowed fields across a batch', () => {
-  const lines = formatLines([VALID, { ...VALID, id: 'other-anchor', secret: 'C:\\Users\\victim\\.env' }])
+  const lines = formatLines([VALID, { ...VALID, id: 'other-anchor', secret: 'super-secret-token-should-not-leak' }])
   assert.equal(lines.length, 2)
-  for (const line of lines) assert.ok(!line.includes('victim'))
+  for (const line of lines) assert.ok(!line.includes('secret-token'))
 })
 
 for (const [field, badValue] of [
