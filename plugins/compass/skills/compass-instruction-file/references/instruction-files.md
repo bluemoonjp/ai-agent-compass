@@ -35,11 +35,12 @@ Claude Code's own memory documentation describes an `@path/to/file` import as te
 
 #### When it applies
 
-Applies to any `@path/to/file` import inside a CLAUDE.md (or CLAUDE.local.md) file that Claude Code reads, including an import nested inside another imported file, up to the source's documented four-hop depth; past that depth an import silently does not load, which this rule alone does not guard against. It does not apply to a path merely mentioned in backticks, which the same documentation treats as literal text rather than an import, and it makes no claim about how another tool's own include or reference mechanism behaves.
+Applies to any `@path/to/file` import inside a CLAUDE.md (or CLAUDE.local.md) file that Claude Code reads, including an import nested inside another imported file, up to the source's documented four-hop depth. It does not apply to a path merely mentioned in backticks, which the same documentation treats as literal text rather than an import, and it makes no claim about how another tool's own include or reference mechanism behaves.
 
 #### Sources
 
 - Claude Code's memory documentation states that @path imports are expanded and loaded into context at launch alongside the referencing CLAUDE.md, not deferred until the agent later needs the imported file. (<https://docs.claude.com/en/docs/claude-code/memory>)
+- Claude Code's memory documentation states that imported files may recursively import other files up to a maximum nesting depth of four hops. (<https://docs.claude.com/en/docs/claude-code/memory>)
 
 ### 0004: Write one canonical rule; contradictions may be resolved arbitrarily
 
