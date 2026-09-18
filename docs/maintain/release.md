@@ -66,11 +66,19 @@ this machine's own Claude Code configuration. `claude plugin marketplace
 add`, `claude plugin install`, `claude plugin list`, `claude plugin
 uninstall`, and `claude plugin marketplace remove` need no authentication
 and work against an empty `CLAUDE_CONFIG_DIR`; only running an actual prompt
-against the installed plugin does, and that requires either logging in
-again inside the new config directory or copying this machine's own
-`~/.claude/.credentials.json` into it — a sensitive, one-off action to
-approve explicitly each time, not something to script or repeat
-unattended. If that step is skipped, the install/uninstall lifecycle check
+against the installed plugin does. Claude Code's own documentation of
+`CLAUDE_CONFIG_DIR` states that when it is set, Claude Code keeps
+`.credentials.json` under that directory instead of the default one, so a
+session started with a different `CLAUDE_CONFIG_DIR` reads a different
+credentials entry
+(<https://docs.claude.com/en/docs/claude-code/iam>). Running `claude auth
+status --json` confirms what that implies: `loggedIn:false` in a freshly
+isolated `CLAUDE_CONFIG_DIR`, `loggedIn:true` in this machine's default one.
+Log in again inside the new config directory instead of copying this
+machine's own `~/.claude/.credentials.json` into it. `claude auth login`
+opens a browser for interactive sign-in, so run it yourself as a one-off
+release step (marked below in both snippets), not from an unattended
+script. If that step is skipped, the install/uninstall lifecycle check
 above still verifies the distribution path works; only the live-fire
 confirmation is deferred.
 
@@ -79,6 +87,8 @@ PowerShell:
 ```powershell
 $tmp = New-Item -ItemType Directory -Path (Join-Path $env:TEMP ([System.Guid]::NewGuid()))
 $env:CLAUDE_CONFIG_DIR = $tmp.FullName
+claude auth login  # human-run, opens a browser — do not run from a script
+claude auth status --json
 claude plugin marketplace add bluemoonjp/ai-agent-compass
 claude plugin install compass@ai-agent-compass
 # exercise a skill, e.g. by running the eval suite again or a manual prompt
@@ -93,6 +103,8 @@ bash:
 ```bash
 tmp=$(mktemp -d)
 export CLAUDE_CONFIG_DIR="$tmp"
+claude auth login  # human-run, opens a browser — do not run from a script
+claude auth status --json
 claude plugin marketplace add bluemoonjp/ai-agent-compass
 claude plugin install compass@ai-agent-compass
 # exercise a skill, e.g. by running the eval suite again or a manual prompt
@@ -101,6 +113,13 @@ claude plugin marketplace remove ai-agent-compass
 unset CLAUDE_CONFIG_DIR
 rm -rf "$tmp"
 ```
+
+`claude auth status --json` reports the signed-in account (email, org id,
+subscription type) alongside `loggedIn`. Redact those fields by hand before
+pasting its output anywhere, then run it through `pnpm check:paste` (step
+8) to catch anything missed — its generic patterns cover a bare email
+address, but org id and subscription type carry no generic pattern, so
+redacting them is not optional.
 
 Record which skill fired and how, in the release's tracking issue, with any
 absolute path redacted first.
