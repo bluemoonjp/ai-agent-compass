@@ -1,0 +1,329 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.276",
+  "startedAt": "2026-09-18T14:52:44.183Z",
+  "durationSeconds": 274,
+  "costUsd": 0.9512475,
+  "partial": false,
+  "suite": {
+    "root": "./plugins/compass",
+    "ablation": "with-without",
+    "judgeModel": "haiku",
+    "threshold": 1,
+    "concurrency": 1,
+    "plugins": [
+      {
+        "name": "compass",
+        "version": "0.1.0-alpha",
+        "path": "./plugins/compass"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "bloated-agents-md",
+      "dir": "evals\\bloated-agents-md",
+      "source": "prose",
+      "promptMarkdown": "Our project's `AGENTS.md` has grown unwieldy. Here is its current content:\n\n```markdown\n# AGENTS.md\n\n## Repository overview\n\nThis repository is a TypeScript monorepo with three packages: `api`, `web`,\nand `shared`. The `api` package exposes a REST API built on Express. The\n`web` package is a React frontend built with Vite. The `shared` package\nholds types and utilities used by both.\n\n## IMPORTANT rules\n\n- **IMPORTANT**: Always run `npm test` before committing.\n- **IMPORTANT**: Always use TypeScript strict mode.\n- **IMPORTANT**: Always write a commit message that starts with a ticket\n  number.\n- **IMPORTANT**: Prefer functional components in `web`.\n- **IMPORTANT**: Never commit directly to `main`.\n\n## Style\n\n- Use 2-space indentation everywhere.\n- Use 4-space indentation for Python scripts under `scripts/`.\n```\n\nHelp me decide what to keep, what to delete, and what should become a hook\nor a CI check instead, and propose a replacement `AGENTS.md`.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 300,
+      "maxTurns": 10,
+      "graders": [
+        {
+          "name": "expected-outcomes",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS only if the response reaches all three of these outcomes, not merely commits to some outcome for each item, and cites a practice or antipattern id for each one:\n\n1. Recommends deleting (or substantially rewriting away) the \"Repository overview\" section, citing antipattern `0001`.\n2. Recommends removing or reducing the `**IMPORTANT**` emphasis markers on the five bullet points, citing antipattern `0002`.\n3. Recommends converting at least the \"always run npm test before committing\" and \"never commit directly to main\" rules into a hook, lint rule, or required CI/branch-protection check rather than leaving them as prose, citing practice `0001`.\n\nFAIL if any of the three outcomes above is missing, reversed (e.g. recommending the repository-overview section be kept), or given without citing the specific practice or antipattern id named above.",
+          "config": {
+            "criteria": "PASS only if the response reaches all three of these outcomes, not merely commits to some outcome for each item, and cites a practice or antipattern id for each one:\n\n1. Recommends deleting (or substantially rewriting away) the \"Repository overview\" section, citing antipattern `0001`.\n2. Recommends removing or reducing the `**IMPORTANT**` emphasis markers on the five bullet points, citing antipattern `0002`.\n3. Recommends converting at least the \"always run npm test before committing\" and \"never commit directly to main\" rules into a hook, lint rule, or required CI/branch-protection check rather than leaving them as prose, citing practice `0001`.\n\nFAIL if any of the three outcomes above is missing, reversed (e.g. recommending the repository-overview section be kept), or given without citing the specific practice or antipattern id named above.",
+            "focus": "last_message"
+          }
+        },
+        {
+          "name": "no-both-sides",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the response commits to exactly one outcome (delete, keep as prose, or convert to a hook/check) for each instruction-file line or section it discusses, citing a practice or antipattern id for each choice.\n\nFAIL if the response presents two options as equally valid without picking one (for example, \"you could either keep this or remove it,\" \"it depends,\" or a list of pros and cons with no recommendation), or if it gives a recommendation without citing any practice or antipattern id.",
+          "config": {
+            "criteria": "PASS if the response commits to exactly one outcome (delete, keep as prose, or convert to a hook/check) for each instruction-file line or section it discusses, citing a practice or antipattern id for each choice.\n\nFAIL if the response presents two options as equally valid without picking one (for example, \"you could either keep this or remove it,\" \"it depends,\" or a list of pros and cons with no recommendation), or if it gives a recommendation without citing any practice or antipattern id.",
+            "focus": "last_message"
+          }
+        },
+        {
+          "name": "skill-fires",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?compass-instruction-file\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.27609399999999995,
+            "judgeCostUsd": 0.012659,
+            "durationSeconds": 101,
+            "startedAt": "2026-09-18T14:52:44.205Z",
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "expected-outcomes",
+                "passed": false,
+                "weight": 1,
+                "explanation": "judge votes: FAIL FAIL FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ],
+                "evidence": "I couldn't read the skill's `references/instruction-files.md` or its templates — file access outside the working directory is denied in this session, and `Read`/`Grep`/`Glob` on that path were all refused. I applied the practice and antipattern rules as stated in the skill's own procedure, citing the same ids. If you want the triage re-checked against the full reference text, grant read access to that plugin directory and I'll redo it.\n\nI'm also treating this as a Claude Code target (the file is `AGENTS.md`, which Claude Code loads, and you asked about hooks), so the conversion targets below are Claude Code hooks plus repo-side enforcement.\n\n## Triage\n\n| Line / section | Outcome | Practice / antipattern |\n|---|---|---|\n| `## Repository overview` (all three sentences) | Delete | antipattern `0001`; also `0001` — package names and roles are visible from the workspace root |\n| `## IMPORTANT rules` heading and all five `**IMPORTANT**` markers | Delete the emphasis | antipattern `0002` |\n| Always run `npm test` before committing | Convert → CI required check + `PreToolUse` hook | practice `0001` |\n| Always use TypeScript strict mode | Convert → `tsconfig` + CI typecheck | practice `0001` |\n| Commit message starts with a ticket number | Convert → `commit-msg` hook | practice `0001` |\n| Prefer functional components in `web` | Delete | practice `0001` — the surrounding `web` code already shows the idiom; add a lint rule if you want it guaranteed |\n| Never commit directly to `main` | Convert → branch protection (server-side) | practice `0001` |\n| Use 2-space indentation everywhere | Convert → `.editorconfig` + formatter in CI | practice `0001`, practice `0004` |\n| Use 4-space indentation for Python under `scripts/` | Convert → same formatter config | practice `0001`, practice `0004` |\n\nThe two indentation lines are the clearest `0004` case: \"everywhere\" and the `scripts/` exception are two rules that can contradict. The formatter config becomes the single canonical rule, and neither line survives as prose.\n\n## What each conversion looks like\n\n- **`npm test` before committing** — make it a required status check on PRs, and add a Claude Code `PreToolUse` hook matching `Bash` commands containing `git commit` that runs the suite and blocks on failure.\n- **TypeScript strict mode** — `\"strict\": true` in the base `tsconfig.json` that all three packages extend, with `tsc --noEmit` per workspace in CI. A config value can't be \"forgotten\" the way a prose rule can.\n- **Ticket number in commit message** — a `commit-msg` hook (husky + commitlint, or a plain script) regexing the subject line. Optionally also check PR titles in CI, since squash merges rewrite the message.\n- **Never commit to `main`** — branch protection / a repo ruleset. This one must be server-side; a local hook is bypassable and gives false confidence.\n- **Indentation** — `.editorconfig` plus Prettier for TS/JS and Ruff (or Black) for `scripts/*.py`, with a `format:check` job in CI.\n\n## Proposed `AGENTS.md`\n\n```markdown\n# AGENTS.md\n\n## Commands\n\n- Single package: `npm test -w api` (likewise `web`, `shared`)\n- Everything: `npm test`\n- Fix formatting and lint violations: `npm run fix`\n\n## Rules\n\n<!-- Only genuinely conditional guidance belongs here: things an agent\n     cannot infer from the code and no hook or CI check can enforce.\n     Examples of the right shape:\n     - `shared` must not import from `api` or `web`; the dependency\n       direction is one-way and there is no lint rule for it yet.\n     - Prefer extending an existing Express router over adding a new\n       top-level mount; route ordering in `api/src/server.ts` is\n       load-bearing. -->\n\nFormatting, TypeScript strictness, commit message format, and the test\ngate are enforced by tooling, not by this file. If CI rejects a change\nfor one of these, fix the code — do not adjust the config to match.\n```\n\nReplace the commented block with your actual conditional rules; I left it as a slot rather than inventing repo facts I can't verify. Drop the `## Commands` section too if those invocations are already plain `package.json` scripts an agent will find on its own.\n\nTwo notes on the checks in step 5: the draft adds no `@import` directives, so there's no eager-load duplication or hop-depth concern (practice `0003`), and each surviving statement appears exactly once with no competing variant (practice `0004`).\n\nThe closing paragraph is the one piece of new prose worth its tokens — it tells an agent *why* a CI failure happened and what not to do about it, which the tooling itself can't communicate."
+              },
+              {
+                "name": "no-both-sides",
+                "passed": false,
+                "weight": 1,
+                "explanation": "judge votes: FAIL FAIL FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ],
+                "evidence": "I couldn't read the skill's `references/instruction-files.md` or its templates — file access outside the working directory is denied in this session, and `Read`/`Grep`/`Glob` on that path were all refused. I applied the practice and antipattern rules as stated in the skill's own procedure, citing the same ids. If you want the triage re-checked against the full reference text, grant read access to that plugin directory and I'll redo it.\n\nI'm also treating this as a Claude Code target (the file is `AGENTS.md`, which Claude Code loads, and you asked about hooks), so the conversion targets below are Claude Code hooks plus repo-side enforcement.\n\n## Triage\n\n| Line / section | Outcome | Practice / antipattern |\n|---|---|---|\n| `## Repository overview` (all three sentences) | Delete | antipattern `0001`; also `0001` — package names and roles are visible from the workspace root |\n| `## IMPORTANT rules` heading and all five `**IMPORTANT**` markers | Delete the emphasis | antipattern `0002` |\n| Always run `npm test` before committing | Convert → CI required check + `PreToolUse` hook | practice `0001` |\n| Always use TypeScript strict mode | Convert → `tsconfig` + CI typecheck | practice `0001` |\n| Commit message starts with a ticket number | Convert → `commit-msg` hook | practice `0001` |\n| Prefer functional components in `web` | Delete | practice `0001` — the surrounding `web` code already shows the idiom; add a lint rule if you want it guaranteed |\n| Never commit directly to `main` | Convert → branch protection (server-side) | practice `0001` |\n| Use 2-space indentation everywhere | Convert → `.editorconfig` + formatter in CI | practice `0001`, practice `0004` |\n| Use 4-space indentation for Python under `scripts/` | Convert → same formatter config | practice `0001`, practice `0004` |\n\nThe two indentation lines are the clearest `0004` case: \"everywhere\" and the `scripts/` exception are two rules that can contradict. The formatter config becomes the single canonical rule, and neither line survives as prose.\n\n## What each conversion looks like\n\n- **`npm test` before committing** — make it a required status check on PRs, and add a Claude Code `PreToolUse` hook matching `Bash` commands containing `git commit` that runs the suite and blocks on failure.\n- **TypeScript strict mode** — `\"strict\": true` in the base `tsconfig.json` that all three packages extend, with `tsc --noEmit` per workspace in CI. A config value can't be \"forgotten\" the way a prose rule can.\n- **Ticket number in commit message** — a `commit-msg` hook (husky + commitlint, or a plain script) regexing the subject line. Optionally also check PR titles in CI, since squash merges rewrite the message.\n- **Never commit to `main`** — branch protection / a repo ruleset. This one must be server-side; a local hook is bypassable and gives false confidence.\n- **Indentation** — `.editorconfig` plus Prettier for TS/JS and Ruff (or Black) for `scripts/*.py`, with a `format:check` job in CI.\n\n## Proposed `AGENTS.md`\n\n```markdown\n# AGENTS.md\n\n## Commands\n\n- Single package: `npm test -w api` (likewise `web`, `shared`)\n- Everything: `npm test`\n- Fix formatting and lint violations: `npm run fix`\n\n## Rules\n\n<!-- Only genuinely conditional guidance belongs here: things an agent\n     cannot infer from the code and no hook or CI check can enforce.\n     Examples of the right shape:\n     - `shared` must not import from `api` or `web`; the dependency\n       direction is one-way and there is no lint rule for it yet.\n     - Prefer extending an existing Express router over adding a new\n       top-level mount; route ordering in `api/src/server.ts` is\n       load-bearing. -->\n\nFormatting, TypeScript strictness, commit message format, and the test\ngate are enforced by tooling, not by this file. If CI rejects a change\nfor one of these, fix the code — do not adjust the config to match.\n```\n\nReplace the commented block with your actual conditional rules; I left it as a slot rather than inventing repo facts I can't verify. Drop the `## Commands` section too if those invocations are already plain `package.json` scripts an agent will find on its own.\n\nTwo notes on the checks in step 5: the draft adds no `@import` directives, so there's no eager-load duplication or hop-depth concern (practice `0003`), and each surviving statement appears exactly once with no competing variant (practice `0004`).\n\nThe closing paragraph is the one piece of new prose worth its tokens — it tells an agent *why* a CI failure happened and what not to do about it, which the tooling itself can't communicate."
+              },
+              {
+                "name": "skill-fires",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.153923,
+            "judgeCostUsd": 0.008376999999999999,
+            "durationSeconds": 53,
+            "startedAt": "2026-09-18T14:54:25.539Z",
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "expected-outcomes",
+                "passed": false,
+                "weight": 1,
+                "explanation": "judge votes: FAIL FAIL FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ],
+                "evidence": "I couldn't inspect the repo — the working directory (`<sandbox working directory>`) is empty, no `package.json`, `tsconfig.json`, or `.github/`. So this is a read of the document itself; you'll know which enforcement mechanisms already exist.\n\n## The core problem\n\nSeven of your nine rules are **mechanically checkable**. A rule a machine can verify shouldn't live in a prompt — prose enforcement is probabilistic, a CI check is not. Two secondary issues:\n\n- **Emphasis inflation.** Five consecutive `**IMPORTANT**` bullets means the marker carries no signal. When everything is important, the model has no basis to prioritize under pressure.\n- **A contradiction.** \"2-space indentation everywhere\" is directly negated by the next line. Models resolve conflicts unpredictably; \"everywhere\" should have said \"for TypeScript, JSON, and Markdown.\"\n\n## Triage\n\n| Rule | Verdict | Where it belongs |\n|---|---|---|\n| Repository overview | **Keep**, trimmed | Orientation an agent can't cheaply infer |\n| `npm test` before committing | **Delete** | CI on every PR + optional `PreToolUse` hook on `git commit` |\n| TypeScript strict mode | **Delete** | `\"strict\": true` in the base `tsconfig.json` — `tsc` fails without it |\n| Ticket number in commit message | **Delete** | `commit-msg` git hook, or a PR-title check in CI |\n| Prefer functional components | **Delete** | ESLint `no-restricted-syntax` banning `class … extends React.Component` |\n| Never commit directly to `main` | **Delete** | GitHub branch protection — a rule the agent can't violate needs no mention |\n| 2-space indentation | **Delete** | `.editorconfig` + Prettier |\n| 4-space Python in `scripts/` | **Delete** | `.editorconfig` section + Ruff/Black (4 is their default) |\n\n**Hook vs. CI:** CI is the authoritative gate — it catches humans and agents alike, and it's the one that can actually block a merge. Reach for a Claude Code hook only when you want fast local feedback at the moment of the action, or when the rule is about steering *the agent* specifically. Branch protection and lint belong in CI; \"run the tests before you commit\" is a reasonable hook because it shortens the agent's feedback loop.\n\n**Sequencing matters:** don't delete a line until its replacement mechanism exists and is verified. Otherwise you've removed a weak control and installed nothing.\n\n## Proposed replacement\n\n```markdown\n# AGENTS.md\n\n## Overview\n\nTypeScript monorepo with three packages:\n\n- `api` — REST API on Express\n- `web` — React frontend on Vite\n- `shared` — types and utilities consumed by both; changes here affect\n  `api` and `web` together\n\n## Commands\n\n- `npm test` — full suite; also runs in CI on every PR\n- `npm run lint` — ESLint and Prettier\n- `npm run typecheck` — `tsc --noEmit` across all packages\n\n## Conventions\n\nFormatting, strict mode, commit-message format, and branch protection are\nenforced by tooling — match what the files and the linter already do rather\nthan reasoning about them here.\n\n<!-- Add judgment-call conventions below: things a competent contributor\n     could reasonably get wrong and no check will catch. For example:\n     which package a new shared type belongs in, error-handling patterns\n     in `api`, when to add an integration test vs. a unit test. -->\n```\n\nTwo notes on this draft. The **Commands** section is a guess at your script names — correct it against `package.json`. And the empty **Conventions** section is deliberate: it's the only part of the original file that was load-bearing in principle, and none of your nine rules filled it. That's the gap worth spending time on, because it's the only content a check can't replace.\n\nWant me to write the `.editorconfig`, ESLint rule, `commit-msg` hook, and CI workflow? I'd set those up first, confirm each one actually fails on a violation, then cut the corresponding lines."
+              },
+              {
+                "name": "no-both-sides",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  false
+                ],
+                "evidence": "I couldn't inspect the repo — the working directory (`<sandbox working directory>`) is empty, no `package.json`, `tsconfig.json`, or `.github/`. So this is a read of the document itself; you'll know which enforcement mechanisms already exist.\n\n## The core problem\n\nSeven of your nine rules are **mechanically checkable**. A rule a machine can verify shouldn't live in a prompt — prose enforcement is probabilistic, a CI check is not. Two secondary issues:\n\n- **Emphasis inflation.** Five consecutive `**IMPORTANT**` bullets means the marker carries no signal. When everything is important, the model has no basis to prioritize under pressure.\n- **A contradiction.** \"2-space indentation everywhere\" is directly negated by the next line. Models resolve conflicts unpredictably; \"everywhere\" should have said \"for TypeScript, JSON, and Markdown.\"\n\n## Triage\n\n| Rule | Verdict | Where it belongs |\n|---|---|---|\n| Repository overview | **Keep**, trimmed | Orientation an agent can't cheaply infer |\n| `npm test` before committing | **Delete** | CI on every PR + optional `PreToolUse` hook on `git commit` |\n| TypeScript strict mode | **Delete** | `\"strict\": true` in the base `tsconfig.json` — `tsc` fails without it |\n| Ticket number in commit message | **Delete** | `commit-msg` git hook, or a PR-title check in CI |\n| Prefer functional components | **Delete** | ESLint `no-restricted-syntax` banning `class … extends React.Component` |\n| Never commit directly to `main` | **Delete** | GitHub branch protection — a rule the agent can't violate needs no mention |\n| 2-space indentation | **Delete** | `.editorconfig` + Prettier |\n| 4-space Python in `scripts/` | **Delete** | `.editorconfig` section + Ruff/Black (4 is their default) |\n\n**Hook vs. CI:** CI is the authoritative gate — it catches humans and agents alike, and it's the one that can actually block a merge. Reach for a Claude Code hook only when you want fast local feedback at the moment of the action, or when the rule is about steering *the agent* specifically. Branch protection and lint belong in CI; \"run the tests before you commit\" is a reasonable hook because it shortens the agent's feedback loop.\n\n**Sequencing matters:** don't delete a line until its replacement mechanism exists and is verified. Otherwise you've removed a weak control and installed nothing.\n\n## Proposed replacement\n\n```markdown\n# AGENTS.md\n\n## Overview\n\nTypeScript monorepo with three packages:\n\n- `api` — REST API on Express\n- `web` — React frontend on Vite\n- `shared` — types and utilities consumed by both; changes here affect\n  `api` and `web` together\n\n## Commands\n\n- `npm test` — full suite; also runs in CI on every PR\n- `npm run lint` — ESLint and Prettier\n- `npm run typecheck` — `tsc --noEmit` across all packages\n\n## Conventions\n\nFormatting, strict mode, commit-message format, and branch protection are\nenforced by tooling — match what the files and the linter already do rather\nthan reasoning about them here.\n\n<!-- Add judgment-call conventions below: things a competent contributor\n     could reasonably get wrong and no check will catch. For example:\n     which package a new shared type belongs in, error-handling patterns\n     in `api`, when to add an integration test vs. a unit test. -->\n```\n\nTwo notes on this draft. The **Commands** section is a guess at your script names — correct it against `package.json`. And the empty **Conventions** section is deliberate: it's the only part of the original file that was load-bearing in principle, and none of your nine rules filled it. That's the gap worth spending time on, because it's the only content a check can't replace.\n\nWant me to write the `.editorconfig`, ESLint rule, `commit-msg` hook, and CI workflow? I'd set those up first, confirm each one actually fails on a violation, then cut the corresponding lines."
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0,
+        "passRate": 0,
+        "scoreWithout": 0.5,
+        "passRateWithout": 0,
+        "delta": -0.5
+      }
+    },
+    {
+      "name": "claude-md-design",
+      "dir": "evals\\claude-md-design",
+      "source": "prose",
+      "promptMarkdown": "I'm starting a brand-new project and haven't written any instruction files\nyet. What should I put in `CLAUDE.md` versus `AGENTS.md`, and how do I keep\n`CLAUDE.md` from growing out of control as the project gets bigger?",
+      "runsPerCase": 1,
+      "timeoutSeconds": 300,
+      "maxTurns": 10,
+      "graders": [
+        {
+          "name": "skill-fires",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?compass-instruction-file\"",
+            "min": 1
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.2273465,
+            "judgeCostUsd": 0,
+            "durationSeconds": 61,
+            "startedAt": "2026-09-18T14:55:18.447Z",
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "skill-fires",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.14743699999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 42,
+            "startedAt": "2026-09-18T14:56:19.884Z",
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "skill-fires",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 0,
+        "passRateWithout": 0,
+        "delta": 1
+      }
+    },
+    {
+      "name": "unrelated-task",
+      "dir": "evals\\unrelated-task",
+      "source": "prose",
+      "promptMarkdown": "Write a Python function that computes the nth Fibonacci number iteratively,\nwith a docstring and a couple of example calls in a comment.",
+      "runsPerCase": 1,
+      "timeoutSeconds": 300,
+      "maxTurns": 10,
+      "graders": [
+        {
+          "name": "skill-does-not-fire",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?compass-instruction-file\"",
+            "min": 0,
+            "max": 0,
+            "arm": "both"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.073641,
+            "judgeCostUsd": 0,
+            "durationSeconds": 7,
+            "startedAt": "2026-09-18T14:57:02.285Z",
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "skill-does-not-fire",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.072806,
+            "judgeCostUsd": 0,
+            "durationSeconds": 9,
+            "startedAt": "2026-09-18T14:57:09.296Z",
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "skill-does-not-fire",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 1,
+        "passRateWithout": 1,
+        "delta": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 3,
+    "casesPassed": 2,
+    "overallScore": 0.6666666666666666,
+    "overallPassRate": 0.6666666666666666,
+    "meanDelta": 0.16666666666666666
+  }
+}
