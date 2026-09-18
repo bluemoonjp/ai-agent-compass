@@ -1,10 +1,19 @@
 import {
   applyBlock,
+  INSTRUCTION_FILE_SKILL_DIR,
+  INSTRUCTION_FILE_TEMPLATE_NAMES,
+  listSkillFiles,
+  parseAntipatternDetails,
+  parsePracticeDetails,
   parsePracticeRows,
+  parseSkillTopics,
   renderAuthoringTable,
   renderPracticeIndex,
   renderReadmeBlockEn,
   renderReadmeBlockJa,
+  renderReferenceFile,
+  renderTemplateReferenceReadme,
+  stripAdaptersNote,
 } from '../gen.mjs'
 
 const RULE_ID = 'generated-fresh'
@@ -64,6 +73,52 @@ export function run({ files }) {
         ruleId: `${RULE_ID}:readme-stale`,
       })
       notices.push(`${RULE_ID}: ${README_PATH} is stale — run: pnpm gen`)
+    }
+  }
+
+  const practices = parsePracticeDetails(files)
+  const antipatterns = parseAntipatternDetails(files)
+
+  // A missing target (a topic just added to metadata.topics, or a plugin
+  // scaffolded without running pnpm gen yet) is staleness too, not something
+  // to skip — files.find returns undefined, actual stays null, and null
+  // never equals a non-empty expected string.
+  for (const skillFile of listSkillFiles(files)) {
+    const skillDir = skillFile.path.slice(0, -'/SKILL.md'.length)
+    for (const topic of parseSkillTopics(skillFile)) {
+      const refPath = `${skillDir}/references/${topic}.md`
+      const refFile = files.find((f) => f.path === refPath)
+      const actual = refFile ? normalize(refFile.text) : null
+      const expected = normalize(renderReferenceFile(topic, practices, antipatterns))
+      if (actual !== expected) {
+        findings.push({ path: refPath, line: 1, ruleId: `${RULE_ID}:reference-stale` })
+        notices.push(`${RULE_ID}: ${refPath} is stale — run: pnpm gen`)
+      }
+    }
+  }
+
+  const instructionFileSkill = files.find((f) => f.path === `${INSTRUCTION_FILE_SKILL_DIR}/SKILL.md`)
+  if (instructionFileSkill) {
+    for (const name of INSTRUCTION_FILE_TEMPLATE_NAMES) {
+      const sourceFile = files.find((f) => f.path === `templates/${name}`)
+      if (!sourceFile) continue
+      const targetPath = `${INSTRUCTION_FILE_SKILL_DIR}/references/templates/${name}`
+      const targetFile = files.find((f) => f.path === targetPath)
+      const expected = normalize(stripAdaptersNote(sourceFile.text))
+      const actual = targetFile ? normalize(targetFile.text) : null
+      if (actual !== expected) {
+        findings.push({ path: targetPath, line: 1, ruleId: `${RULE_ID}:reference-template-stale` })
+        notices.push(`${RULE_ID}: ${targetPath} is stale — run: pnpm gen`)
+      }
+    }
+
+    const readmePath = `${INSTRUCTION_FILE_SKILL_DIR}/references/templates/README.md`
+    const readmeTemplateFile = files.find((f) => f.path === readmePath)
+    const actualReadme = readmeTemplateFile ? normalize(readmeTemplateFile.text) : null
+    const expectedReadme = normalize(renderTemplateReferenceReadme())
+    if (actualReadme !== expectedReadme) {
+      findings.push({ path: readmePath, line: 1, ruleId: `${RULE_ID}:reference-template-stale` })
+      notices.push(`${RULE_ID}: ${readmePath} is stale — run: pnpm gen`)
     }
   }
 

@@ -1,0 +1,18 @@
+# AGENTS.md
+
+State this project's purpose for an agent in one line.
+
+This file guides the agent; only a hook or a CI check your project runs actually enforces a rule.
+
+## Map
+
+| Path | Contents |
+| --- | --- |
+| `<path>` | `<what an agent needs to know lives here>` |
+
+## Working rules
+
+- Convert anything that must happen every time with zero exceptions into a hook instead of prose; keep everything else here minimal.
+- State one canonical rule per topic; do not leave two rules that might contradict.
+
+Strip the `.template` suffix when you copy this file into your project; place it at `AGENTS.md`, not `AGENTS.md.template`.
