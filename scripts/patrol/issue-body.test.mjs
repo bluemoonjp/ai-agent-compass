@@ -78,7 +78,7 @@ test('renderIssueBody never leaks a poisoned id, state, or url beyond their allo
     run: { openWeeklyIssues: 1, registryCheck: 'pass' },
   }
   const poisonedRegistry = {
-    sources: [{ id: 'sample-source', url: 'https://example.com/a\n| injected | row |\nC:\\Users\\victim\\secret' }],
+    sources: [{ id: 'sample-source', url: 'https://example.com/a\n| injected | row |\nsecret-token-should-not-leak' }],
   }
 
   const health = { lines: ['ok: 1 sources'], exitCode: 0 }
@@ -97,7 +97,7 @@ test('renderIssueBody never leaks a poisoned id, state, or url beyond their allo
 
   assert.ok(!body.includes('<script>'))
   assert.ok(!body.includes('injected'))
-  assert.ok(!body.includes('victim'))
+  assert.ok(!body.includes('secret-token'))
   // The poisoned url must not appear verbatim (it fails the https, no-space,
   // no-newline pattern), but the id row it belongs to must still render.
   assert.ok(!body.includes('| injected | row |'))
