@@ -27,9 +27,10 @@ Write an ADR only when deleting the decision would let someone repeat the mistak
 | `adapters/` | Tool-specific differences from the sourced practices and antipatterns |
 | `antipatterns/` | Sourced antipatterns: what to avoid and why |
 | `docs/adr/` | Architecture decision records |
-| `docs/maintain/` | Maintainer setup, authoring, and review instructions |
+| `docs/maintain/` | Maintainer setup, authoring, review, and patrol instructions |
 | `plugins/` | The Claude Code plugin this repository distributes itself as |
 | `practices/` | Sourced best practices for AI coding agents |
-| `schemas/` | JSON Schemas for practice, antipattern, and skill frontmatter |
+| `schemas/` | JSON Schemas for practice, antipattern, skill frontmatter, and the source registry |
 | `scripts/` | The check toolchain: runner, checks, and their fixtures |
+| `sources/` | The source registry and observed-state baseline the weekly patrol tracks |
 | `templates/` | Copyable starter files for another project's AGENTS.md/CLAUDE.md |
