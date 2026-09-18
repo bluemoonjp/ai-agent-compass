@@ -170,6 +170,24 @@
       "fixture": true,
       "protects": "Every plugin a marketplace entry points at must have a plugin.json whose version matches the marketplace entry (and, when COMPASS_RELEASE_TAG is set, the pushed tag) and must carry its own LICENSE/LICENSE-DOCS copies, since an install only ever copies the plugin directory, not the repository root.",
       "enforces": []
+    },
+    {
+      "id": "registry-check",
+      "script": "scripts/checks/registry-check.mjs",
+      "blocking": false,
+      "fast": true,
+      "fixture": true,
+      "protects": "sources/registry.json must validate against its JSON Schema with no duplicate anchor id, every id in sources/baseline.json must resolve to a registered anchor, every covers host must share its anchor's eTLD+1, and every non-other source host cited by practices/ and antipatterns/ must be covered by a registered anchor, since an anchor nothing approved or a host nothing tracks lets a source drift without the weekly patrol ever seeing it.",
+      "enforces": []
+    },
+    {
+      "id": "freshness-report",
+      "script": "scripts/checks/freshness-report.mjs",
+      "blocking": false,
+      "fast": true,
+      "fixture": true,
+      "protects": "Every active practice and antipattern's oldest sources[].verified_on is checked against a 180-day threshold and reported, since a source nobody has revisited in six months is exactly what the weekly patrol exists to catch.",
+      "enforces": []
     }
   ]
 }
