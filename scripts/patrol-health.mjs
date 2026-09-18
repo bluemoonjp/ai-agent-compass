@@ -4,11 +4,11 @@ import { fileURLToPath } from 'node:url'
 
 import { STALE_CHECK_DAYS, assertValidSourceState, computeRunState, daysSince } from './patrol/state.mjs'
 
-const STATE_FILENAME = 'state.json'
+const DEFAULT_STATE_PATH = 'state.json'
 
-function readState(root) {
+function readState(absPath) {
   try {
-    return JSON.parse(readFileSync(path.join(root, STATE_FILENAME), 'utf8'))
+    return JSON.parse(readFileSync(absPath, 'utf8'))
   } catch {
     return null
   }
@@ -54,8 +54,10 @@ export function evaluate(raw, { now = Date.now() } = {}) {
 }
 
 function main() {
-  const root = process.cwd()
-  const raw = readState(root)
+  const args = process.argv.slice(2)
+  const stateFlag = args.indexOf('--state')
+  const statePath = stateFlag !== -1 ? args[stateFlag + 1] : DEFAULT_STATE_PATH
+  const raw = readState(path.resolve(process.cwd(), statePath))
   const { lines, exitCode } = evaluate(raw)
   for (const line of lines) console.log(line)
   process.exit(exitCode)
