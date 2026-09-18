@@ -100,5 +100,9 @@ export async function fetchAnchor(
     bodyText,
   })
 
-  return { id: anchor.id, url: anchor.url, checkedAt: new Date(now()).toISOString().slice(0, 10), ...result }
+  // Full timestamp, not just a date: state.json is written even on a no-op
+  // week (see ADR-0006 / #34), and a date-only value would make two same-day
+  // dispatches produce byte-identical state.json, so there'd be nothing to
+  // commit on the second run.
+  return { id: anchor.id, url: anchor.url, checkedAt: new Date(now()).toISOString(), ...result }
 }

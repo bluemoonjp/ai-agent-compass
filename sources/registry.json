@@ -1,3 +1,20 @@
 {
-  "sources": []
+  "sources": [
+    {
+      "id": "control-static-rfc2119",
+      "url": "https://www.rfc-editor.org/rfc/rfc2119.txt",
+      "method": "md5",
+      "role": "control-static",
+      "tools": ["general"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19" }
+    },
+    {
+      "id": "control-changing-time",
+      "url": "https://timeapi.io/api/time/current/zone?timeZone=UTC",
+      "method": "md5",
+      "role": "control-changing",
+      "tools": ["general"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19" }
+    }
+  ]
 }
