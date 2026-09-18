@@ -1,3 +1,6 @@
 node_modules/
 .env*
 *.local.*
+# claude plugin eval's own raw output directory; a maintainer commits at
+# most one redacted result by hand, at plugins/compass/evals/results/*.json
+plugins/compass/evals/results/*/

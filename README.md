@@ -24,6 +24,8 @@ Clone this repository, then copy `templates/AGENTS.md.template` and `templates/C
 _Generated from `practices/*.md` by `pnpm gen`; do not edit this block._ **5** active practices are indexed in [`practices/index.md`](practices/index.md), licensed under [CC BY 4.0](LICENSE-DOCS).
 <!-- gen:end:how-to-use-en -->
 
+Or install `compass` as a Claude Code plugin: `/plugin marketplace add bluemoonjp/ai-agent-compass`, then `/plugin install compass@ai-agent-compass` (from a shell: `claude plugin marketplace add`/`claude plugin install`). Without a marketplace, copy a skill directory from `plugins/compass/skills/` straight into `~/.claude/skills/<name>/` instead. A third-party marketplace like this one has auto-update off by default (`/plugin` → Marketplaces to turn it on), and even with it on, `compass`'s pinned `version` only advances when that field is bumped in a release.
+
 ### Layout
 
 See the Map table in this repository's own [AGENTS.md](AGENTS.md) for what each top-level directory holds.
@@ -65,6 +67,8 @@ alpha。骨格・検査・パイロット内容は揃っています。より広
 <!-- gen:start:how-to-use-ja -->
 _`practices/*.md` から `pnpm gen` で生成。このブロックは編集しないこと。_ **5** 件の active な practice を [`practices/index.md`](practices/index.md) に索引化(ライセンス: [CC BY 4.0](LICENSE-DOCS))。
 <!-- gen:end:how-to-use-ja -->
+
+または Claude Code プラグインとして `compass` を install できます: `/plugin marketplace add bluemoonjp/ai-agent-compass` の後 `/plugin install compass@ai-agent-compass`(シェルからは `claude plugin marketplace add`/`claude plugin install`)。marketplace を使わない場合は `plugins/compass/skills/` 配下のスキルディレクトリを `~/.claude/skills/<name>/` に直接コピーしてください。このリポジトリのようなサードパーティ marketplace は既定で auto-update が無効です(`/plugin` → Marketplaces で有効化可能)。有効にした場合でも、`compass` はバージョンをピン留めしているため、リリースで `version` を上げない限り更新は反映されません。
 
 ### Layout
 
