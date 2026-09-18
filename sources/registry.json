@@ -1,6 +1,131 @@
 {
   "sources": [
     {
+      "id": "claude-code-docs-llms",
+      "url": "https://docs.claude.com/llms.txt",
+      "method": "md5",
+      "role": "source",
+      "tools": ["claude-code"],
+      "covers": [
+        {
+          "host": "platform.claude.com",
+          "reason": "docs.claude.com and platform.claude.com share the eTLD+1 claude.com; platform.claude.com is the host a practice/antipattern source cites directly"
+        }
+      ],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "claude-code-whats-new",
+      "url": "https://docs.claude.com/en/docs/claude-code/whats-new",
+      "method": "md5",
+      "role": "source",
+      "tools": ["claude-code"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "claude-code-docs-changelog",
+      "url": "https://docs.claude.com/en/docs/claude-code/changelog",
+      "method": "md5",
+      "role": "source",
+      "tools": ["claude-code"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "claude-code-changelog-raw",
+      "url": "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md",
+      "method": "etag",
+      "role": "source",
+      "tools": ["claude-code"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "agents-md-site",
+      "url": "https://agents.md/",
+      "method": "etag",
+      "role": "source",
+      "tools": ["general"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "agents-md-commits",
+      "url": "https://github.com/agentsmd/agents.md/commits/main.atom",
+      "method": "etag",
+      "role": "source",
+      "tools": ["general"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "agent-skills-llms",
+      "url": "https://agentskills.io/llms.txt",
+      "method": "md5",
+      "role": "source",
+      "tools": ["general"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "codex-llms",
+      "url": "https://developers.openai.com/codex/llms.txt",
+      "method": "md5",
+      "role": "source",
+      "tools": ["codex"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "copilot-docs-commits",
+      "url": "https://github.com/github/docs/commits/main/content/copilot.atom",
+      "method": "etag",
+      "role": "source",
+      "tools": ["copilot"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "copilot-changelog-feed",
+      "url": "https://github.blog/changelog/label/copilot/feed/",
+      "method": "etag",
+      "role": "source",
+      "tools": ["copilot"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "cursor-docs-llms",
+      "url": "https://cursor.com/docs/llms.txt",
+      "method": "md5",
+      "role": "source",
+      "tools": ["cursor"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "gemini-cli-changelog",
+      "url": "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/changelogs/latest.md",
+      "method": "etag",
+      "role": "source",
+      "tools": ["gemini-cli"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "arxiv-coding-agent",
+      "url": "https://export.arxiv.org/api/query?search_query=abs:%22coding+agent%22+AND+abs:%22context%22&sortBy=submittedDate&sortOrder=descending&max_results=5",
+      "method": "md5",
+      "role": "source",
+      "tools": ["general"],
+      "minIntervalSec": 3,
+      "covers": [
+        {
+          "host": "arxiv.org",
+          "reason": "export.arxiv.org and arxiv.org share the eTLD+1 arxiv.org; arxiv.org is the host a practice/antipattern source cites directly"
+        }
+      ],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "anthropic-engineering",
+      "url": "https://www.anthropic.com/engineering",
+      "method": "md5",
+      "role": "source",
+      "tools": ["claude-code"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
       "id": "control-static-rfc2119",
       "url": "https://www.rfc-editor.org/rfc/rfc2119.txt",
       "method": "md5",
