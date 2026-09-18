@@ -13,14 +13,16 @@ const fixturesRoot = path.join(checksDir, 'fixtures')
 const checks = loadChecksRegistry(root)
 
 // This file only exercises the generic findings>0 / findings===0 contract. A
-// check's own environment-variable-driven behavior (e.g. forbidden-patterns'
-// CI / COMPASS_PRIVATE_PATTERNS handling) is covered by that check's own
-// *.test.mjs, run as a subprocess. Neutralize both here so this file's
-// results do not depend on the environment it happens to run in.
-const savedEnv = { CI: process.env.CI, COMPASS_PRIVATE_PATTERNS: process.env.COMPASS_PRIVATE_PATTERNS }
+// check's own environment-variable-driven behavior is covered by that
+// check's own *.test.mjs. Neutralize every such variable here so this
+// file's results do not depend on the environment it happens to run in.
+const savedEnv = {
+  CI: process.env.CI,
+  COMPASS_PRIVATE_PATTERNS: process.env.COMPASS_PRIVATE_PATTERNS,
+  COMPASS_RELEASE_TAG: process.env.COMPASS_RELEASE_TAG,
+}
 before(() => {
-  delete process.env.CI
-  delete process.env.COMPASS_PRIVATE_PATTERNS
+  for (const key of Object.keys(savedEnv)) delete process.env[key]
 })
 after(() => {
   for (const [key, value] of Object.entries(savedEnv)) {

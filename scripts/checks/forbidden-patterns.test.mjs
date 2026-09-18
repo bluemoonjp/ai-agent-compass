@@ -30,7 +30,11 @@ const SECRET_PROBE = 'COMPASS_TEST_SECRET_PROBE_7XJ4MNBV'
 
 function runCli(overrides, unset = []) {
   const env = { ...process.env, ...overrides }
-  for (const key of unset) delete env[key]
+  // check.mjs runs every registered check against this repository, not only
+  // forbidden-patterns — COMPASS_RELEASE_TAG left over from a developer's
+  // shell would make release-check:tag-mismatch fire here for reasons
+  // unrelated to what this file tests.
+  for (const key of [...unset, 'COMPASS_RELEASE_TAG']) delete env[key]
   return spawnSync(process.execPath, [path.join(root, 'scripts', 'check.mjs')], {
     cwd: root,
     encoding: 'utf8',
@@ -104,6 +108,7 @@ test('--strict enforces the env var locally the same way CI does', () => {
       const env = { ...process.env }
       delete env.CI
       delete env.COMPASS_PRIVATE_PATTERNS
+      delete env.COMPASS_RELEASE_TAG
       return env
     })() },
   )
