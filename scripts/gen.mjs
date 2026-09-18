@@ -116,7 +116,7 @@ function extractH2Sections(body) {
 }
 
 function renderSourceList(sources) {
-  return (sources ?? []).filter((s) => s?.summary && s?.url).map((s) => `- ${s.summary} (${s.url})`)
+  return (sources ?? []).filter((s) => s?.summary && s?.url).map((s) => `- ${s.summary} (<${s.url}>)`)
 }
 
 // Pure: one skill's topic reference file, from that topic's active practices
@@ -135,7 +135,7 @@ export function renderReferenceFile(topic, practices, antipatterns) {
       lines.push('', `#### ${section.heading}`, '', section.content)
     }
     const sources = renderSourceList(p.sources)
-    if (sources.length > 0) lines.push('', 'Sources:', ...sources)
+    if (sources.length > 0) lines.push('', '#### Sources', '', ...sources)
   }
 
   if (relatedAntipatterns.length > 0) {
@@ -155,7 +155,7 @@ export function renderReferenceFile(topic, practices, antipatterns) {
         lines.push('', `#### ${section.heading}`, '', section.content)
       }
       const sources = renderSourceList(a.sources)
-      if (sources.length > 0) lines.push('', 'Sources:', ...sources)
+      if (sources.length > 0) lines.push('', '#### Sources', '', ...sources)
     }
   }
 

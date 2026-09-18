@@ -7,7 +7,7 @@ runs: 1
 
 Our project's `AGENTS.md` has grown unwieldy. Here is its current content:
 
-```
+```markdown
 # AGENTS.md
 
 ## Repository overview
