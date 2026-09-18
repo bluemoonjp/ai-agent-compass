@@ -3,7 +3,7 @@
     "claude-code-docs-llms": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:47.638Z",
+      "checkedAt": "2026-09-18T16:55:18.006Z",
       "http": 200,
       "md5": "df00ef9e26fcb35aebcf44816844d520",
       "bytes": 68036
@@ -11,7 +11,7 @@
     "claude-code-whats-new": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:47.737Z",
+      "checkedAt": "2026-09-18T16:55:18.160Z",
       "http": 200,
       "md5": "38af90bccc22ac85d1fdfadd8cb9a5e9",
       "bytes": 435218
@@ -19,7 +19,7 @@
     "claude-code-docs-changelog": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:47.994Z",
+      "checkedAt": "2026-09-18T16:55:18.504Z",
       "http": 200,
       "md5": "20a1307efa27a93a0937f36310ea1ebd",
       "bytes": 3564767
@@ -27,7 +27,7 @@
     "claude-code-changelog-raw": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:48.052Z",
+      "checkedAt": "2026-09-18T16:55:18.623Z",
       "http": 200,
       "etag": "W/\"879d817d9e3b28288491585e1da958814cc9ccdca54d5d1200a69f7ff341d369\"",
       "bytes": 733121
@@ -35,7 +35,7 @@
     "agents-md-site": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:48.131Z",
+      "checkedAt": "2026-09-18T16:55:18.851Z",
       "http": 200,
       "etag": "W/\"z1nbkq3dw21r0m\"",
       "bytes": 81690
@@ -43,7 +43,7 @@
     "agents-md-commits": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:48.320Z",
+      "checkedAt": "2026-09-18T16:55:19.171Z",
       "http": 200,
       "etag": "\"340679207ce9deca38e2128c45167658\"",
       "bytes": 16008
@@ -51,7 +51,7 @@
     "agent-skills-llms": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:48.916Z",
+      "checkedAt": "2026-09-18T16:55:19.701Z",
       "http": 200,
       "md5": "05c6aca7c0f5987cbb8ff0deaabe8b93",
       "bytes": 1374
@@ -59,7 +59,7 @@
     "codex-llms": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:49.184Z",
+      "checkedAt": "2026-09-18T16:55:19.902Z",
       "http": 200,
       "md5": "e9a4c1776b79ceecde8d0746f3dd8e4a",
       "bytes": 26074
@@ -67,7 +67,7 @@
     "copilot-docs-commits": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:49.391Z",
+      "checkedAt": "2026-09-18T16:55:20.167Z",
       "http": 200,
       "etag": "\"40b5b67475e8eb22b4d856379b731589\"",
       "bytes": 19265
@@ -75,15 +75,15 @@
     "copilot-changelog-feed": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:49.664Z",
+      "checkedAt": "2026-09-18T16:55:20.253Z",
       "http": 200,
-      "etag": "W/\"0276677cea200597b139b612090b6b18\"",
+      "etag": "W/\"e398dbe98b52e3e5e307a810e8522ee2\"",
       "bytes": 44319
     },
     "cursor-docs-llms": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:49.795Z",
+      "checkedAt": "2026-09-18T16:55:20.353Z",
       "http": 200,
       "md5": "7855bb90ac5f9a3378099c77a2caee0a",
       "bytes": 21678
@@ -91,7 +91,7 @@
     "gemini-cli-changelog": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:49.869Z",
+      "checkedAt": "2026-09-18T16:55:20.491Z",
       "http": 200,
       "etag": "W/\"a1b9ca465aebc18c83c4b369180ccd28bdda2e2427115327c3d9ab0317e3f903\"",
       "bytes": 3556
@@ -99,7 +99,7 @@
     "arxiv-coding-agent": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:49.991Z",
+      "checkedAt": "2026-09-18T16:55:20.767Z",
       "http": 200,
       "md5": "19ed906abfa6fcf70e76698bf6dd2241",
       "bytes": 14814
@@ -107,30 +107,30 @@
     "anthropic-engineering": {
       "role": "source",
       "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:50.133Z",
+      "checkedAt": "2026-09-18T16:55:21.265Z",
       "http": 200,
       "md5": "1202cbab4229a170dccaa1ef6cf84d97",
       "bytes": 178152
     },
     "control-static-rfc2119": {
       "role": "control-static",
-      "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:50.365Z",
+      "state": "unchanged",
+      "checkedAt": "2026-09-18T16:55:21.698Z",
       "http": 200,
       "md5": "42f1e4edffdfec8db0ac811adfd13ce1",
       "bytes": 4723
     },
     "control-changing-time": {
       "role": "control-changing",
-      "state": "no-baseline",
-      "checkedAt": "2026-09-18T16:53:50.815Z",
+      "state": "changed",
+      "checkedAt": "2026-09-18T16:55:22.514Z",
       "http": 200,
-      "md5": "c5a7659b2380ec55a26fedf2fa21bc5e",
+      "md5": "d6b4fecd5ff257f71ade655b5370320b",
       "bytes": 218
     }
   },
   "run": {
-    "openWeeklyIssues": 0,
+    "openWeeklyIssues": 1,
     "registryCheck": "pass"
   }
 }
