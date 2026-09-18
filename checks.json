@@ -152,6 +152,24 @@
       "fixture": true,
       "protects": "README.md's English and 日本語 sections must have the same number of H3 subsections, since a reader following one language must find every section the other language has.",
       "enforces": []
+    },
+    {
+      "id": "skill-shape",
+      "script": "scripts/checks/skill-shape.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "Every plugins/*/skills/*/SKILL.md and .claude/skills/*/SKILL.md must have frontmatter matching schemas/skill-frontmatter.schema.json with a name matching its own directory, a body under 500 lines, and relative links confined to its own references/ subdirectory, since a skill that grows past this shape stops being the thin, always-loaded file the runtime assumes it is.",
+      "enforces": []
+    },
+    {
+      "id": "release-check",
+      "script": "scripts/checks/release-check.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "Every plugin a marketplace entry points at must have a plugin.json whose version matches the marketplace entry (and, when COMPASS_RELEASE_TAG is set, the pushed tag) and must carry its own LICENSE/LICENSE-DOCS copies, since an install only ever copies the plugin directory, not the repository root.",
+      "enforces": []
     }
   ]
 }

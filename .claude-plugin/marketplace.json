@@ -1,0 +1,15 @@
+{
+  "name": "ai-agent-compass",
+  "description": "Sourced best practices for AI coding agents, distilled from primary sources and research.",
+  "owner": {
+    "name": "bluemoonjp"
+  },
+  "plugins": [
+    {
+      "name": "compass",
+      "source": "./plugins/compass",
+      "description": "Sourced best practices for AI coding agents, distilled from primary sources and research.",
+      "version": "0.1.0-alpha"
+    }
+  ]
+}
