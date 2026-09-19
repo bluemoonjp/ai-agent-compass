@@ -51,7 +51,12 @@ function collectSourceHosts(files) {
   const hosts = new Set()
   for (const file of files) {
     if (!CONTENT_FILE.test(path.basename(file.path))) continue
-    if (!file.path.startsWith('practices/') && !file.path.startsWith('antipatterns/')) continue
+    if (
+      !file.path.startsWith('practices/') &&
+      !file.path.startsWith('antipatterns/') &&
+      !file.path.startsWith('adapters/')
+    )
+      continue
     const match = FRONTMATTER.exec(file.text)
     if (!match) continue
     let data

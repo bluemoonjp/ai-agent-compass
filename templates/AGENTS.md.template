@@ -18,3 +18,5 @@ This file guides the agent; only a hook or a CI check your project runs actually
 Strip the `.template` suffix when you copy this file into your project; place it at `AGENTS.md`, not `AGENTS.md.template`.
 
 Before copying, check this repository's [adapters/README.md](../adapters/README.md) for tool-specific differences (Codex, Copilot, Gemini CLI, Cursor, ...). This sentence describes this repository's own layout, not yours — delete it once you copy the file.
+
+Per-tool adapters: [Codex](../adapters/0001-codex.md), [Copilot](../adapters/0002-copilot.md), [Gemini CLI](../adapters/0003-gemini-cli.md), [Cursor](../adapters/0004-cursor.md).
