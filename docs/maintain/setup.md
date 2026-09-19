@@ -100,9 +100,16 @@ matched text either. This is a safety net for what `pnpm check:paste` was
 meant to catch locally, not a replacement for running it before pasting.
 
 A pull request opened from a fork does not receive repository secrets, so
-`COMPASS_PRIVATE_PATTERNS` is unset in that run and the workflow's check
-fails closed on `forbidden-patterns:env-unset` — the same fail-closed
-behavior `check:paste` always has, just triggered by an environment this
-workflow cannot avoid. This is a known limitation, not a bug: it means a
-fork-originated PR's `check-paste` job fails every time until this
-repository's contribution path for forks is decided separately.
+`COMPASS_PRIVATE_PATTERNS` is unset in that run. `ci.yml`'s `check` job
+still fails closed on `forbidden-patterns:env-unset` in that case — this is
+intentional (ADR-0008), not a bug: it puts a fork PR into an
+owner-review-required state instead of silently skipping the check.
+`.github/workflows/fork-recheck.yml` is the maintainer's path to clear it,
+run manually via `workflow_dispatch` against the exact commit reviewed; see
+`CONTRIBUTING.md` for the contributor-facing description.
+
+`public-surface.yml`'s `check-paste` step hits the same unset variable on a
+fork PR. Since that failure means the secret was missing rather than that a
+match was found, the workflow flags it with a separate
+`needs-owner-recheck` label and comment instead of the `needs-redaction`
+one used for an actual match.
