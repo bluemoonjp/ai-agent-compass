@@ -1,0 +1,26 @@
+name: Content problem
+description: A practice, antipattern, adapter, or template is wrong, outdated, or missing a citation.
+title: "[content]: "
+labels: ["type:content"]
+body:
+  - type: input
+    id: path
+    attributes:
+      label: File path
+      description: "e.g. practices/some-practice.md"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong
+      description: The specific claim, section, or citation, and why it is wrong or outdated.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source for the correction
+      description: A link to a primary source backing the correction — this repository does not accept an uncited claim.
+    validations:
+      required: false
