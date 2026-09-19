@@ -14,7 +14,7 @@ An AI coding agent working on some other project is the primary reader; a human 
 
 ### Status
 
-alpha. The skeleton, checks, and a pilot set of content exist; broader content and tool adapters are still being built out issue by issue.
+v0.1.0. Content, checks, generation, the weekly patrol, and a distributable plugin are all in place; broader content keeps accumulating issue by issue going forward.
 
 ### How to use
 
@@ -58,7 +58,7 @@ AI コーディングエージェントのためのベストプラクティス�
 
 ### Status
 
-alpha。骨格・検査・パイロット内容は揃っています。より広い内容とツール別アダプタは Issue ごとに積んでいる途中です。
+v0.1.0。内容・検査・生成・週次巡回・配布可能なプラグインが揃っています。より広い内容は今後も Issue ごとに積み上げていきます。
 
 ### How to use
 
