@@ -7,6 +7,7 @@
   "agents-md-commits": { "etag": "\"340679207ce9deca38e2128c45167658\"", "bytes": 16008, "acceptedOn": "2026-09-19" },
   "agent-skills-llms": { "md5": "05c6aca7c0f5987cbb8ff0deaabe8b93", "bytes": 1374, "acceptedOn": "2026-09-19" },
   "codex-llms": { "md5": "e9a4c1776b79ceecde8d0746f3dd8e4a", "bytes": 26074, "acceptedOn": "2026-09-19" },
+  "codex-agents-md-chatgpt": { "md5": "e9a4c1776b79ceecde8d0746f3dd8e4a", "bytes": 26074, "acceptedOn": "2026-09-19" },
   "copilot-docs-commits": { "etag": "\"40b5b67475e8eb22b4d856379b731589\"", "bytes": 19265, "acceptedOn": "2026-09-19" },
   "copilot-changelog-feed": { "etag": "W/\"e398dbe98b52e3e5e307a810e8522ee2\"", "bytes": 44319, "acceptedOn": "2026-09-19" },
   "cursor-docs-llms": { "md5": "7855bb90ac5f9a3378099c77a2caee0a", "bytes": 21678, "acceptedOn": "2026-09-19" },
