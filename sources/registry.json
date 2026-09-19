@@ -125,6 +125,22 @@
       "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
     },
     {
+      "id": "grafana-alerting-docs",
+      "url": "https://grafana.com/docs/grafana/latest/alerting/guides/missing-data/",
+      "method": "etag",
+      "role": "source",
+      "tools": ["general"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
+      "id": "sre-google-workbook",
+      "url": "https://sre.google/workbook/monitoring/",
+      "method": "md5",
+      "role": "source",
+      "tools": ["general"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
       "id": "arxiv-coding-agent",
       "url": "https://export.arxiv.org/api/query?search_query=abs:%22coding+agent%22+AND+abs:%22context%22&sortBy=submittedDate&sortOrder=descending&max_results=5",
       "method": "md5",
