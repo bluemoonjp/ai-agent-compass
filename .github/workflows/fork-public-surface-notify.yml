@@ -1,0 +1,160 @@
+name: Fork PR public-surface notify
+
+# Second stage of the split ADR-0009 makes to public-surface.yml's
+# check-paste job: that job's GITHUB_TOKEN is forced read-only by GitHub,
+# and receives no secrets, for a pull_request run whose head is a fork or
+# one opened by Dependabot, no matter what `permissions:` it declares — so
+# it cannot run the private-pattern half of check-paste there at all, let
+# alone post about it. This workflow, woken by workflow_run, runs with a
+# normal token AND normal secret access (workflow_run is not subject to
+# either restriction), so it actually PERFORMS that check itself, against
+# the PR's current body, rather than relaying anything the first job found.
+#
+# It does not trust anything public-surface.yml's own job computed. For a
+# `pull_request` (not `pull_request_target`) trigger, GitHub runs that job
+# using the workflow FILE as it exists on the pull request's own branch, so
+# a contributor can rewrite that job's steps freely. Only this workflow's
+# own file is trustworthy: `workflow_run` always reads the subscriber's
+# file from the default branch, never from the triggering run's branch. So
+# this workflow re-derives everything itself, from data GitHub's API
+# attaches to the run rather than from anything a workflow step wrote:
+# - which PR the triggering run's commit belongs to, via the commits→pulls
+#   endpoint, keyed on that commit's SHA (github.event.workflow_run.head_sha)
+# - that PR's current source repository, author, and body, via `gh pr view`
+# - the check-paste verdict, by running this repository's own (default-
+#   branch) copy of check-paste.mjs, with the real secret, against that
+#   freshly-fetched body
+#
+# A real match (exit 1) gets needs-redaction, same as public-surface.yml's
+# own direct path. Exit 2 (the check itself could not run) is not posted
+# here at all: since this job has normal secret access, exit 2 can only
+# mean this repository's own COMPASS_PRIVATE_PATTERNS is itself broken —
+# unrelated to the PR being a fork or Dependabot PR — and public-surface.yml
+# already treats that same condition as a maintainer-side issue to notice
+# from the job log, not something to post to a PR. There is no longer a
+# "please have the owner recheck this" state for check-paste to report: the
+# recheck already happened, automatically, in this job.
+#
+# This is not pull_request_target (ADR-0008 still bars it): it never checks
+# out or executes a fork's code, only the workflow file and scripts already
+# committed to the default branch, evaluated against PR text read through
+# the API — the same shape check-paste.mjs was already built to handle
+# safely.
+
+on:
+  workflow_run:
+    workflows: ["Public surface"]
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  # Editing a PR's body/title (public-surface.yml's trigger) never changes
+  # its head commit, so two edits close together can produce two
+  # workflow_run events whose downstream jobs here race: both could read
+  # "not yet labeled" before either writes the label, each then posting its
+  # own copy of the comment. Grouping by the PR's own fork branch (stable
+  # across its whole open lifetime, unlike the resolved PR number, which
+  # this job cannot know before it runs) serializes those runs — queued,
+  # not cancelled, so the second run's own already-labeled check still sees
+  # what the first one posted.
+  group: fork-public-surface-notify-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+
+jobs:
+  notify:
+    # public-surface.yml's own M0/M1 milestone exclusion is not repeated
+    # here by name: when its job is skipped by that `if:`, the triggering
+    # run's conclusion is 'skipped', not 'success', so this condition
+    # already excludes it — an implicit dependency on that job-skip
+    # semantics rather than a duplicated milestone check.
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Resolve the open PR this run's commit belongs to
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          NUMBER=$(gh api "repos/${{ github.repository }}/commits/${HEAD_SHA}/pulls" --jq '[.[] | select(.state == "open")][0].number // empty')
+          echo "number=${NUMBER}" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch that PR's source repository, author, and body
+        id: meta
+        if: steps.pr.outputs.number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          gh pr view "${NUMBER}" --repo "${{ github.repository }}" \
+            --json author,headRepository \
+            --jq '"author=" + .author.login, "head_repo=" + .headRepository.nameWithOwner' \
+            >> "$GITHUB_OUTPUT"
+          # A PR body can contain newlines $GITHUB_OUTPUT's single-line form
+          # cannot carry safely; write it to its own file instead.
+          gh pr view "${NUMBER}" --repo "${{ github.repository }}" --json body --jq .body \
+            > "${{ runner.temp }}/pr-body.txt"
+
+      - name: Only a fork or Dependabot PR ever needed this workflow
+        # Everything above is re-derived from GitHub's own API against the
+        # triggering run's commit SHA; public-surface.yml's own job already
+        # posted directly for every other case, so repeating that here
+        # would double-post.
+        id: gate
+        if: steps.pr.outputs.number != ''
+        env:
+          HEAD_REPO: ${{ steps.meta.outputs.head_repo }}
+          AUTHOR: ${{ steps.meta.outputs.author }}
+        run: |
+          set -euo pipefail
+          NEEDED=false
+          if [ "${HEAD_REPO}" != "${{ github.repository }}" ]; then NEEDED=true; fi
+          if [ "${AUTHOR}" = "dependabot[bot]" ]; then NEEDED=true; fi
+          echo "needed=${NEEDED}" >> "$GITHUB_OUTPUT"
+
+      - name: Run check:paste against the PR's current body, with the real secret
+        id: paste
+        if: steps.gate.outputs.needed == 'true'
+        env:
+          COMPASS_PRIVATE_PATTERNS: ${{ secrets.COMPASS_PRIVATE_PATTERNS }}
+        run: |
+          set +e
+          COMPASS_PASTE_BODY="$(cat "${{ runner.temp }}/pr-body.txt")" node scripts/check-paste.mjs
+          code=$?
+          set -e
+          # 1 = a real match — see the "Flag needs-redaction" step below. 2
+          # = the check could not run (an unset/invalid COMPASS_PRIVATE_PATTERNS)
+          # despite this job having normal secret access, which makes exit 2
+          # here this repository's own secret misconfiguration rather than
+          # anything about the PR — deliberately not posted, same as
+          # public-surface.yml's own non-restricted path never posts it either.
+          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
+
+      - name: Flag needs-redaction
+        # exit code 1: check-paste found a real match. The comment body
+        # below is a fixed string chosen by this branch, never text read
+        # from the PR itself. `edited` re-fires this workflow on every edit,
+        # so the label add (idempotent on its own) also gates the comment:
+        # without that, an unfixed match would get a fresh duplicate
+        # comment on every subsequent edit instead of just the first.
+        if: steps.paste.outputs.exit_code == '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          ALREADY=$(gh api "repos/${{ github.repository }}/issues/${NUMBER}/labels" --jq '[.[].name] | index("needs-redaction") // empty')
+          gh api "repos/${{ github.repository }}/issues/${NUMBER}/labels" -f "labels[]=needs-redaction"
+          if [ -z "${ALREADY}" ]; then
+            gh api "repos/${{ github.repository }}/issues/${NUMBER}/comments" -f "body=この本文に、固有情報らしき文字列(パス・メールアドレス等)と一致する箇所が見つかりました。内容を確認し、必要なら編集または削除してください。一致した文字列や行番号はこのコメントには含めていません。"
+          fi

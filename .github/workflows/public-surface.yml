@@ -23,40 +23,63 @@ jobs:
       !startsWith(github.event.issue.milestone.title || github.event.pull_request.milestone.title || '', 'M1')
     runs-on: ubuntu-latest
     env:
-      # Computed once here so the two steps below cannot drift out of sync
-      # on what counts as a fork PR (ADR-0008).
-      IS_FORK_PR: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+      # Computed once here so the steps below cannot drift out of sync on
+      # when this run's GITHUB_TOKEN is write-capable. GitHub forces
+      # GITHUB_TOKEN read-only, no matter what `permissions:` above
+      # declares, for a `pull_request` run whose head is a fork AND for one
+      # opened by Dependabot even though Dependabot's branch lives in this
+      # same repository (ADR-0009) — this job cannot write to the PR in
+      # either case and must not try to.
+      TOKEN_RESTRICTED: >-
+        ${{
+          github.event_name == 'pull_request' &&
+          (github.event.pull_request.head.repo.full_name != github.repository ||
+           github.event.pull_request.user.login == 'dependabot[bot]')
+        }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # check-paste.mjs only reads COMPASS_PASTE_BODY (an event field),
+          # never a repository file, so there is no reason to run a fork or
+          # Dependabot PR's own copy of it. Pinning to the base branch's
+          # commit keeps this job's own script execution off contributor-
+          # controlled code (ADR-0009) — it does not, and cannot, do the
+          # same for this workflow file's own step definitions; see
+          # ADR-0009 for why the second stage never trusts anything this
+          # job computes.
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 24
       - name: Run check:paste
         id: paste
-        continue-on-error: true
         env:
           COMPASS_PASTE_BODY: ${{ github.event.comment.body || github.event.issue.body || github.event.pull_request.body }}
           COMPASS_PRIVATE_PATTERNS: ${{ secrets.COMPASS_PRIVATE_PATTERNS }}
-        run: node scripts/check-paste.mjs
+        run: |
+          set +e
+          node scripts/check-paste.mjs
+          code=$?
+          set -e
+          # 0 = clean, 1 = a real match was found, 2 = the check itself
+          # could not run (for example an unset secret) with no real match
+          # — see scripts/check-paste.mjs. The step always exits 0 itself;
+          # downstream steps branch on this output instead of on step
+          # outcome, which cannot tell those two codes apart.
+          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
       - name: Flag needs-redaction
-        # A fork PR never receives COMPASS_PRIVATE_PATTERNS (ADR-0008), so
-        # check-paste's failure there means the secret was unset, not that
-        # a match was found; that case is handled by the step below instead.
-        if: steps.paste.outcome == 'failure' && env.IS_FORK_PR != 'true'
+        # Only when the token can write directly (TOKEN_RESTRICTED != true)
+        # and only for a real match (exit 1). A fork or Dependabot run
+        # never reaches here at all — fork-public-surface-notify.yml
+        # (ADR-0009) handles those independently, since this run's token
+        # cannot write regardless of what this step's `if:` says. Exit 2
+        # here would mean this repository's own COMPASS_PRIVATE_PATTERNS
+        # secret is itself broken; that is a maintainer-side misconfiguration
+        # to notice from the job log, not something to mislabel as a match.
+        if: steps.paste.outputs.exit_code == '1' && env.TOKEN_RESTRICTED != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
         run: |
           gh api "repos/${{ github.repository }}/issues/${NUMBER}/labels" -f "labels[]=needs-redaction"
           gh api "repos/${{ github.repository }}/issues/${NUMBER}/comments" -f "body=この本文に、固有情報らしき文字列(パス・メールアドレス等)と一致する箇所が見つかりました。内容を確認し、必要なら編集または削除してください。一致した文字列や行番号はこのコメントには含めていません。"
-      - name: Flag needs-owner-recheck (fork PR)
-        # Same check-paste failure, but on a fork PR it is caused by the
-        # missing secret (ADR-0008), not by an actual match — this step
-        # states that instead of the (false, in this case) message above.
-        if: steps.paste.outcome == 'failure' && env.IS_FORK_PR == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          gh api "repos/${{ github.repository }}/issues/${NUMBER}/labels" -f "labels[]=needs-owner-recheck"
-          gh api "repos/${{ github.repository }}/issues/${NUMBER}/comments" -f "body=このプルリクエストは fork から作成されているため、自動の私的パターン検査(private-pattern check)を実行できませんでした(見つかった、ではありません)。メンテナがレビュー後に手動で再実行します。"
