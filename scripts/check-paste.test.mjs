@@ -53,6 +53,19 @@ test('a clean body exits 0', () => {
   assert.equal(result.status, 0)
 })
 
+test('COMPASS_PRIVATE_PATTERNS unset with no other match exits 2, not 1', () => {
+  const result = runCheckPaste('nothing sensitive in this comment', { COMPASS_PRIVATE_PATTERNS: '' })
+  assert.equal(result.status, 2)
+  assert.match(result.stdout, /forbidden-patterns:env-unset/)
+})
+
+test('a real match alongside an unset COMPASS_PRIVATE_PATTERNS still exits 1', () => {
+  const result = runCheckPaste(`here is a path: ${FAKE_WINDOWS_PATH}`, { COMPASS_PRIVATE_PATTERNS: '' })
+  assert.equal(result.status, 1)
+  assert.match(result.stdout, /forbidden-patterns:windows-profile-path/)
+  assert.match(result.stdout, /forbidden-patterns:env-unset/)
+})
+
 test('never leaks the matched string or the private pattern value', () => {
   const result = runCheckPaste(`secret: ${SECRET_PATTERN}, path: ${FAKE_WINDOWS_PATH}`)
   assert.equal(result.status, 1)

@@ -109,7 +109,30 @@ run manually via `workflow_dispatch` against the exact commit reviewed; see
 `CONTRIBUTING.md` for the contributor-facing description.
 
 `public-surface.yml`'s `check-paste` step hits the same unset variable on a
-fork PR. Since that failure means the secret was missing rather than that a
-match was found, the workflow flags it with a separate
-`needs-owner-recheck` label and comment instead of the `needs-redaction`
-one used for an actual match.
+fork or Dependabot PR (Dependabot's `pull_request` runs get the same
+read-only `GITHUB_TOKEN` and no secrets, even though its branch lives in
+this repository). `check-paste.mjs` exits 2 for that (the check could not
+run) and 1 when it actually found a match, even alongside the unset
+variable — see `scripts/check-paste.mjs`. That job's `GITHUB_TOKEN` is
+read-only regardless of the workflow's declared `permissions:` in either
+case, so it cannot post a label there and does not try to; for a
+same-repository, non-Dependabot run the token is never restricted, and that
+job keeps posting `needs-redaction` directly on a real match (exit 1).
+
+For a fork or Dependabot run, `fork-public-surface-notify.yml` (triggered
+by `workflow_run` once `public-surface.yml` finishes, with a token *and*
+secret access that are not fork- or Dependabot-restricted) independently
+looks up the PR from the run's commit SHA, fetches its current body, and
+runs `check-paste.mjs` against it itself, with the real
+`COMPASS_PRIVATE_PATTERNS` — it does not reuse anything `check-paste`'s job
+computed, since that job's own step definitions run from the contributor's
+branch for a `pull_request` trigger and cannot be trusted the way
+`pull_request_target` would forbid anyway. A real match (exit 1) gets
+`needs-redaction`, same wording as the direct path. Exit 2 is not posted:
+since this job has the real secret, it can only mean this repository's own
+`COMPASS_PRIVATE_PATTERNS` is broken, not that the PR is a fork or from
+Dependabot — the same maintainer-side condition the direct path already
+leaves to the job log rather than a PR comment. There is no
+`needs-owner-recheck` label from this path any more: the check that label
+used to ask a maintainer to redo now runs automatically instead. See
+ADR-0009.

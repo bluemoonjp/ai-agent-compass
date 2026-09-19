@@ -1,6 +1,6 @@
 # ADR-0008: External contributions open; a fork PR's private-pattern stage stays fail-closed until an owner reruns it via workflow_dispatch
 
-Status: accepted
+Status: amended by ADR-0009
 
 Issue: #46
 Date: 2026-09-19
@@ -64,7 +64,10 @@ branch, with no human step in between. This repository does not use it.
   a comment that states the actual reason. This changes only the
   workflow's reaction to `check-paste`'s exit code — `forbidden-patterns.mjs`
   keeps the single fail-closed behavior ADR-0002 gave it, unweakened,
-  everywhere else it runs.
+  everywhere else it runs. (ADR-0009 removes the "Flag needs-owner-recheck"
+  step entirely: a second workflow now performs the check itself, with the
+  real secret, instead of asking a maintainer to. The reaction described
+  here no longer matches what runs.)
 - Issue Forms become mandatory: `.github/ISSUE_TEMPLATE/config.yml` sets
   `blank_issues_enabled: false`, backed by a "Bug report" and a "Content
   problem" form.
