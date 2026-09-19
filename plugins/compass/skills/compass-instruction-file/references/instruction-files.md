@@ -243,4 +243,105 @@ Treat an LLM-generated context file as a draft that a maintainer edits before it
 - A controlled study found LLM-generated context files caused performance drops in most of the settings tested, with neither benchmark's drop reaching statistical significance, while inference cost rose by more than 20% on average. (<https://arxiv.org/abs/2602.11988>)
 - The same study found developer-provided context files significantly outperformed the LLM-generated ones, unlike the LLM-generated files' own null effect against having no context file at all. (<https://arxiv.org/abs/2602.11988>)
 
+### 0004: An environment-variable opt-in instruction that outlived its default
+
+Rule: Do not keep an instruction to set an env var opting into a behavior after the tool made it default for that platform; check whether the variable's meaning has since flipped to opt-out.
+
+Classification: obsolete
+
+Applies to: claude-code
+
+#### What we did
+
+An instruction file told the agent to set `CLAUDE_CODE_USE_POWERSHELL_TOOL=1` on Windows so the PowerShell tool would be available immediately, because at the time the tool was only progressively rolling out and not every account had it yet.
+
+#### Why it worked
+
+During the rollout, explicitly setting the variable was a way to guarantee the tool was available rather than waiting on whatever automatic timeline applied to that account, so the instruction was genuinely useful for anyone who wanted the tool right away.
+
+#### What changed
+
+A later release made the PowerShell tool default-on for Windows users on Bedrock, Vertex, and Foundry, and repurposed the same variable as an opt-out (`=0` to disable) for that population instead. An instruction that still says "set it to 1 to enable" is now vestigial there — harmless, since setting an opt-out variable to 1 is a no-op, but pointless, and it misdescribes what the variable currently does. The instruction is not vestigial everywhere: the source shows the default-on change scoped to Windows Bedrock/Vertex/Foundry specifically, so the same instruction may still be live and useful for a different platform or provider, and even within that rollout the changelog itself calls it progressive — two accounts on the same platform and provider could have reached the default at different times, so no single date cleanly separates "still needed" from "vestigial" for everyone.
+
+#### What to do now
+
+Before keeping an environment-variable opt-in instruction, check the tool's current changelog for whether that specific platform and provider combination's default has since changed, rather than assuming an instruction that was once necessary still is — but check against the changelog for the version the project is actually pinned to, not always the latest one; a project intentionally running an older release may still need the older instruction regardless of what a newer changelog says. When the pinned version's own history shows the default has changed, delete the instruction rather than leaving a now-inert variable assignment in place.
+
+#### Sources
+
+- Claude Code's own changelog (v2.1.111) documents the PowerShell tool as progressively rolling out to Windows users, with the CLAUDE_CODE_USE_POWERSHELL_TOOL environment variable available to opt in or out during that rollout. (<https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md>)
+- A later changelog entry (v2.1.143) documents the same variable's meaning changing for one platform and provider combination, the PowerShell tool became default-on for Windows Bedrock, Vertex, and Foundry users, and the variable switched to an opt-out, set to 0 to disable. (<https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md>)
+
+### 0005: The same reference table hand-maintained in two documents
+
+Rule: Do not hand-maintain the same table, checklist, or reference list in two separate documents; keep it in one place and generate or reference the second copy from it.
+
+Classification: harmful
+
+Applies to: general
+
+#### Symptom
+
+A checklist, a configuration reference, or a table of commands that must always match appears twice — once in a README or onboarding doc, once in an instruction file — each maintained by hand, with no indication which copy is authoritative.
+
+#### Cause
+
+The second copy usually starts as a convenience: someone writing the instruction file wants the same information the README already has, and pasting it in is faster than linking to it or wiring up a generator. Each copy is correct the day it's written; nothing then keeps them in sync when one changes. This is a different situation from two tables that merely look alike today because they track related but independently-governed facts — a "supported" list and a "tested" list can coincide now and still be allowed to diverge later; forcing those into one source would remove a distinction the two tables exist to keep.
+
+#### Remedy
+
+Keep the content in one file and have the other reference or generate from it, rather than retype it. GitHub's own documentation-contribution guide describes exactly this mechanism for its own docs: a shared piece of content — explicitly including a procedural list, the same shape as a checklist — is stored once as a reusable and referenced from every page that needs it, instead of copied into each one by hand. The same reasoning that argues for one canonical rule per topic applies to a table that must always agree with its other copy: two hand-maintained copies of one fact aren't a redundancy that's merely wasteful, they're a standing opportunity for one to drift and go uncorrected while the other is updated.
+
+#### Sources
+
+- GitHub's own documentation-contribution guide describes a mechanism for storing a repeated paragraph or procedural list once, as a single reusable file, and referencing it from every page that needs it, instead of retyping the same content into each one by hand. (<https://docs.github.com/en/contributing/writing-for-github-docs/creating-reusable-content>)
+
+### 0007: A generated record nothing ever reads back
+
+Rule: Do not add a log, state file, or exported metric before deciding what will actually consume it; a record with no reader is maintenance cost with no offsetting benefit.
+
+Classification: harmful
+
+Applies to: general
+
+#### Symptom
+
+A pipeline writes a log file, a state record, or an exported metric that no dashboard displays, no alert reads, no later step in the pipeline consumes, and no one — not even an infrequent human reader such as an on-call engineer during a future incident, or a compliance reviewer — was ever going to read; it exists because writing it looked like good practice, not because any of those readers, automated or human, actually needs it.
+
+#### Cause
+
+Emitting a record is cheap and looks like diligence: more logging, more state, more metrics all read as more observability, so it's easy to add one without first confirming who or what will read it back. Nothing forces the check, since the record's absence wouldn't break anything either — the cost is diffuse (a little more to maintain, a little more noise to search through) rather than a failure anyone notices. This is different from a record kept deliberately for a reader who is expected to be rare — a postmortem log meant to sit unread until an incident, or a record kept solely to satisfy a retention requirement — where the absence of daily readers was the plan, not an oversight.
+
+#### Remedy
+
+Decide what will consume a record before writing it, not after. The Google SRE Workbook's own monitoring guidance states this directly for metrics: resist exporting one just because it's easy to generate, and think about how it will actually be used first. The same discipline applies to any generated record — a log, a state file, a report — that isn't a metric: if nothing, human or automated, was ever going to read it back, it isn't documentation of anything, it's just another file to keep consistent with a system that has moved on. This is the same "would removing this cause a mistake" test the sibling practice on keeping always-loaded instructions minimal applies to a line of prose, generalized past that practice's own context-budget reasoning to any artifact a project keeps: if no reader was ever decided on, removing the record costs nothing, which is the test for whether it belonged in the first place.
+
+#### Sources
+
+- The Google SRE Workbook's monitoring chapter instructs engineers to resist exporting a metric just because it's easy to generate, and to instead think about how each metric will actually be used before adding it. (<https://sre.google/workbook/monitoring/>)
+
+### 0008: Appending notes to a growing section instead of editing in place
+
+Rule: Do not append a new note to an Addendum or Updates section of a living instruction file; edit the relevant section in place so the file states one current answer, not accumulated layered ones.
+
+Classification: harmful
+
+Applies to: general
+
+#### Symptom
+
+An instruction file has an "Addendum" or "Updates" heading that keeps growing — each edit adds one more note at the bottom instead of changing the relevant section directly, so old and new guidance sit side by side with no indication which one still applies. This is a different thing from a genuinely versioned migration guide, where sections conditioned on a version number ("if you're on v1, do X; on v2, do Y") stay because readers on different versions still need different answers — that isn't accumulated confusion, it's current guidance for more than one audience.
+
+#### Cause
+
+Appending feels safer than editing: the original text stays intact, and adding a note at the end is a smaller, more reviewable diff than rewriting a paragraph in place. Each individual addition looks reasonable on its own; nothing about any single edit forces revisiting whether the growing section still reads as one coherent instruction.
+
+#### Remedy
+
+Edit the relevant section directly instead of appending a note elsewhere in the file. An empirical study of 2,303 agent context files across 1,925 repositories found that these files evolve through exactly this pattern of frequent, small additions, and warns that the growth risks turning them into unstructured append-only logs — its own recommendation is not to avoid a changelog altogether, but to apply semantic versioning and keep a separate, deliberately maintained changelog artifact rather than letting undated notes accumulate inside the instructions themselves. The distinction that matters is between a dedicated, structured changelog kept apart from current guidance, and an in-place pile of notes that an agent has to sort through to find which one still applies at the moment it acts; only a single, current statement in the relevant section answers that, the same reasoning that argues for one canonical rule per topic rather than several that might disagree.
+
+#### Sources
+
+- An empirical study of 2,303 agent context files across 1,925 repositories found these files evolve through frequent, small additions, risking unstructured append-only logs unless developers apply versioning and keep a separate changelog. (<https://arxiv.org/pdf/2511.12884v2>)
+
 This file's content is drawn from `practices/` and `antipatterns/`, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

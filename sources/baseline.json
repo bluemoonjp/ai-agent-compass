@@ -13,6 +13,8 @@
   "cursor-docs-llms": { "md5": "7855bb90ac5f9a3378099c77a2caee0a", "bytes": 21678, "acceptedOn": "2026-09-19" },
   "gemini-cli-changelog": { "etag": "W/\"a1b9ca465aebc18c83c4b369180ccd28bdda2e2427115327c3d9ab0317e3f903\"", "bytes": 3556, "acceptedOn": "2026-09-19" },
   "chroma-context-rot": { "etag": "\"4810b7314f99400fb0420490d2855289\"", "bytes": 269388, "acceptedOn": "2026-09-19" },
+  "grafana-alerting-docs": { "etag": "W/\"6aade20d-e88f\"", "bytes": 345874, "acceptedOn": "2026-09-19" },
+  "sre-google-workbook": { "md5": "da365def2b160425f128ee54a1e3389d", "bytes": 49455, "acceptedOn": "2026-09-19" },
   "arxiv-coding-agent": { "md5": "19ed906abfa6fcf70e76698bf6dd2241", "bytes": 14814, "acceptedOn": "2026-09-19" },
   "anthropic-engineering": { "md5": "1202cbab4229a170dccaa1ef6cf84d97", "bytes": 178152, "acceptedOn": "2026-09-19" }
 }
