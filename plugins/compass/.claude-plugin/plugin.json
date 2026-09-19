@@ -1,6 +1,6 @@
 {
   "name": "compass",
-  "version": "0.1.0-alpha",
+  "version": "0.1.0",
   "description": "Sourced best practices for AI coding agents, distilled from primary sources and research.",
   "license": "MIT",
   "author": {
