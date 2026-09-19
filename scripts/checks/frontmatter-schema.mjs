@@ -34,11 +34,13 @@ const ANTIPATTERN_H2 = new Set([
 
 // A generated file such as practices/index.md lives under practices/ but is
 // not itself a practice instance — only a file whose basename matches the
-// numbered-id shape is.
+// numbered-id shape is. An adapter file reuses the practice schema and
+// heading set verbatim — it is a practice-shaped file scoped to one tool.
 function kindOf(filePath) {
   if (!FILENAME_ID.test(path.basename(filePath))) return null
   if (filePath.startsWith('practices/')) return 'practice'
   if (filePath.startsWith('antipatterns/')) return 'antipattern'
+  if (filePath.startsWith('adapters/')) return 'adapter'
   return null
 }
 
@@ -60,6 +62,9 @@ export function run({ files }) {
     const m = FILENAME_ID.exec(path.basename(file.path))
     if (m) practiceIds.add(m[1])
   }
+  // adapters/ ids and practices/ ids both start counting from 0001; keeping
+  // adapters out of practiceIds means an antipattern's relates_to can never
+  // accidentally resolve against an adapter file of the same number.
 
   for (const file of targetFiles) {
     const kind = kindOf(file.path)
@@ -78,7 +83,7 @@ export function run({ files }) {
       continue
     }
 
-    const validate = kind === 'practice' ? validatePractice : validateAntipattern
+    const validate = kind === 'antipattern' ? validateAntipattern : validatePractice
     if (!validate(data)) {
       findings.push({ path: file.path, line: 1, ruleId: `${RULE_ID}:schema` })
     }
@@ -89,7 +94,7 @@ export function run({ files }) {
       findings.push({ path: file.path, line: 1, ruleId: `${RULE_ID}:id-filename-mismatch` })
     }
 
-    const allowedH2 = kind === 'practice' ? PRACTICE_H2 : ANTIPATTERN_H2
+    const allowedH2 = kind === 'antipattern' ? ANTIPATTERN_H2 : PRACTICE_H2
     for (const heading of extractH2s(body)) {
       if (!allowedH2.has(heading)) {
         findings.push({ path: file.path, line: 1, ruleId: `${RULE_ID}:unknown-heading` })

@@ -33,7 +33,7 @@
       "blocking": true,
       "fast": true,
       "fixture": true,
-      "protects": "Every practice and antipattern file's frontmatter must validate against its JSON Schema, its id must match its file name, and its body may only use the fixed set of H2 headings for its kind, since ungoverned metadata is what lets a single unsupported claim, an uncited quote, or a dangling relates_to pass as settled guidance.",
+      "protects": "Every practice, antipattern, and adapter file's frontmatter must validate against its JSON Schema, its id must match its file name, and its body may only use the fixed set of H2 headings for its kind, since ungoverned metadata is what lets a single unsupported claim, an uncited quote, or a dangling relates_to pass as settled guidance.",
       "enforces": []
     },
     {
@@ -186,7 +186,7 @@
       "blocking": true,
       "fast": true,
       "fixture": true,
-      "protects": "sources/registry.json must validate against its JSON Schema with no duplicate anchor id, every id in sources/baseline.json must resolve to a registered anchor, every covers host must share its anchor's eTLD+1, and every non-other source host cited by practices/ and antipatterns/ must be covered by a registered anchor, since an anchor nothing approved or a host nothing tracks lets a source drift without the weekly patrol ever seeing it.",
+      "protects": "sources/registry.json must validate against its JSON Schema with no duplicate anchor id, every id in sources/baseline.json must resolve to a registered anchor, every covers host must share its anchor's eTLD+1, and every non-other source host cited by practices/, antipatterns/, and adapters/ must be covered by a registered anchor, since an anchor nothing approved or a host nothing tracks lets a source drift without the weekly patrol ever seeing it.",
       "enforces": []
     },
     {
