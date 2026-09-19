@@ -17,7 +17,7 @@
       "id": "false-premise",
       "scope": ["practices/**", "templates/**", "adapters/**", "plugins/**/SKILL.md", "AGENTS.md", "CLAUDE.md"],
       "excludeIfMatches": ["\\b(not|no|did ?n['o]t)\\b"],
-      "patterns": ["138 (repos|repositories)"]
+      "patterns": ["138 (repos|repositories)", "LLM-generated.{0,80}(lowers|reduces).{0,80}success"]
     },
     {
       "id": "single-canon",

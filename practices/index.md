@@ -17,5 +17,9 @@ Generated from `practices/*.md` by `pnpm gen`; do not edit.
 | 0011 | For most Claude Code hook events, only exit code 2 blocks the action; exit code 0 or 1 both let it proceed to the normal permission flow, which can still deny it on its own. | hooks-permissions | claude-code | 2026-09-19 |
 | 0012 | Do not assume a model uses its full context window uniformly; treat added context as a cost that can lower reliability on its own, and keep loaded context small regardless of the window's rated size. | context | general | 2026-09-19 |
 | 0013 | After /compact, only the root CLAUDE.md is guaranteed to re-inject; a nested CLAUDE.md or path-scoped rule re-injects only once its trigger fires again, and a conversation-only note does not. | context | claude-code | 2026-09-19 |
+| 0014 | Do not assume a repository-level context file only affects correctness; a controlled comparison found its presence associated with lower runtime and token cost, at comparable task completion. | evidence | general | 2026-09-19 |
+| 0015 | Do not trust an unverified claim that an instruction file's size, position, or structure changes compliance; a factorial study found none of 4 such structural variables had a detectable effect. | verification-review | general | 2026-09-19 |
+| 0016 | Do not assume improving repository guidance makes an agent's individual fixes better; one study found it raised coverage with precision unchanged on a capable model, while hurting a weaker model. | evidence | general | 2026-09-19 |
+| 0017 | Do not assume a context file covers non-functional requirements just because it covers functional ones; a study found security/performance guidance in roughly 1 in 7 files, versus most for tests. | evidence | general | 2026-09-19 |
 
 This table's content is drawn from `practices/`, licensed under [CC BY 4.0](../LICENSE-DOCS).
