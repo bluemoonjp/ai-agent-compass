@@ -60,7 +60,16 @@
       "blocking": true,
       "fast": true,
       "fixture": true,
-      "protects": "Practice, template, adapter, plugin SKILL.md, AGENTS.md, and CLAUDE.md bodies must not narrate their own history or restate a known false premise, since prose that records how a rule changed decays the moment it changes again.",
+      "protects": "Practice, template, adapter, plugin SKILL.md, AGENTS.md, and CLAUDE.md bodies must not narrate their own history or present two sides where only one canonical answer belongs, since prose that records how a rule changed decays the moment it changes again.",
+      "enforces": []
+    },
+    {
+      "id": "no-false-premises",
+      "script": "scripts/checks/no-false-premises.mjs",
+      "blocking": true,
+      "fast": true,
+      "fixture": true,
+      "protects": "Practice, template, adapter, plugin SKILL.md, AGENTS.md, and CLAUDE.md bodies must not restate a known false premise, such as a misremembered study figure or an overstated research finding, since a plausible-sounding misstatement spreads exactly like an accurate one once it is written down.",
       "enforces": []
     },
     {
