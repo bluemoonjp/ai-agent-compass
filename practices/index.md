@@ -14,5 +14,8 @@ Generated from `practices/*.md` by `pnpm gen`; do not edit.
 | 0008 | Treat instruction files as context with no guarantee of compliance; a requirement that must hold with zero exceptions belongs in a hook, a permission rule, or an external gate such as CI, not prose. | instruction-files | claude-code | 2026-09-19 |
 | 0009 | Write a SKILL.md's description in the third person, stating both what the skill does and when to use it; it is the free-text field in what Claude pre-loads before deciding whether to load the skill. | skills | claude-code, general | 2026-09-19 |
 | 0010 | Keep each CLAUDE.md file under roughly 200 lines; once it grows past that, move directory- or file-type-specific content into path-scoped rules instead of continuing to grow the always-loaded file. | instruction-files | claude-code | 2026-09-19 |
+| 0011 | For most Claude Code hook events, only exit code 2 blocks the action; exit code 0 or 1 both let it proceed to the normal permission flow, which can still deny it on its own. | hooks-permissions | claude-code | 2026-09-19 |
+| 0012 | Do not assume a model uses its full context window uniformly; treat added context as a cost that can lower reliability on its own, and keep loaded context small regardless of the window's rated size. | context | general | 2026-09-19 |
+| 0013 | After /compact, only the root CLAUDE.md is guaranteed to re-inject; a nested CLAUDE.md or path-scoped rule re-injects only once its trigger fires again, and a conversation-only note does not. | context | claude-code | 2026-09-19 |
 
 This table's content is drawn from `practices/`, licensed under [CC BY 4.0](../LICENSE-DOCS).
