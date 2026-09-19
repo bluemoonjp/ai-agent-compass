@@ -14,7 +14,8 @@
     "gen": "node scripts/gen.mjs",
     "check:paste": "node scripts/check-paste.mjs",
     "patrol": "node scripts/patrol.mjs",
-    "patrol:health": "node scripts/patrol-health.mjs"
+    "patrol:health": "node scripts/patrol-health.mjs",
+    "patrol:review-list": "node scripts/patrol-review-list.mjs"
   },
   "devDependencies": {
     "ajv": "8.17.1",
