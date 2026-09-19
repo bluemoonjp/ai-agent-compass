@@ -1,0 +1,30 @@
+name: Bug report
+description: A check, script, or GitHub Actions workflow in this repository does not do what it claims to.
+title: "[bug]: "
+labels: ["type:bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a problem in the *content* of a practice, antipattern, adapter, or template, use "Content problem" instead.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you ran, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: The exact command(s), and the file(s) involved if relevant.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Node version (`node -v`), pnpm version (`pnpm -v`).
+    validations:
+      required: false

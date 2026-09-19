@@ -22,6 +22,10 @@ jobs:
       !startsWith(github.event.issue.milestone.title || github.event.pull_request.milestone.title || '', 'M0') &&
       !startsWith(github.event.issue.milestone.title || github.event.pull_request.milestone.title || '', 'M1')
     runs-on: ubuntu-latest
+    env:
+      # Computed once here so the two steps below cannot drift out of sync
+      # on what counts as a fork PR (ADR-0008).
+      IS_FORK_PR: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -35,10 +39,24 @@ jobs:
           COMPASS_PRIVATE_PATTERNS: ${{ secrets.COMPASS_PRIVATE_PATTERNS }}
         run: node scripts/check-paste.mjs
       - name: Flag needs-redaction
-        if: steps.paste.outcome == 'failure'
+        # A fork PR never receives COMPASS_PRIVATE_PATTERNS (ADR-0008), so
+        # check-paste's failure there means the secret was unset, not that
+        # a match was found; that case is handled by the step below instead.
+        if: steps.paste.outcome == 'failure' && env.IS_FORK_PR != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
         run: |
           gh api "repos/${{ github.repository }}/issues/${NUMBER}/labels" -f "labels[]=needs-redaction"
           gh api "repos/${{ github.repository }}/issues/${NUMBER}/comments" -f "body=この本文に、固有情報らしき文字列(パス・メールアドレス等)と一致する箇所が見つかりました。内容を確認し、必要なら編集または削除してください。一致した文字列や行番号はこのコメントには含めていません。"
+      - name: Flag needs-owner-recheck (fork PR)
+        # Same check-paste failure, but on a fork PR it is caused by the
+        # missing secret (ADR-0008), not by an actual match — this step
+        # states that instead of the (false, in this case) message above.
+        if: steps.paste.outcome == 'failure' && env.IS_FORK_PR == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh api "repos/${{ github.repository }}/issues/${NUMBER}/labels" -f "labels[]=needs-owner-recheck"
+          gh api "repos/${{ github.repository }}/issues/${NUMBER}/comments" -f "body=このプルリクエストは fork から作成されているため、自動の私的パターン検査(private-pattern check)を実行できませんでした(見つかった、ではありません)。メンテナがレビュー後に手動で再実行します。"

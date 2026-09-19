@@ -1,0 +1,110 @@
+name: Fork PR recheck
+
+# Owner-only path to run `pnpm check` (with COMPASS_PRIVATE_PATTERNS)
+# against a single, already-reviewed commit from a pull request whose head
+# is a fork. The regular `check` job in ci.yml cannot do this itself:
+# GitHub Actions never sends repository secrets to a `pull_request`
+# -triggered run when the head is a fork, so that job's private-pattern
+# stage fails closed on every fork PR by design (see ADR-0002, ADR-0008).
+# This workflow never uses pull_request_target (ADR-0008) — only an
+# explicit workflow_dispatch run, naming the exact reviewed commit, can
+# reach the secret.
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number to recheck"
+        required: true
+      head_sha:
+        description: "Exact head commit SHA you reviewed (must still be the PR's current head)"
+        required: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: fork-recheck-${{ github.event.inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  recheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ github.event.inputs.pr_number }}/head
+          fetch-depth: 0
+          # The commit checked out here is the reviewed fork commit, not
+          # this repository's own code — persist-credentials defaults to
+          # true and would leave GITHUB_TOKEN (pull-requests: write)
+          # readable from .git/config while that commit's own
+          # scripts/install hooks run below with COMPASS_PRIVATE_PATTERNS
+          # present. Nothing in this job pushes, so it is not needed.
+          persist-credentials: false
+
+      - name: Confirm the PR head has not moved since review
+        env:
+          EXPECTED_SHA: ${{ github.event.inputs.head_sha }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          ACTUAL_SHA=$(git rev-parse HEAD)
+          if [ "$ACTUAL_SHA" != "$EXPECTED_SHA" ]; then
+            echo "PR #${PR_NUMBER}'s head is now ${ACTUAL_SHA}, not the reviewed ${EXPECTED_SHA}."
+            echo "Re-review the new commit(s) and dispatch again with the new SHA."
+            exit 1
+          fi
+
+      - name: Resolve the PR's base commit
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          BASE_SHA=$(gh pr view "${PR_NUMBER}" --repo "${{ github.repository }}" --json baseRefOid --jq .baseRefOid)
+          echo "base_sha=${BASE_SHA}" >> "$GITHUB_OUTPUT"
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: pnpm check
+        id: check
+        continue-on-error: true
+        run: pnpm check
+        env:
+          COMPASS_PRIVATE_PATTERNS: ${{ secrets.COMPASS_PRIVATE_PATTERNS }}
+          COMPASS_BASE_SHA: ${{ steps.pr.outputs.base_sha }}
+          COMPASS_HEAD_SHA: ${{ github.event.inputs.head_sha }}
+
+      - name: Record the outcome on the PR
+        # Only when pnpm check actually ran (steps.check.outcome is
+        # 'success' or 'failure'). If an earlier step aborted the job (for
+        # example the head-mismatch guard above), steps.check.outcome is
+        # empty, not 'failure' — posting the "failed" wording in that case
+        # would misreport a skipped check as a failed one.
+        if: steps.check.outcome == 'success' || steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+          HEAD_SHA: ${{ github.event.inputs.head_sha }}
+          OUTCOME: ${{ steps.check.outcome }}
+        run: |
+          set -euo pipefail
+          if [ "${OUTCOME}" = "success" ]; then
+            BODY="Owner recheck: \`pnpm check\` (with \`COMPASS_PRIVATE_PATTERNS\`) passed against ${HEAD_SHA}."
+          else
+            BODY="Owner recheck: \`pnpm check\` (with \`COMPASS_PRIVATE_PATTERNS\`) failed against ${HEAD_SHA}; see this workflow run's log."
+          fi
+          gh pr comment "${PR_NUMBER}" --repo "${{ github.repository }}" --body "${BODY}"
+
+      - name: Fail the job if the recheck failed
+        if: steps.check.outcome != 'success'
+        run: exit 1
