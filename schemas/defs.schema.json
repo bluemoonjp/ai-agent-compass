@@ -7,7 +7,7 @@
     },
     "topic": {
       "description": "Closed enum. Its initial values are the pilot content's topics only (#15); widen it only alongside content that uses the new value.",
-      "enum": ["instruction-files", "docs"]
+      "enum": ["instruction-files", "docs", "skills"]
     },
     "appliesTo": {
       "enum": ["claude-code", "codex", "copilot", "gemini-cli", "cursor", "general"]

@@ -71,11 +71,25 @@
       "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
     },
     {
+      "id": "codex-agents-md-chatgpt",
+      "url": "https://learn.chatgpt.com/docs/llms.txt",
+      "method": "md5",
+      "role": "source",
+      "tools": ["codex"],
+      "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
+    },
+    {
       "id": "copilot-docs-commits",
       "url": "https://github.com/github/docs/commits/main/content/copilot.atom",
       "method": "etag",
       "role": "source",
       "tools": ["copilot"],
+      "covers": [
+        {
+          "host": "docs.github.com",
+          "reason": "github.com and docs.github.com share the eTLD+1 github.com; docs.github.com is the host a practice/antipattern source cites directly"
+        }
+      ],
       "approval": { "decidedBy": "human", "on": "2026-09-19", "probe": { "on": "2026-09-19", "volatile": false } }
     },
     {
