@@ -55,4 +55,28 @@ Two things to watch operationally:
 
 ## Rehearsal record
 
-Unconfirmed as of this page's last edit: pending a rehearsal dispatch.
+Dispatched 2026-09-21 against pull request #116, `head_sha`
+`5c1ee95d1c0890941172757211d29877798245bf`.
+
+- `fork-recheck.yml` run 35618603711 completed with conclusion `success`.
+  Its "Confirm the PR head has not moved since review" step ran and passed
+  (the guard was not skipped or bypassed).
+- The `pnpm check` step's env showed `COMPASS_PRIVATE_PATTERNS: ***`
+  (masked, confirming the secret was present, not withheld) and the run's
+  own log showed `commits checked: 4` (not zero) and `all checks passed`.
+- The workflow posted its comment on the PR — the durable record ADR-0008
+  refers to — at
+  <https://github.com/bluemoonjp/ai-agent-compass/pull/116#issuecomment-5762967996>.
+
+What this rehearsal did not cover: PR #116's head is a branch of this
+repository, not an actual fork, so GitHub did not withhold
+`COMPASS_PRIVATE_PATTERNS` from `ci.yml`'s own `check` job the way it would
+for a genuine fork PR — that job's fail-closed behavior was not exercised by
+this run. Half of that gap is covered separately, by the
+`scripts/checks/forbidden-patterns.test.mjs` test
+`CI + unset COMPASS_PRIVATE_PATTERNS fails closed`, unit-testing the same
+code path this rehearsal could not reach through a real workflow run.
+
+Replace this record the first time a PR with an actual fork head goes
+through this page's procedure: rerun steps 1–3 above against that PR and
+overwrite the entries here with what that run actually shows.
