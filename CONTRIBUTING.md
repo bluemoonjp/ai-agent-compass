@@ -27,17 +27,31 @@ describe this repository's conventions and check suite.
 A pull request opened from a fork does not receive this repository's
 `COMPASS_PRIVATE_PATTERNS` secret — GitHub Actions never sends repository
 secrets to a `pull_request`-triggered run when the head is a fork. Because
-of that, CI's `check` job fails on the private-pattern stage
-(`forbidden-patterns:env-unset`) for every fork PR, regardless of the PR's
-actual content — this is expected, not something to fix in your PR. The
+of that, CI's `check` job always reports exactly one finding on the
+private-pattern stage, `forbidden-patterns:env-unset`, for every fork PR,
+regardless of the PR's actual content. That one line is expected and is not
+something to fix in your PR.
+
+Every other line the same job reports is yours to fix. The `forbidden-
+patterns` check also scans for filesystem paths, an address-shaped string
+(the kind an email uses), and a `file://` URI, and it scans your commit
+messages, not only the files your PR changes. A clean fork PR should show
+exactly one finding — the `env-unset` line above — and nothing else; the
 rest of `pnpm check`, and `pnpm test`, still run and still need to pass.
 
-After reviewing the diff, the maintainer clears that failure by manually
-running the "Fork PR recheck" workflow (`workflow_dispatch`, from the
-Actions tab) against the PR's exact head commit; it posts a comment on the
-PR recording the outcome. There is no action for you to take here beyond
-waiting for that review. See ADR-0008 for why this path exists and why it
-does not use `pull_request_target`.
+After reviewing the diff, the maintainer runs the "Fork PR recheck" workflow
+(`workflow_dispatch`, from the Actions tab) against your PR's exact head
+commit, with the private-pattern secret present, and posts a comment on the
+PR recording the outcome; avoid force-pushing while that is pending, since
+the workflow refuses to run once the head commit no longer matches what was
+reviewed. After that, the reviewed commits are re-landed onto a branch of
+this repository — a separate pull request, cherry-picked with your
+authorship preserved — and this PR is closed with a link to where the work
+landed (see ADR-0011). Your PR will therefore show as "closed", not
+"merged", even when it is accepted; that is this repository's normal path
+for a fork contribution, not a rejection. See ADR-0008 for why the
+private-pattern stage stays fail-closed on a fork PR and why this repository
+does not use `pull_request_target` to avoid that.
 
 ## License
 
