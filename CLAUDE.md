@@ -4,3 +4,4 @@
 
 - Verify a primary source with `curl`; a `WebFetch` summary is not a citable quote.
 - During development, load this plugin only via `--plugin-dir`.
+- Start each issue's work in a worktree via EnterWorktree; end it with ExitWorktree.
