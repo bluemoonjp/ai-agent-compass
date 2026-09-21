@@ -23,4 +23,4 @@ body:
       label: Source for the correction
       description: A link to a primary source backing the correction — this repository does not accept an uncited claim.
     validations:
-      required: false
+      required: true

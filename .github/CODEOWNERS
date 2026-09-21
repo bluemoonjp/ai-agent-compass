@@ -1,3 +1,3 @@
-# See CONTRIBUTING.md and ADR-0008. This only has an effect once branch
-# protection is configured to require code owner review.
+# See CONTRIBUTING.md and ADR-0008. Branch protection requires code owner
+# review, so this is active for a PR opened by anyone other than the owner.
 * @bluemoonjp
