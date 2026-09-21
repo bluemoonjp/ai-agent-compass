@@ -1,0 +1,23 @@
+name: New content proposal
+description: Propose a new practice, antipattern, adapter, or template.
+title: "[proposal]: "
+labels: ["type:content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a problem in *existing* content, use "Content problem" instead.
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What to add
+      description: The practice, antipattern, adapter, or template you are proposing, and which existing file (if any) it is closest to.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Primary source
+      description: A link to a primary source backing this — this repository does not accept an uncited claim.
+    validations:
+      required: true

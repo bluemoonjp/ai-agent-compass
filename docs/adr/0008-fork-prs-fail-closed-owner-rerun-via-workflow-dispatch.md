@@ -76,7 +76,10 @@ branch, with no human step in between. This repository does not use it.
   owner review — a repository setting, not a file in this repository — and
   only for a PR opened by someone other than the maintainer; ADR-0001
   already recorded that a single-maintainer repository has no equivalent
-  gate for the maintainer's own PRs, and that has not changed.
+  gate for the maintainer's own PRs, and that has not changed. (Branch
+  protection now requires code owner review — confirmed 2026-09-21 via the
+  repository's branch protection settings — so this bullet's condition is
+  met, not merely provided for.)
 - `CONTRIBUTING.md` describes this from a contributor's side: what this
   repository accepts, the fork-PR flow above, and that a contribution is
   made under whichever of MIT or CC BY 4.0 covers the path it touches
@@ -101,4 +104,8 @@ deliberate trade-off rather than a solved problem.
 `public-surface.yml` now carries two branches of reaction to the same
 `check-paste` failure instead of one, and each must keep stating the
 correct reason (an actual match, or a fork PR's missing secret) as the
-workflow evolves.
+workflow evolves. (ADR-0009 replaces the `needs-owner-recheck` branch with
+a second, `workflow_run`-triggered workflow that performs the private-
+pattern check for real, with the actual secret, instead of asking a
+maintainer to; only the `needs-redaction` branch described here still runs
+directly from this job.)

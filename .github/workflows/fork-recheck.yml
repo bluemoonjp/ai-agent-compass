@@ -25,8 +25,13 @@ permissions:
   pull-requests: write
 
 concurrency:
+  # No cancel-in-progress: this workflow's last step posts a PR comment
+  # recording the outcome. Cancelling an in-progress run because a second
+  # dispatch for the same PR started would risk killing that step before it
+  # posts, losing the record of a run that already executed pnpm check.
+  # Grouping by pr_number still serializes overlapping dispatches — queued,
+  # not cancelled — mirroring fork-public-surface-notify.yml's precedent.
   group: fork-recheck-${{ github.event.inputs.pr_number }}
-  cancel-in-progress: true
 
 jobs:
   recheck:
@@ -46,13 +51,19 @@ jobs:
 
       - name: Confirm the PR head has not moved since review
         env:
-          EXPECTED_SHA: ${{ github.event.inputs.head_sha }}
+          INPUT_SHA: ${{ github.event.inputs.head_sha }}
           PR_NUMBER: ${{ github.event.inputs.pr_number }}
         run: |
           set -euo pipefail
           ACTUAL_SHA=$(git rev-parse HEAD)
+          # Normalize the input before comparing: a short SHA resolves to
+          # the same full commit as the checked-out HEAD, but would never
+          # equal it in a plain string comparison. git rev-parse fails
+          # closed (non-zero exit, caught by set -e) if the input does not
+          # resolve to an object reachable in this checkout at all.
+          EXPECTED_SHA=$(git rev-parse "$INPUT_SHA")
           if [ "$ACTUAL_SHA" != "$EXPECTED_SHA" ]; then
-            echo "PR #${PR_NUMBER}'s head is now ${ACTUAL_SHA}, not the reviewed ${EXPECTED_SHA}."
+            echo "PR #${PR_NUMBER}'s head is now ${ACTUAL_SHA}, not the reviewed ${EXPECTED_SHA} (input: ${INPUT_SHA})."
             echo "Re-review the new commit(s) and dispatch again with the new SHA."
             exit 1
           fi
@@ -67,13 +78,13 @@ jobs:
           BASE_SHA=$(gh pr view "${PR_NUMBER}" --repo "${{ github.repository }}" --json baseRefOid --jq .baseRefOid)
           echo "base_sha=${BASE_SHA}" >> "$GITHUB_OUTPUT"
 
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
+      # A local action reference resolves against the commit checked out
+      # above -- the reviewed fork commit, not this repository's trusted
+      # default-branch copy. That is the same trust model ADR-0008 already
+      # accepts for scripts/check.mjs and package.json from that same
+      # commit: the manual review before dispatch is what covers this, not
+      # a sandbox. Review .github/ changes too before dispatching.
+      - uses: ./.github/actions/setup-node-pnpm
 
       - name: pnpm check
         id: check
