@@ -27,12 +27,6 @@
       "PowerShell(npx markdownlint-cli2 *)",
       "Bash(git fetch origin)",
       "PowerShell(git fetch origin)",
-      "Bash(git switch -c *)",
-      "PowerShell(git switch -c *)",
-      "Bash(git worktree add *)",
-      "PowerShell(git worktree add *)",
-      "Bash(git worktree remove *)",
-      "PowerShell(git worktree remove *)",
       "Bash(git branch -d *)",
       "PowerShell(git branch -d *)",
       "Bash(git branch -D *)",
@@ -78,7 +72,100 @@
       "Bash(gh api *secrets*)",
       "PowerShell(gh api *secrets*)",
       "Bash(gh api *git/refs*)",
-      "PowerShell(gh api *git/refs*)"
+      "PowerShell(gh api *git/refs*)",
+      "Bash(git switch -c *)",
+      "PowerShell(git switch -c *)",
+      "Bash(git switch -C *)",
+      "PowerShell(git switch -C *)",
+      "Bash(git checkout -b *)",
+      "PowerShell(git checkout -b *)",
+      "Bash(git checkout -B *)",
+      "PowerShell(git checkout -B *)",
+      "Bash(git worktree add *)",
+      "PowerShell(git worktree add *)",
+      "Bash(git worktree remove *)",
+      "PowerShell(git worktree remove *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git worktree add *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          },
+          {
+            "type": "command",
+            "if": "Bash(git worktree remove *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          },
+          {
+            "type": "command",
+            "if": "Bash(git switch -c *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          },
+          {
+            "type": "command",
+            "if": "Bash(git switch -C *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          },
+          {
+            "type": "command",
+            "if": "Bash(git checkout -b *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          },
+          {
+            "type": "command",
+            "if": "Bash(git checkout -B *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          },
+          {
+            "type": "command",
+            "if": "PowerShell(git worktree add *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          },
+          {
+            "type": "command",
+            "if": "PowerShell(git worktree remove *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          },
+          {
+            "type": "command",
+            "if": "PowerShell(git switch -c *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          },
+          {
+            "type": "command",
+            "if": "PowerShell(git switch -C *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          },
+          {
+            "type": "command",
+            "if": "PowerShell(git checkout -b *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          },
+          {
+            "type": "command",
+            "if": "PowerShell(git checkout -B *)",
+            "command": "node",
+            "args": ["${CLAUDE_PROJECT_DIR}/scripts/hooks/deny-manual-worktree-and-branch-ops.mjs"]
+          }
+        ]
+      }
     ]
   }
 }

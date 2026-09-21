@@ -17,6 +17,7 @@ This repository has two layers (ADR-0001): the deliverable (layer A: `practices/
 - Never narrate this repository's own history in prose. (ci: no-history-words)
 - Never write filesystem paths, email addresses, or other private information. (ci: forbidden-patterns)
 - Cite a source with a summary and a link, not a bare claim. (ci: frontmatter-schema)
+- Start issue work with EnterWorktree; never run git worktree/switch/checkout branch commands directly. (none)
 
 Write an ADR only when deleting the decision would let someone repeat the mistake, and re-deciding it would need reconstructing an incident or a long investigation.
 
@@ -27,7 +28,7 @@ Write an ADR only when deleting the decision would let someone repeat the mistak
 | `adapters/` | Tool-specific differences from the sourced practices and antipatterns |
 | `antipatterns/` | Sourced antipatterns: what to avoid and why |
 | `docs/adr/` | Architecture decision records |
-| `docs/maintain/` | Maintainer setup, authoring, review, and patrol instructions |
+| `docs/maintain/` | Maintainer setup, authoring, review, patrol, and worktree instructions |
 | `plugins/` | The Claude Code plugin this repository distributes itself as |
 | `practices/` | Sourced best practices for AI coding agents |
 | `schemas/` | JSON Schemas for practice, antipattern, skill frontmatter, and the source registry |

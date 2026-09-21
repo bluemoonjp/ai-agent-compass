@@ -13,7 +13,7 @@ description: Use when processing the weekly patrol Issue that `patrol.yml` opens
    - **`Changed`.** Fetch the source's current content yourself with `curl`, not `WebFetch` — a raw byte fetch is what a diff needs; `WebFetch`'s summary is not a citable quote and is at most a reading aid for a long page, never the basis for a judgment about what changed. Compare against what `sources/baseline.json`'s entry for that id last accepted, and read for anything that would change a rule this repository states.
    - **`no-baseline`.** Nothing has ever been accepted for this id — whether because this is patrol's first-ever run or because the source was only just registered — so there is no prior observation to diff against and nothing a read could compare. Do not fetch or read the content for this reason; go straight to accepting its baseline in step 5.
 4. For each `Changed` source that actually affects existing content, list the `practices/` and `antipatterns/` ids it touches, by id.
-5. Create a branch. For every `Changed` source id — not just the ones that affected content — do one of:
+5. Start a worktree for this issue (`EnterWorktree`). For every `Changed` source id — not just the ones that affected content — do one of:
    - Update the affected practice or antipattern file (`sources[].verified_on`, and `quote` if the cited text itself changed), following `docs/maintain/authoring.md`.
    - If the change doesn't affect what any file here claims, record that judgment against the source id instead of editing anything.
 
