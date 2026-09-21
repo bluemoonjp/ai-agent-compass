@@ -84,12 +84,17 @@ branch, with no human step in between. This repository does not use it.
   repository accepts, the fork-PR flow above, and that a contribution is
   made under whichever of MIT or CC BY 4.0 covers the path it touches
   (inbound = outbound), matching `README.md`'s existing license split.
+  (How a reviewed commit actually reaches `main` after this point is
+  ADR-0011; this ADR only covers what clears the private-pattern stage.)
 
 ## Consequences
 
 A first-time fork PR will predictably show a failing `check` job on the
 private-pattern stage; that is the maintainer's cue to review the diff and
-run `fork-recheck.yml`, not something a contributor needs to fix.
+run `fork-recheck.yml`, not something a contributor needs to fix. (What
+happens to the reviewed commits after that comment lands — how they reach
+`main` — is ADR-0011; `fork-recheck.yml` itself never turns this PR's own
+`check` context green.)
 
 `fork-recheck.yml` still checks out the reviewed commit's own `scripts/`,
 `package.json`, and `pnpm-lock.yaml`, and runs `pnpm install` and

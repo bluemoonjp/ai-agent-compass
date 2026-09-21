@@ -21,7 +21,9 @@ function compilePatterns(defs) {
 function isAllowedTrailerLine(line) {
   const m = TRAILER_LINE.exec(line.trim())
   if (!m) return false
-  const domain = m[1].split('@')[1]
+  const address = m[1]
+  if ((TRAILER_ALLOWLIST.addresses ?? []).includes(address)) return true
+  const domain = address.split('@')[1]
   return Boolean(domain) && TRAILER_ALLOWLIST.noreplyDomains.includes(domain)
 }
 

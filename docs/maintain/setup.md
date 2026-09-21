@@ -106,12 +106,21 @@ intentional (ADR-0008), not a bug: it puts a fork PR into an
 owner-review-required state instead of silently skipping the check.
 `.github/workflows/fork-recheck.yml` is the maintainer's path to clear it,
 run manually via `workflow_dispatch` against the exact commit reviewed; see
-`CONTRIBUTING.md` for the contributor-facing description.
+`CONTRIBUTING.md` for the contributor-facing description and
+[`docs/maintain/fork-pr.md`](fork-pr.md) for the maintainer's own
+step-by-step procedure, including how the reviewed commit then reaches
+`main`.
 
-`public-surface.yml`'s `check-paste` step hits the same unset variable on a
-fork or Dependabot PR (Dependabot's `pull_request` runs get the same
-read-only `GITHUB_TOKEN` and no secrets, even though its branch lives in
-this repository). `check-paste.mjs` exits 2 for that (the check could not
+`public-surface.yml`'s `check-paste` step hits the same unset variable on
+an actual fork PR. A Dependabot `pull_request` run gets the same read-only
+`GITHUB_TOKEN`, even though its branch lives in this repository, so it
+cannot post a label there either — but `COMPASS_PRIVATE_PATTERNS` itself
+does reach that run, because Dependabot has its own secret store separate
+from this repository's Actions secrets, and a same-named secret is
+registered there (confirmed via `gh secret list --app dependabot`). Token
+restriction and secret reachability are different mechanisms; only the
+former is shared between a fork PR and a Dependabot PR. `check-paste.mjs`
+exits 2 for that (the check could not
 run) and 1 when it actually found a match, even alongside the unset
 variable — see `scripts/check-paste.mjs`. That job's `GITHUB_TOKEN` is
 read-only regardless of the workflow's declared `permissions:` in either
