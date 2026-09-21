@@ -1,3 +1,4 @@
 {
-  "noreplyDomains": ["anthropic.com"]
+  "noreplyDomains": ["anthropic.com", "users.noreply.github.com"],
+  "addresses": ["support@github.com"]
 }

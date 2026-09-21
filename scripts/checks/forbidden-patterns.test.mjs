@@ -120,6 +120,8 @@ test('--strict enforces the env var locally the same way CI does', () => {
 // the email-address pattern when the repository scans its own tracked files.
 const ALLOWLISTED_TRAILER_EMAIL = ['noreply', 'anthropic.com'].join('@')
 const NON_ALLOWLISTED_TRAILER_EMAIL = ['someone', 'example.com'].join('@')
+const PER_USER_NOREPLY_EMAIL = ['12345+someone', 'users.noreply.github.com'].join('@')
+const BOT_SIGNOFF_EMAIL = ['support', 'github.com'].join('@')
 
 test('a trailer line with an allowlisted noreply domain is not flagged', async () => {
   const message = `Fix docs\n\nCo-Authored-By: Claude Sonnet 5 <${ALLOWLISTED_TRAILER_EMAIL}>`
@@ -129,6 +131,24 @@ test('a trailer line with an allowlisted noreply domain is not flagged', async (
 
 test('a non-allowlisted email in a commit message is still flagged', async () => {
   const message = `Fix docs\n\nCo-Authored-By: Someone <${NON_ALLOWLISTED_TRAILER_EMAIL}>`
+  const { findings } = await runCheck(root, check, { files: [], messages: [message] })
+  assert.ok(findings.length > 0)
+})
+
+test('a Co-authored-by trailer with a per-user noreply address is not flagged', async () => {
+  const message = `Fix docs\n\nCo-authored-by: Someone <${PER_USER_NOREPLY_EMAIL}>`
+  const { findings } = await runCheck(root, check, { files: [], messages: [message] })
+  assert.equal(findings.length, 0)
+})
+
+test('a Signed-off-by trailer with the allowlisted bot address is not flagged', async () => {
+  const message = `Bump dependency\n\nSigned-off-by: dependabot[bot] <${BOT_SIGNOFF_EMAIL}>`
+  const { findings } = await runCheck(root, check, { files: [], messages: [message] })
+  assert.equal(findings.length, 0)
+})
+
+test('the same allowlisted address outside a trailer line is still flagged', async () => {
+  const message = `Fix docs\n\nContact ${BOT_SIGNOFF_EMAIL} for help.`
   const { findings } = await runCheck(root, check, { files: [], messages: [message] })
   assert.ok(findings.length > 0)
 })
