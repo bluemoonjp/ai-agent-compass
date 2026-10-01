@@ -37,7 +37,7 @@ jobs:
            github.event.pull_request.user.login == 'dependabot[bot]')
         }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # check-paste.mjs only reads COMPASS_PASTE_BODY (an event field),
           # never a repository file, so there is no reason to run a fork or
@@ -48,7 +48,7 @@ jobs:
           # ADR-0009 for why the second stage never trusts anything this
           # job computes.
           ref: ${{ github.event.pull_request.base.sha || github.sha }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
       - name: Run check:paste
