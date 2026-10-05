@@ -5,7 +5,7 @@ status: active
 topic: instruction-files
 applies_to:
   - claude-code
-rule: A subdirectory CLAUDE.md, or a .claude/rules/ file with paths frontmatter, loads only when Claude accesses a matching file (path-scoped rules on Read, Write, or Edit), not at session start.
+rule: A subdirectory CLAUDE.md, or a .claude/rules/ file with paths frontmatter, loads only when Claude reads a matching file (path-scoped rules also on Write or Edit), not at session start.
 license: CC-BY-4.0
 sources:
   - url: https://docs.claude.com/en/docs/claude-code/memory
@@ -30,7 +30,7 @@ sources:
 
 ## Why
 
-Root CLAUDE.md and an unscoped `.claude/rules/` file load at launch into every session, whether or not the current task touches what they describe. A nested CLAUDE.md and a `paths`-scoped rule instead wait until Claude actually accesses a file the rule concerns, so guidance narrow enough to belong to one directory or file type stays out of context until it's relevant, rather than being paid for on every turn regardless of task.
+Root CLAUDE.md and an unscoped `.claude/rules/` file load at launch into every session, whether or not the current task touches what they describe. A nested CLAUDE.md and a `paths`-scoped rule instead wait until Claude actually reads (for a path-scoped rule, also writes or edits) a file the rule concerns, so guidance narrow enough to belong to one directory or file type stays out of context until it's relevant, rather than being paid for on every turn regardless of task.
 
 ## When it applies
 
@@ -38,4 +38,4 @@ Applies to deciding where to put directory- or file-type-specific guidance in a 
 
 ## Conflicting guidance
 
-Claude Code loads each nested or path-scoped file individually, on demand, as Claude accesses a matching file. Codex's AGENTS.md discovery works differently: it concatenates every AGENTS.md file it finds, from the project root down, into one combined prompt, and stops adding files once that combination reaches a byte limit that defaults to 32 KiB. A project that nests instructions several directories deep under the assumption that Claude Code's on-demand model applies everywhere will find that Codex, instead, can silently drop whichever files the traversal hadn't reached yet once the cap is hit, unless the limit is raised.
+Claude Code loads each nested or path-scoped file individually, on demand, as Claude reads a matching file (a path-scoped rule also as Claude writes or edits one). Codex's AGENTS.md discovery works differently: it concatenates every AGENTS.md file it finds, from the project root down, into one combined prompt, and stops adding files once that combination reaches a byte limit that defaults to 32 KiB. A project that nests instructions several directories deep under the assumption that Claude Code's on-demand model applies everywhere will find that Codex, instead, can silently drop whichever files the traversal hadn't reached yet once the cap is hit, unless the limit is raised.
