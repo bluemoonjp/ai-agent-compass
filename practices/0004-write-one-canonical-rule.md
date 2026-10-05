@@ -11,9 +11,9 @@ sources:
   - url: https://docs.claude.com/en/docs/claude-code/memory
     kind: primary
     confidence: verified
-    verified_on: "2026-09-18"
-    summary: Claude Code's memory documentation states that when two CLAUDE.md rules contradict each other, Claude may pick one arbitrarily, and recommends removing the conflict rather than relying on a consistent resolution.
-    quote: "Consistency: if two rules contradict each other, Claude may pick one arbitrarily."
+    verified_on: "2026-10-05"
+    summary: Claude Code's memory documentation states that when two CLAUDE.md instructions contradict each other, Claude may pick one arbitrarily, and recommends removing the conflict rather than relying on a consistent resolution.
+    quote: "Consistency: if two instructions contradict each other, Claude may pick one arbitrarily."
   - url: https://developers.openai.com/codex/guides/agents-md
     kind: primary
     confidence: verified
