@@ -15,10 +15,9 @@ Frontmatter records which tool a file applies to (`applies_to`) and what kind ea
 
 A model-release review covers every active practice and every active antipattern. `pnpm patrol:review-list` prints all of them and applies no narrowing condition. Adapters are out of scope: they describe other tools' mechanisms, which the weekly patrol covers.
 
-This amends ADR-0006's sentence that a model release "calls for reviewing every Claude-Code-scoped practice and undetermined antipattern at once": the scope is every active practice and antipattern. A `holds` verdict advances `sources[].verified_on` once an independent reviewer has failed to overturn it, without a person reading it; ADR-0006's "a human actually read" is satisfied by an agent acting for the maintainer in that case.
-
+This amends ADR-0006's sentence that a model release "calls for reviewing every Claude-Code-scoped practice and undetermined antipattern at once": the scope is every active practice and antipattern.
 ## Consequences
 
-Reviewing every file is workable only because the re-verification procedure in `docs/maintain/model-release.md` checks each id independently and has every verdict, `holds` included, challenged by a separate reviewer before only the contested or non-`holds` ones reach a person; the human cost follows that procedure, not the size of the list.
+Reviewing every file is workable only because the re-verification procedure in `docs/maintain/model-release.md` checks each id independently and puts only the verdicts that fail its independent check in front of a person; the human cost follows that procedure, not the size of the list.
 
 The list now grows with the corpus, so the cost of the re-verification grows with it. If a full pass stops being practical, the next candidate is an explicit frontmatter field marking model-dependent claims. It would remove the errors only if its value is right when written, which moves the judgment to authoring time, where nothing re-checks it later.
