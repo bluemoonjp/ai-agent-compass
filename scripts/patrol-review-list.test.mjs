@@ -16,14 +16,21 @@ function antipatternFile(path, { id, classification, status = 'active' }) {
   }
 }
 
+function adapterFile(path, { id, status = 'active' }) {
+  return {
+    path,
+    text: `---\nid: "${id}"\ntitle: Sample\nstatus: ${status}\n---\n\nSample.\n`,
+  }
+}
+
 test('lists an active practice whose applies_to includes claude-code', () => {
   const files = [practiceFile('practices/0001-sample.md', { id: '0001', appliesTo: ['claude-code'] })]
   assert.deepEqual(reviewListIds({ files }), ['practices/0001'])
 })
 
-test('excludes a practice whose applies_to omits claude-code', () => {
+test('lists an active practice that applies only to general', () => {
   const files = [practiceFile('practices/0001-sample.md', { id: '0001', appliesTo: ['general'] })]
-  assert.deepEqual(reviewListIds({ files }), [])
+  assert.deepEqual(reviewListIds({ files }), ['practices/0001'])
 })
 
 test('excludes a draft practice even with claude-code in applies_to', () => {
@@ -31,16 +38,22 @@ test('excludes a draft practice even with claude-code in applies_to', () => {
   assert.deepEqual(reviewListIds({ files }), [])
 })
 
-test('lists an undetermined antipattern', () => {
-  const files = [antipatternFile('antipatterns/0001-sample.md', { id: '0001', classification: 'undetermined' })]
-  assert.deepEqual(reviewListIds({ files }), ['antipatterns/0001'])
+test('lists an active antipattern whatever its classification', () => {
+  const files = [
+    antipatternFile('antipatterns/0001-sample.md', { id: '0001', classification: 'undetermined' }),
+    antipatternFile('antipatterns/0002-sample.md', { id: '0002', classification: 'harmful' }),
+    antipatternFile('antipatterns/0003-sample.md', { id: '0003', classification: 'obsolete' }),
+  ]
+  assert.deepEqual(reviewListIds({ files }), ['antipatterns/0001', 'antipatterns/0002', 'antipatterns/0003'])
 })
 
-test('excludes a harmful or obsolete antipattern', () => {
-  const files = [
-    antipatternFile('antipatterns/0001-sample.md', { id: '0001', classification: 'harmful' }),
-    antipatternFile('antipatterns/0002-sample.md', { id: '0002', classification: 'obsolete' }),
-  ]
+test('excludes a draft antipattern', () => {
+  const files = [antipatternFile('antipatterns/0001-sample.md', { id: '0001', classification: 'harmful', status: 'draft' })]
+  assert.deepEqual(reviewListIds({ files }), [])
+})
+
+test('excludes an adapter', () => {
+  const files = [adapterFile('adapters/0001-sample.md', { id: '0001' })]
   assert.deepEqual(reviewListIds({ files }), [])
 })
 
@@ -53,7 +66,7 @@ test('sorts practices and antipatterns together by their kind-prefixed id', () =
   const files = [
     practiceFile('practices/0002-sample.md', { id: '0002', appliesTo: ['claude-code'] }),
     antipatternFile('antipatterns/0001-sample.md', { id: '0001', classification: 'undetermined' }),
-    practiceFile('practices/0001-sample.md', { id: '0001', appliesTo: ['claude-code'] }),
+    practiceFile('practices/0001-sample.md', { id: '0001', appliesTo: ['general'] }),
   ]
   assert.deepEqual(reviewListIds({ files }), ['antipatterns/0001', 'practices/0001', 'practices/0002'])
 })

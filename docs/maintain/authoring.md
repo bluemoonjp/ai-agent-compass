@@ -16,7 +16,7 @@ Every source object has a `kind`: `primary` (the tool vendor's own documentation
 
 ## Confidence and verification dates
 
-Each source also carries a `confidence`: `verified` (someone actually re-read the source and it says what the summary claims), `unverified` (cited but not re-checked since it was added), `unavailable` (the source no longer resolves, and a `note` field explains what was tried), or `derived` (the claim follows from a `verified` or `unverified` source by reasoning that is not itself in the source text). `verified_on` is the only place a re-check date lives; it records the last time a human actually revisited the source, not the date the file was created or last edited.
+Each source also carries a `confidence`: `verified` (someone actually re-read the source and it says what the summary claims), `unverified` (cited but not re-checked since it was added), `unavailable` (the source no longer resolves, and a `note` field explains what was tried), or `derived` (the claim follows from a `verified` or `unverified` source by reasoning that is not itself in the source text). `verified_on` is the only place a re-check date lives; it records the last time a person, or an agent acting for one, actually revisited the source, not the date the file was created or last edited.
 
 ## Verbatim quotes
 

@@ -3,15 +3,19 @@ import { parse as parseYaml } from 'yaml'
 import { loadRepoFiles } from './lib/runner.mjs'
 
 // Lists the ids a model release should prompt a human to re-check: every
-// active practice whose applies_to includes claude-code (its rule may
-// describe a limitation a new model no longer has), and every antipattern
-// still classified undetermined (a new model may resolve the uncertainty
-// one way or the other). Prints ids only, one per line, kind-prefixed the
-// same way scripts/checks/data/not_applicable.json keys are, so a caller
-// can pipe the output straight into another script without parsing prose.
+// active practice and every active antipattern. It deliberately does not
+// narrow by frontmatter. Frontmatter records which tool a file applies to
+// and what kind each source is, but not whether the claim depends on how a
+// model behaves, so any narrowing condition both misses model-dependent
+// claims and includes ones that are not. Adapters are out of scope: they
+// describe other tools' mechanisms, which the weekly patrol covers. Prints
+// ids only, one per line, kind-prefixed the same way
+// scripts/checks/data/not_applicable.json keys are, so a caller can pipe the
+// output straight into another script without parsing prose.
 
 const FRONTMATTER = /^---\n([\s\S]*?)\n---\n?/
 const FILENAME_ID = /^(\d{4})-[a-z0-9-]+\.md$/
+const KIND_DIRS = ['practices', 'antipatterns']
 
 function frontmatterOf(file) {
   const match = FRONTMATTER.exec(file.text)
@@ -26,19 +30,12 @@ function frontmatterOf(file) {
 export function reviewListIds({ files }) {
   const ids = []
   for (const file of files) {
+    const dir = KIND_DIRS.find((d) => file.path.startsWith(`${d}/`))
+    if (!dir) continue
     if (!FILENAME_ID.test(file.path.split('/').pop())) continue
     const data = frontmatterOf(file)
     if (data?.status !== 'active') continue
-
-    if (file.path.startsWith('practices/')) {
-      if (Array.isArray(data.applies_to) && data.applies_to.includes('claude-code')) {
-        ids.push(`practices/${data.id}`)
-      }
-    } else if (file.path.startsWith('antipatterns/')) {
-      if (data.classification === 'undetermined') {
-        ids.push(`antipatterns/${data.id}`)
-      }
-    }
+    ids.push(`${dir}/${data.id}`)
   }
   return ids.sort()
 }
