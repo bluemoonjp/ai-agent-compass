@@ -31,9 +31,10 @@ by that confirmation.
 2. Re-verify each id on its own, one at a time and independent of the
    others (an agent per id is fine), against its cited source fetched per
    this repository's own `CLAUDE.md` and what the current model release
-   notes say. Give every verdict other than `holds` to a separate
-   adversarial reviewer; a person decides only on the verdicts that are not
-   `holds`.
+   notes say. A verdict is `holds` (the source still supports the rule and
+   no limitation it describes is gone) or it is not. Give every verdict
+   other than `holds` to a separate adversarial reviewer; a person decides
+   only on the verdicts that are not `holds`.
 3. Apply each verdict:
    - If the rule still holds, update `sources[].verified_on` to today and
      leave the rule text alone.
@@ -43,7 +44,8 @@ by that confirmation.
      pointing back at it, rather than editing the practice in place.
    - For an antipattern, if the new evidence changes its classification,
      set it to `harmful`, `obsolete`, or `undetermined` accordingly;
-     if it does not, update only `verified_on`.
+     if it does not, update only `verified_on`. A change of classification
+     changes the required headings; `authoring.md` lists them.
 4. Run `pnpm gen && pnpm test && pnpm check`, then open a pull request like
    any other change to this repository.
 
