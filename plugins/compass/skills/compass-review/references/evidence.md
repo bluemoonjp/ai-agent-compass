@@ -12,7 +12,7 @@ Applies to: general
 
 #### Why
 
-It is easy to treat a repository-level context file as a correctness-only lever: it either helps the agent get the task right or it doesn't. Each of 124 real pull request tasks across 10 repositories was executed once with and once without the repository's AGENTS.md file, in matched, isolated environments on the identical pre-merge commit; that paired comparison found AGENTS.md's presence associated with a lower median runtime (28.64%) and lower median output token consumption (16.58%), at comparable task completion. The study is explicit that its completion check was a sanity check for non-empty, non-trivial output rather than a full correctness evaluation — so the finding supports treating AGENTS.md as an efficiency lever worth measuring, not a settled claim that completion quality was unaffected.
+It is easy to treat a repository-level context file as a correctness-only lever: it either helps the agent get the task right or it doesn't. Each of 124 real pull request tasks across 10 repositories was executed once with and once without the repository's AGENTS.md file, in matched, isolated environments on the identical pre-merge commit; that paired comparison found AGENTS.md's presence associated with a lower median runtime (28.64%) and lower median output token consumption (16.58%), at comparable task completion. The study is explicit that its completion check was a sanity check for non-empty, non-trivial output rather than a full correctness evaluation — so the finding supports treating AGENTS.md as an efficiency lever worth measuring, not a settled claim that completion quality was unaffected. A later controlled ablation on Claude Code and Codex, which did evaluate correctness against gold tests, found no measurable effect of context strategy on it, within a 10 to 15 percentage-point bound; that is consistent with reading the context file as an efficiency lever, though its abstract reports no runtime or token-cost result.
 
 #### When it applies
 
@@ -24,6 +24,7 @@ This finding and a different controlled study's finding point in opposite direct
 
 #### Sources
 
+- A July 2026 controlled ablation of context-injection strategy across Claude Code and Codex, with 17 real tasks and 288 gold-test runs, found no measurable effect of context strategy on correctness, within a bound of 10 to 15 percentage points. (<https://arxiv.org/abs/2607.27250>)
 - A study analyzing 10 repositories and 124 pull requests, run with and without an AGENTS.md file, found its presence associated with a lower median runtime (28.64%) and reduced median output token consumption (16.58%), while task completion behavior stayed comparable. (<https://arxiv.org/abs/2601.20404>)
 - The same study notes its completion check was a sanity check for non-empty, non-trivial changes rather than a full correctness evaluation, so its efficiency findings should not be read as also proving completion quality was unaffected. (<https://arxiv.org/abs/2601.20404>)
 - A different controlled study, on SWE-bench and a novel CTXbench, found context files did not generally improve task success while raising inference cost, holding for both LLM-generated and developer-committed files, the opposite cost direction from this practice's own source. (<https://arxiv.org/abs/2602.11988>)
