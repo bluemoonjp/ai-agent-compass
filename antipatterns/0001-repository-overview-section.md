@@ -14,7 +14,7 @@ sources:
   - url: https://arxiv.org/abs/2602.11988
     kind: research
     confidence: verified
-    verified_on: "2026-09-17"
+    verified_on: "2026-10-05"
     summary: A 2026 study of AGENTS.md-style context files found that repository-overview sections specifically, despite being popular and recommended by model providers, were not helpful, while context files overall raised inference cost by more than 20% without a general gain in task success.
     quote: "we find that providing context files does not generally improve task success rates, while increasing inference cost by over 20% on average. This observation holds across different LLMs, coding agents, and for both LLM-generated and developer-committed context files."
 ---

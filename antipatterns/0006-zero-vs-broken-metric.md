@@ -14,7 +14,7 @@ sources:
   - url: https://grafana.com/docs/grafana/latest/alerting/guides/missing-data/
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Grafana's own alerting documentation states that Prometheus-style alerting does not fire when a query returns no data, treating an empty result the same as a genuinely healthy state, so a target that stops reporting entirely triggers no alert unless someone explicitly checks for the absence.
     quote: "Prometheus doesn't fire alerts when the query returns no data. It simply assumes there was nothing to report, like with query errors. Missing data won't trigger existing alerts unless you explicitly check for it."
 ---

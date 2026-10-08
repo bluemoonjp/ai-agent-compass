@@ -11,13 +11,13 @@ sources:
   - url: https://arxiv.org/abs/2605.10039
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: A factorial study of 1,650 Claude Code CLI sessions (16,050 function-level observations) across two TypeScript codebases and three models found that none of four structural variables, or their interactions, produced a detectable contrast after correction.
     quote: "None of the four structural variables or three two-way interactions produces a detectable contrast after multiple-testing correction."
   - url: https://arxiv.org/abs/2605.10039
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same study found the largest measured effect was within-session, not structural, roughly 5.6% lower odds of compliance per additional function generated within the tested session-length range, though explicitly a non-monotonic relationship, not a constant per-step decline.
     quote: "each additional function the agent generates is associated with approximately 5.6% lower odds of compliance per step (OR = 0.944) within the session-length range we tested, though the relationship is non-monotonic rather than a constant per-step effect"
 ---

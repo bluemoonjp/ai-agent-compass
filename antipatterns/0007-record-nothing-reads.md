@@ -14,7 +14,7 @@ sources:
   - url: https://sre.google/workbook/monitoring/
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The Google SRE Workbook's monitoring chapter instructs engineers to resist exporting a metric just because it's easy to generate, and to instead think about how each metric will actually be used before adding it.
     quote: "Each exposed metric should serve a purpose. Resist the temptation of exporting a handful of metrics just because they are easy to generate. Instead, think about how these metrics will be used."
 ---

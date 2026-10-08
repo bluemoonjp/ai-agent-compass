@@ -11,19 +11,19 @@ sources:
   - url: https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/cli/gemini-md.md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Gemini CLI's own documentation states it loads context files from a global location, workspace directories and their parents, and just-in-time from a directory's ancestors when a tool accesses it, concatenating all found files and sending them with every prompt.
     quote: "It loads various context files from several locations, concatenates the contents of all found files, and sends them to the model with every prompt."
   - url: https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/cli/gemini-md.md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same documentation states the default context filename, GEMINI.md, can be replaced with a different name or a list of names through the context.fileName setting.
     quote: "While GEMINI.md is the default filename, you can configure this in your settings.json file. To specify a different name or a list of names, use the context.fileName property."
   - url: https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/reference/memport.md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Gemini CLI's own memory-import-processor reference documents an @file.md import as resolved into the surrounding content, its processed-result type is defined as content with imports already resolved, not a reference kept for deferred loading.
     quote: "content: string; // The processed content with imports resolved"
 ---

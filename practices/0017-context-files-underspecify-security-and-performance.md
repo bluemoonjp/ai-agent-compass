@@ -11,7 +11,7 @@ sources:
   - url: https://arxiv.org/abs/2511.12884
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: A content analysis of 2,303 agent context files from 1,925 repositories, across 16 instruction types, found developers prioritize functional context such as test procedures (75.9%) and implementation details (70.8%), while security (14.8%) and performance (14.5%) are rarely specified.
     quote: "developers prioritize functional context, such as test procedures (75.9%), implementation details (70.8%), and architecture (68.1%). We also identify a significant gap: non-functional requirements such as security (14.8%) and performance (14.5%) are rarely specified"
 ---

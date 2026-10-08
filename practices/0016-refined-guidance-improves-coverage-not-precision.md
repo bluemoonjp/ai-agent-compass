@@ -11,13 +11,13 @@ sources:
   - url: https://arxiv.org/abs/2606.20512
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: On SWE-bench Verified with Qwen3.5-35B-A3B, iteratively refining repository guidance through synthetic bug-fix probes raised the resolve rate from 25.5% unguided to 33.0%, producing evaluable patches for 14.5 more percentage points of instances, with per-patch precision statistically unchanged.
     quote: "The improvement comes from coverage rather than precision: refined guidance produces evaluable patches for 14.5 percentage points (pp) more instances while per-patch precision remains statistically constant (~59%, p=0.119)"
   - url: https://arxiv.org/abs/2606.20512
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same study's cross-model check found the opposite pattern on a different, capacity-constrained model, guidance tuned on that model made every guided condition underperform the unguided baseline instead of improving on it.
     quote: "Nemotron's results, using guidance tuned on Nemotron itself, show the opposite pattern to Qwen's: all guidance conditions underperform the unguided baseline"
 ---

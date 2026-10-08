@@ -12,13 +12,13 @@ sources:
   - url: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
     kind: primary
     confidence: verified
-    verified_on: "2026-09-18"
+    verified_on: "2026-10-05"
     summary: Anthropic's Agent Skills engineering post describes progressive disclosure, a skill's name and description load into the system prompt at startup, and its full SKILL.md body loads only if Claude judges the skill relevant to the task.
     quote: "At startup, the agent pre-loads the name and description of every installed skill into its system prompt. This metadata is the first level of progressive disclosure: it provides just enough information for Claude to know when each skill should be used without loading all of it into context."
   - url: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
     kind: primary
     confidence: verified
-    verified_on: "2026-09-18"
+    verified_on: "2026-10-05"
     summary: Anthropic's Agent Skills best-practices docs recommend keeping reference files one level deep from SKILL.md, since Claude may only partially read a file reached through a chain of nested references.
     quote: "Keep references one level deep from SKILL.md. All reference files should link directly from SKILL.md to ensure Claude reads complete files when needed."
 ---

@@ -17,7 +17,7 @@ sources:
   - url: https://developers.openai.com/codex/guides/agents-md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-18"
+    verified_on: "2026-10-05"
     summary: OpenAI's Codex documentation describes a deterministic merge instead of an arbitrary pick, AGENTS.md files concatenate from the project root down, and a file closer to the working directory overrides earlier guidance by position.
     quote: "Codex concatenates files from the root down, joining them with blank lines. Files closer to your current directory override earlier guidance because they appear later in the combined prompt."
 ---

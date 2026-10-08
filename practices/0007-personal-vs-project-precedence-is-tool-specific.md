@@ -17,7 +17,7 @@ sources:
   - url: https://docs.github.com/en/copilot/concepts/prompting/response-customization
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: GitHub's Copilot documentation states the opposite ordering for the analogous layers, personal instructions rank above repository instructions, which in turn rank above organization instructions.
     quote: "Personal instructions take the highest priority. Repository instructions come next, and then organization instructions are prioritized last."
 ---
