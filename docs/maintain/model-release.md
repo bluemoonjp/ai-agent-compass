@@ -31,8 +31,9 @@ by that confirmation.
    this repository's own `CLAUDE.md` and what the current model release
    notes say. A verdict is `holds` (the source still supports the file's
    claim and its classification, if any, stands) or it is not. Give every
-   verdict other than `holds` to a separate adversarial reviewer; a person
-   decides only on the verdicts that are not `holds`.
+   verdict, `holds` included, to a separate adversarial reviewer who tries
+   to show it is wrong. A person decides only on the verdicts that are not
+   `holds` or that the reviewer overturned.
 3. Apply each verdict:
    - If the rule still holds, update `sources[].verified_on` to today and
      leave the rule text alone.
