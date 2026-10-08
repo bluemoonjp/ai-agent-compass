@@ -16,6 +16,7 @@ Frontmatter records which tool a file applies to (`applies_to`) and what kind ea
 A model-release review covers every active practice and every active antipattern. `pnpm patrol:review-list` prints all of them and applies no narrowing condition. Adapters are out of scope: they describe other tools' mechanisms, which the weekly patrol covers.
 
 This amends ADR-0006's sentence that a model release "calls for reviewing every Claude-Code-scoped practice and undetermined antipattern at once": the scope is every active practice and antipattern.
+
 ## Consequences
 
 Reviewing every file is workable only because the re-verification procedure in `docs/maintain/model-release.md` checks each id independently and puts only the verdicts that fail its independent check in front of a person; the human cost follows that procedure, not the size of the list.
