@@ -14,13 +14,13 @@ sources:
   - url: https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Claude Code's own changelog (v2.1.111) documents the PowerShell tool as progressively rolling out to Windows users, with the CLAUDE_CODE_USE_POWERSHELL_TOOL environment variable available to opt in or out during that rollout.
     quote: "Windows: PowerShell tool is progressively rolling out. Opt in or out with `CLAUDE_CODE_USE_POWERSHELL_TOOL`."
   - url: https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: A later changelog entry (v2.1.143) documents the same variable's meaning changing for one platform and provider combination, the PowerShell tool became default-on for Windows Bedrock, Vertex, and Foundry users, and the variable switched to an opt-out, set to 0 to disable.
     quote: "The PowerShell tool is now enabled by default on Windows for Bedrock, Vertex, and Foundry users. Opt out with `CLAUDE_CODE_USE_POWERSHELL_TOOL=0`."
 ---

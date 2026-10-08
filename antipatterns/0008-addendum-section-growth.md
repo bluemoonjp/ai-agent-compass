@@ -14,7 +14,7 @@ sources:
   - url: https://arxiv.org/pdf/2511.12884v2
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: An empirical study of 2,303 agent context files across 1,925 repositories found these files evolve through frequent, small additions, risking unstructured append-only logs unless developers apply versioning and keep a separate changelog.
     quote: "Given that agent context files grow through frequent, small additions (Section 4.2), they risk becoming unstructured append-only logs."
 ---

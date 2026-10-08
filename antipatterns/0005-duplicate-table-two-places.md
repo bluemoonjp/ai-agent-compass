@@ -14,7 +14,7 @@ sources:
   - url: https://docs.github.com/en/contributing/writing-for-github-docs/creating-reusable-content
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: GitHub's own documentation-contribution guide describes a mechanism for storing a repeated paragraph or procedural list once, as a single reusable file, and referencing it from every page that needs it, instead of retyping the same content into each one by hand.
     quote: "Reusables are long strings of reusable text, such as paragraphs or procedural lists, that can be referenced in multiple content files."
 ---

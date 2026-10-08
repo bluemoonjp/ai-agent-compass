@@ -11,19 +11,19 @@ sources:
   - url: https://developers.openai.com/codex/guides/agents-md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Codex's own documentation states it concatenates instruction files from the project root down, joining them with blank lines, so a file closer to the working directory overrides earlier guidance because it appears later in the combined prompt.
     quote: "Codex concatenates files from the root down, joining them with blank lines. Files closer to your current directory override earlier guidance because they appear later in the combined prompt."
   - url: https://developers.openai.com/codex/guides/agents-md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same documentation states Codex stops adding files to the combined prompt once their total size reaches a configurable limit, 32 KiB by default, and describes it as raiseable by editing the setting.
     quote: "Codex skips empty files and stops adding files once the combined size reaches the limit defined by `project_doc_max_bytes` (32 KiB by default)."
   - url: https://developers.openai.com/codex/guides/agents-md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same documentation's troubleshooting section confirms which files are lost when the cap is hit, since files are added root-first, reaching the cap drops whatever would have been added last, the guidance closest to the working directory that the merge order says should override the rest.
     quote: "Instructions truncated: Raise `project_doc_max_bytes` or split large files across nested directories to keep critical guidance intact."
 ---

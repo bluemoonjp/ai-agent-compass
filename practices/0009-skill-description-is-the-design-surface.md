@@ -12,19 +12,19 @@ sources:
   - url: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Anthropic's Agent Skills best-practices docs state that the description field enables skill discovery and should state both what the skill does and when to use it.
     quote: "The description field enables Skill discovery and should include both what the Skill does and when to use it."
   - url: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same docs instruct writing the description in the third person, since it is injected into the system prompt and an inconsistent point of view can cause discovery problems.
     quote: "Always write in third person. The description is injected into the system prompt, and inconsistent point-of-view can cause discovery problems."
   - url: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same docs state that only a skill's name and description, not its body, are pre-loaded at startup, and that the body loads only once Claude judges the skill relevant.
     quote: "At startup, only the metadata (name and description) from all Skills is pre-loaded."
 ---

@@ -14,7 +14,7 @@ sources:
   - url: https://www.anthropic.com/engineering/claude-code-best-practices
     kind: primary
     confidence: verified
-    verified_on: "2026-09-18"
+    verified_on: "2026-10-05"
     summary: Anthropic's Claude Code best-practices guide warns that emphasizing many lines in CLAUDE.md backfires, recommending emphasis such as "IMPORTANT" be reserved for the single line an agent keeps skipping.
     quote: "If Claude keeps skipping one instruction, add emphasis such as “IMPORTANT” to that line alone. If you emphasize many lines, none of them stands out."
 ---

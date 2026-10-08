@@ -11,19 +11,19 @@ sources:
   - url: https://docs.claude.com/en/docs/claude-code/hooks
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Claude Code's hooks reference states that exit code 0 with no output means the hook reported no decision, so the tool call falls through to the normal permission flow rather than being approved by the hook's silence.
     quote: "Exit code 0 with no output means the hook has no decision to report, so the tool call continues through the normal permission flow. The hook can deny the call, but staying silent doesn't approve it."
   - url: https://docs.claude.com/en/docs/claude-code/hooks
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same reference states that, absent valid JSON on stdout, exit code 1 is treated as a non-blocking error rather than the Unix convention of a general failure, and that a hook meant to enforce a policy must use exit code 2 instead.
     quote: "Without valid JSON on stdout, Claude Code treats exit code 1 as a non-blocking error and proceeds with the action, even though 1 is the conventional Unix failure code. If your hook is meant to enforce a policy, use exit 2."
   - url: https://docs.claude.com/en/docs/claude-code/hooks
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same reference states that exit code 2's effect depends on the event, since some events represent an action that can still be blocked while others represent something that already happened and cannot be prevented.
     quote: "The effect depends on the event, because some events represent actions that can be blocked (like a tool call that hasn't happened yet) and others represent things that already happened or can't be prevented."
 ---

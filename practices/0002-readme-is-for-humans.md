@@ -11,7 +11,7 @@ sources:
   - url: https://agents.md/
     kind: primary
     confidence: verified
-    verified_on: "2026-09-17"
+    verified_on: "2026-10-05"
     summary: The AGENTS.md specification site explains that AGENTS.md exists so README.md can stay focused on human readers, while agent-facing build, test, and convention detail moves to a separate file.
     quote: "README.md files are for humans: quick starts, project descriptions, and contribution guidelines."
 ---

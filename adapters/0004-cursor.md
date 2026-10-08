@@ -11,19 +11,19 @@ sources:
   - url: https://cursor.com/docs/rules.md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Cursor's own documentation describes four rule types controlled from a type dropdown that sets the description, globs, and alwaysApply frontmatter fields, ranging from always-applied to manually mentioned.
     quote: "Always Apply: Apply to every chat session. Apply Intelligently: When Agent decides it's relevant based on description. Apply to Specific Files: When file matches a specified pattern. Apply Manually: When @-mentioned in chat"
   - url: https://cursor.com/docs/rules.md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same documentation states Cursor also supports AGENTS.md as a plain-markdown alternative to structured project rules, placed in the project root or any subdirectory.
     quote: "Cursor supports AGENTS.md in the project root and subdirectories."
   - url: https://cursor.com/docs/rules.md
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same documentation states that instructions from a nested AGENTS.md file are combined with those from its parent directories, with the more specific file's instructions taking precedence over the broader one's.
     quote: "Instructions from nested `AGENTS.md` files are combined with parent directories, with more specific instructions taking precedence."
 ---

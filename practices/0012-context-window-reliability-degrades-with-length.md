@@ -11,19 +11,19 @@ sources:
   - url: https://www.trychroma.com/research/context-rot
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Chroma's Context Rot technical report evaluated 18 LLMs, including GPT-4.1, Claude 4, Gemini 2.5, and Qwen3 models, and found that model performance varies significantly as input length changes, even on simple tasks.
     quote: "We observe that model performance varies significantly as input length changes, even on simple tasks."
   - url: https://www.trychroma.com/research/context-rot
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same report states that performance grew increasingly unreliable as input length grew, contrary to the common assumption that a model processes every position in its context window equally reliably.
     quote: "models do not use their context uniformly; instead, their performance grows increasingly unreliable as input length grows"
   - url: https://www.trychroma.com/research/context-rot
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same report states it evaluated 18 LLMs, including GPT-4.1, Claude 4, Gemini 2.5, and Qwen3 models, which is the basis for its claim that the effect holds broadly rather than in one model family.
     quote: "we evaluate 18 LLMs, including the state-of-the-art GPT-4.1, Claude 4, Gemini 2.5, and Qwen3 models"
 ---
