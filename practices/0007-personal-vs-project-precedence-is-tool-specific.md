@@ -1,6 +1,6 @@
 ---
 id: "0007"
-title: Personal- and project-level instructions rank in opposite orders across tools
+title: Personal- vs project-level precedence differs by tool, with Copilot ranking the layers and Claude Code disclaiming a ranking
 status: active
 topic: instruction-files
 applies_to:
@@ -11,9 +11,9 @@ sources:
   - url: https://docs.claude.com/en/docs/claude-code/memory
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
-    summary: Claude Code's memory documentation states that user-level rules under ~/.claude/rules/ load before project-level rules, giving the project-level rules higher priority when both apply.
-    quote: "User-level rules are loaded before project rules, giving project rules higher priority."
+    verified_on: "2026-10-05"
+    summary: Claude Code's memory documentation states that user-level rules under ~/.claude/rules/ load before project-level rules, but that neither set overrides the other, so a conflict between the two may be resolved either way.
+    quote: "Neither set overrides the other: if a user rule and a project rule conflict, Claude may follow either one, so keep the two consistent."
   - url: https://docs.github.com/en/copilot/concepts/prompting/response-customization
     kind: primary
     confidence: verified
@@ -24,7 +24,7 @@ sources:
 
 ## Why
 
-An instruction meant to be authoritative at one layer only works as intended if the author knows which layer wins when a personal- or user-scoped instruction and a project- or repository-scoped one disagree, and that ranking is not a shared convention — it's a design choice each tool states in its own documentation, and the two tools covered here state opposite choices.
+An instruction meant to be authoritative at one layer only works as intended if the author knows which layer wins when a personal- or user-scoped instruction and a project- or repository-scoped one disagree, and that ranking is not a shared convention — it's a design choice each tool states in its own documentation, and the two tools covered here differ: one states an explicit ranking, the other states that no layer overrides the other.
 
 ## When it applies
 
@@ -32,4 +32,4 @@ Applies whenever a personal- or user-scoped instruction and a project- or reposi
 
 ## Conflicting guidance
 
-Claude Code's own documentation states that a user-level rule loads before a project-level rule, and that the project-level rule accordingly has higher priority. GitHub's own documentation of Copilot states the reverse ordering for the layers Copilot recognizes: a personal instruction takes the highest priority, ahead of a repository instruction, which in turn ranks above an organization instruction. An author who writes a personal-level override in one tool and assumes the same ranking carries over to the other will have it silently backwards. This load-order ranking between layers is a different question from what happens when two rules within a resolved context genuinely disagree in meaning, where the sibling practice on writing one canonical rule applies instead and no such ordering is promised.
+Claude Code's own documentation states that a user-level rule loads before a project-level rule, so the project rule appears later in context, but that neither set overrides the other: when a user rule and a project rule conflict, Claude may follow either one, and the two should be kept consistent. GitHub's own documentation of Copilot states an explicit ranking for the layers Copilot recognizes: a personal instruction takes the highest priority, ahead of a repository instruction, which in turn ranks above an organization instruction. An author who writes a personal-level override in Copilot and assumes it also wins in Claude Code will find that the second tool promises no such outcome. This load-order ranking between layers is a different question from what happens when two rules within a resolved context genuinely disagree in meaning, where the sibling practice on writing one canonical rule applies instead and no such ordering is promised.

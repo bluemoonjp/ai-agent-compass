@@ -62,7 +62,7 @@ The two primary sources describe different resolution mechanisms for the same si
 
 #### Sources
 
-- Claude Code's memory documentation states that when two CLAUDE.md rules contradict each other, Claude may pick one arbitrarily, and recommends removing the conflict rather than relying on a consistent resolution. (<https://docs.claude.com/en/docs/claude-code/memory>)
+- Claude Code's memory documentation states that when two CLAUDE.md instructions contradict each other, Claude may pick one arbitrarily, and recommends removing the conflict rather than relying on a consistent resolution. (<https://docs.claude.com/en/docs/claude-code/memory>)
 - OpenAI's Codex documentation describes a deterministic merge instead of an arbitrary pick, AGENTS.md files concatenate from the project root down, and a file closer to the working directory overrides earlier guidance by position. (<https://developers.openai.com/codex/guides/agents-md>)
 
 ### 0005: Progressive disclosure: name and description at startup, body on demand, references one level deep
@@ -86,29 +86,29 @@ Applies to authoring any `SKILL.md`-based skill for an agent that supports this 
 
 ### 0006: Nested CLAUDE.md and path-scoped rules load on demand, not at launch
 
-Rule: A CLAUDE.md in a subdirectory, or a .claude/rules/ file with paths frontmatter, loads only when Claude reads a matching file, not at session start; use it for directory- or path-specific instructions.
+Rule: A subdirectory CLAUDE.md, or a .claude/rules/ file with paths frontmatter, loads only when Claude reads a matching file (path-scoped rules also on Write or Edit), not at session start.
 
 Applies to: claude-code
 
 #### Why
 
-Root CLAUDE.md and an unscoped `.claude/rules/` file load at launch into every session, whether or not the current task touches what they describe. A nested CLAUDE.md and a `paths`-scoped rule instead wait until Claude actually reads a file the rule concerns, so guidance narrow enough to belong to one directory or file type stays out of context until it's relevant, rather than being paid for on every turn regardless of task.
+Root CLAUDE.md and an unscoped `.claude/rules/` file load at launch into every session, whether or not the current task touches what they describe. A nested CLAUDE.md and a `paths`-scoped rule instead wait until Claude actually reads (for a path-scoped rule, also writes or edits) a file the rule concerns, so guidance narrow enough to belong to one directory or file type stays out of context until it's relevant, rather than being paid for on every turn regardless of task.
 
 #### When it applies
 
-Applies to deciding where to put directory- or file-type-specific guidance in a Claude Code project: a subdirectory's own CLAUDE.md, or a `.claude/rules/*.md` file carrying `paths` frontmatter. It does not apply to guidance every session needs regardless of which files get touched — that belongs in the root CLAUDE.md or an unscoped rule, both of which load at launch alongside it. It also does not apply to guidance whose trigger isn't a file read at all: the load happens when Claude reads a matching file, not when it runs a command or writes a new file in that directory, so a rule that must fire on those actions still needs to live somewhere loaded unconditionally.
+Applies to deciding where to put directory- or file-type-specific guidance in a Claude Code project: a subdirectory's own CLAUDE.md, or a `.claude/rules/*.md` file carrying `paths` frontmatter. It does not apply to guidance every session needs regardless of which files get touched — that belongs in the root CLAUDE.md or an unscoped rule, both of which load at launch alongside it. It also does not apply to guidance whose trigger isn't a file access at all: a path-scoped rule loads when Claude uses the Read, Write, or Edit tool on a matching file, not when it merely runs a command in that directory, so a rule that must fire on those actions still needs to live somewhere loaded unconditionally.
 
 #### Conflicting guidance
 
-Claude Code loads each nested or path-scoped file individually, on demand, as Claude reads a matching file. Codex's AGENTS.md discovery works differently: it concatenates every AGENTS.md file it finds, from the project root down, into one combined prompt, and stops adding files once that combination reaches a byte limit that defaults to 32 KiB. A project that nests instructions several directories deep under the assumption that Claude Code's on-demand model applies everywhere will find that Codex, instead, can silently drop whichever files the traversal hadn't reached yet once the cap is hit, unless the limit is raised.
+Claude Code loads each nested or path-scoped file individually, on demand, as Claude reads a matching file (a path-scoped rule also as Claude writes or edits one). Codex's AGENTS.md discovery works differently: it concatenates every AGENTS.md file it finds, from the project root down, into one combined prompt, and stops adding files once that combination reaches a byte limit that defaults to 32 KiB. A project that nests instructions several directories deep under the assumption that Claude Code's on-demand model applies everywhere will find that Codex, instead, can silently drop whichever files the traversal hadn't reached yet once the cap is hit, unless the limit is raised.
 
 #### Sources
 
 - Claude Code's memory documentation states that a CLAUDE.md file in a subdirectory does not load at session start; it loads only when Claude reads a file in that subdirectory, unlike the root file, which loads at launch. (<https://docs.claude.com/en/docs/claude-code/memory>)
-- The same documentation states that a .claude/rules/ file scoped with paths frontmatter loads only when Claude reads a file matching the pattern, not on every tool use, unlike an unscoped rule, which loads at launch. (<https://docs.claude.com/en/docs/claude-code/memory>)
+- The same documentation states that a .claude/rules/ file scoped with paths frontmatter loads only when Claude uses the Read, Write, or Edit tool on a file matching the pattern, not on every tool use, unlike an unscoped rule, which loads at launch. (<https://docs.claude.com/en/docs/claude-code/memory>)
 - OpenAI's Codex documentation states that Codex concatenates every discovered AGENTS.md file into one combined prompt and stops adding files once the total reaches a configurable byte limit, 32 KiB by default, unlike Claude Code's per-directory on-demand loading. (<https://learn.chatgpt.com/docs/agent-configuration/agents-md.md>)
 
-### 0007: Personal- and project-level instructions rank in opposite orders across tools
+### 0007: Personal- vs project-level precedence differs by tool, with Copilot ranking the layers and Claude Code disclaiming a ranking
 
 Rule: Do not assume a personal- or user-level instruction file automatically overrides a project-level one, or the reverse; confirm the specific tool's precedence before relying on it.
 
@@ -116,7 +116,7 @@ Applies to: general
 
 #### Why
 
-An instruction meant to be authoritative at one layer only works as intended if the author knows which layer wins when a personal- or user-scoped instruction and a project- or repository-scoped one disagree, and that ranking is not a shared convention — it's a design choice each tool states in its own documentation, and the two tools covered here state opposite choices.
+An instruction meant to be authoritative at one layer only works as intended if the author knows which layer wins when a personal- or user-scoped instruction and a project- or repository-scoped one disagree, and that ranking is not a shared convention — it's a design choice each tool states in its own documentation, and the two tools covered here differ: one states an explicit ranking, the other states that no layer overrides the other.
 
 #### When it applies
 
@@ -124,11 +124,11 @@ Applies whenever a personal- or user-scoped instruction and a project- or reposi
 
 #### Conflicting guidance
 
-Claude Code's own documentation states that a user-level rule loads before a project-level rule, and that the project-level rule accordingly has higher priority. GitHub's own documentation of Copilot states the reverse ordering for the layers Copilot recognizes: a personal instruction takes the highest priority, ahead of a repository instruction, which in turn ranks above an organization instruction. An author who writes a personal-level override in one tool and assumes the same ranking carries over to the other will have it silently backwards. This load-order ranking between layers is a different question from what happens when two rules within a resolved context genuinely disagree in meaning, where the sibling practice on writing one canonical rule applies instead and no such ordering is promised.
+Claude Code's own documentation states that a user-level rule loads before a project-level rule, so the project rule appears later in context, but that neither set overrides the other: when a user rule and a project rule conflict, Claude may follow either one, and the two should be kept consistent. GitHub's own documentation of Copilot states an explicit ranking for the layers Copilot recognizes: a personal instruction takes the highest priority, ahead of a repository instruction, which in turn ranks above an organization instruction. An author who writes a personal-level override in Copilot and assumes it also wins in Claude Code will find that the second tool promises no such outcome. This load-order ranking between layers is a different question from what happens when two rules within a resolved context genuinely disagree in meaning, where the sibling practice on writing one canonical rule applies instead and no such ordering is promised.
 
 #### Sources
 
-- Claude Code's memory documentation states that user-level rules under ~/.claude/rules/ load before project-level rules, giving the project-level rules higher priority when both apply. (<https://docs.claude.com/en/docs/claude-code/memory>)
+- Claude Code's memory documentation states that user-level rules under ~/.claude/rules/ load before project-level rules, but that neither set overrides the other, so a conflict between the two may be resolved either way. (<https://docs.claude.com/en/docs/claude-code/memory>)
 - GitHub's Copilot documentation states the opposite ordering for the analogous layers, personal instructions rank above repository instructions, which in turn rank above organization instructions. (<https://docs.github.com/en/copilot/concepts/prompting/response-customization>)
 
 ### 0008: Instruction files are context Claude tries to follow, not configuration that guarantees compliance
