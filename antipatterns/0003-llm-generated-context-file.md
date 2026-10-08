@@ -14,13 +14,13 @@ sources:
   - url: https://arxiv.org/abs/2602.11988
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: A controlled study found LLM-generated context files caused performance drops in most of the settings tested, with neither benchmark's drop reaching statistical significance, while inference cost rose by more than 20% on average.
     quote: "LLM-generated context files cause performance drops in 5 out of 8 settings across SWE-bench and CTXbench"
   - url: https://arxiv.org/abs/2602.11988
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same study found developer-provided context files significantly outperformed the LLM-generated ones, unlike the LLM-generated files' own null effect against having no context file at all.
     quote: "Developer-provided context files improve agent performance by 2.4% on average (p=21%), significantly outperforming LLM-generated ones (p=3.8%)"
 ---

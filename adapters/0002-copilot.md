@@ -11,19 +11,19 @@ sources:
   - url: https://docs.github.com/en/copilot/concepts/prompting/response-customization
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: GitHub's own documentation states that agent instructions, specified in AGENTS.md, CLAUDE.md, or GEMINI.md files, are similar to repository-wide custom instructions but are not currently supported by every Copilot feature.
     quote: "Agent instructions, which are similar to repository-wide custom instructions, but are currently not supported by all Copilot features."
   - url: https://docs.github.com/en/copilot/concepts/prompting/response-customization
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: GitHub's own documentation gives the complete precedence order when several instruction types apply to one request, personal first (not shown in this quote), then path-specific, then repository-wide, then agent instructions, then organization instructions last.
     quote: "Repository custom instructions: Path-specific instructions in any applicable .github/instructions/**/*.instructions.md file Repository-wide instructions in the .github/copilot-instructions.md file Agent instructions (for example, in an AGENTS.md file) Organization custom instructions"
   - url: https://docs.github.com/en/copilot/reference/custom-instructions-support
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: GitHub's own support reference shows Copilot Chat on GitHub.com lacking an agent-instructions row entirely, unlike Copilot Chat in Visual Studio Code, whose row includes agent instructions using an AGENTS.md file.
     quote: "Copilot Chat Personal instructions. Repository-wide instructions (using the .github/copilot-instructions.md file). Organization instructions."
 ---

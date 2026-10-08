@@ -86,13 +86,13 @@ Applies to authoring any `SKILL.md`-based skill for an agent that supports this 
 
 ### 0006: Nested CLAUDE.md and path-scoped rules load on demand, not at launch
 
-Rule: A subdirectory CLAUDE.md, or a .claude/rules/ file with paths frontmatter, loads only when Claude reads a matching file (path-scoped rules also on Write or Edit), not at session start.
+Rule: A subdirectory CLAUDE.md, or a .claude/rules/ file with paths frontmatter, loads only when Claude reads, writes, or edits a matching file, not at session start.
 
 Applies to: claude-code
 
 #### Why
 
-Root CLAUDE.md and an unscoped `.claude/rules/` file load at launch into every session, whether or not the current task touches what they describe. A nested CLAUDE.md and a `paths`-scoped rule instead wait until Claude actually reads (for a path-scoped rule, also writes or edits) a file the rule concerns, so guidance narrow enough to belong to one directory or file type stays out of context until it's relevant, rather than being paid for on every turn regardless of task.
+Root CLAUDE.md and an unscoped `.claude/rules/` file load at launch into every session, whether or not the current task touches what they describe. A nested CLAUDE.md and a `paths`-scoped rule instead wait until Claude actually reads, writes, or edits a file the rule concerns, so guidance narrow enough to belong to one directory or file type stays out of context until it's relevant, rather than being paid for on every turn regardless of task.
 
 #### When it applies
 
@@ -100,12 +100,13 @@ Applies to deciding where to put directory- or file-type-specific guidance in a 
 
 #### Conflicting guidance
 
-Claude Code loads each nested or path-scoped file individually, on demand, as Claude reads a matching file (a path-scoped rule also as Claude writes or edits one). Codex's AGENTS.md discovery works differently: it concatenates every AGENTS.md file it finds, from the project root down, into one combined prompt, and stops adding files once that combination reaches a byte limit that defaults to 32 KiB. A project that nests instructions several directories deep under the assumption that Claude Code's on-demand model applies everywhere will find that Codex, instead, can silently drop whichever files the traversal hadn't reached yet once the cap is hit, unless the limit is raised.
+Claude Code loads each nested or path-scoped file individually, on demand, as Claude reads, writes, or edits a matching file. Codex's AGENTS.md discovery works differently: it concatenates every AGENTS.md file it finds, from the project root down, into one combined prompt, and stops adding files once that combination reaches a byte limit that defaults to 32 KiB. A project that nests instructions several directories deep under the assumption that Claude Code's on-demand model applies everywhere will find that Codex, instead, can silently drop whichever files the traversal hadn't reached yet once the cap is hit, unless the limit is raised.
 
 #### Sources
 
 - Claude Code's memory documentation states that a CLAUDE.md file in a subdirectory does not load at session start; it loads only when Claude reads a file in that subdirectory, unlike the root file, which loads at launch. (<https://docs.claude.com/en/docs/claude-code/memory>)
 - The same documentation states that a .claude/rules/ file scoped with paths frontmatter loads only when Claude uses the Read, Write, or Edit tool on a file matching the pattern, not on every tool use, unlike an unscoped rule, which loads at launch. (<https://docs.claude.com/en/docs/claude-code/memory>)
+- Claude Code's context-window documentation states that both path-scoped rules and nested CLAUDE.md files load when Claude reads, writes, or edits their trigger file, not only when it reads one. (<https://docs.claude.com/en/docs/claude-code/context-window>)
 - OpenAI's Codex documentation states that Codex concatenates every discovered AGENTS.md file into one combined prompt and stops adding files once the total reaches a configurable byte limit, 32 KiB by default, unlike Claude Code's per-directory on-demand loading. (<https://learn.chatgpt.com/docs/agent-configuration/agents-md.md>)
 
 ### 0007: Personal- vs project-level precedence differs by tool, with Copilot ranking the layers and Claude Code disclaiming a ranking

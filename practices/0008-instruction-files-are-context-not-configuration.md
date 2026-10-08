@@ -11,13 +11,13 @@ sources:
   - url: https://docs.claude.com/en/docs/claude-code/memory
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Claude Code's memory documentation states that Claude treats CLAUDE.md and auto memory as context rather than enforced configuration, and that blocking an action regardless of what Claude decides requires a PreToolUse hook instead.
     quote: "Claude treats them as context, not enforced configuration. To block an action regardless of what Claude decides, use a PreToolUse hook instead."
   - url: https://docs.claude.com/en/docs/claude-code/memory
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same documentation, troubleshooting why an instruction wasn't followed, states that Claude reads CLAUDE.md and tries to follow it, but there is no guarantee of strict compliance, especially for vague or conflicting instructions.
     quote: "Claude reads it and tries to follow it, but there's no guarantee of strict compliance, especially for vague or conflicting instructions."
 ---

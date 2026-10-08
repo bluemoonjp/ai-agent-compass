@@ -11,13 +11,13 @@ sources:
   - url: https://docs.claude.com/en/docs/claude-code/memory
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Claude Code's memory documentation states that @path imports are expanded and loaded into context at launch alongside the referencing CLAUDE.md, not deferred until the agent later needs the imported file.
     quote: "Imported files are expanded and loaded into context at launch alongside the CLAUDE.md that references them."
   - url: https://docs.claude.com/en/docs/claude-code/memory
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Claude Code's memory documentation states that imported files may recursively import other files up to a maximum nesting depth of four hops.
     quote: "Imported files can recursively import other files, with a maximum depth of four hops."
 ---

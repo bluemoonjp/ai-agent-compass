@@ -17,19 +17,19 @@ sources:
   - url: https://arxiv.org/abs/2601.20404
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: A study analyzing 10 repositories and 124 pull requests, run with and without an AGENTS.md file, found its presence associated with a lower median runtime (28.64%) and reduced median output token consumption (16.58%), while task completion behavior stayed comparable.
     quote: "the presence of AGENTS.md is associated with a lower median runtime (Δ28.64%) and reduced output token consumption (Δ16.58%), while maintaining a comparable task completion behavior"
   - url: https://arxiv.org/abs/2601.20404
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: The same study notes its completion check was a sanity check for non-empty, non-trivial changes rather than a full correctness evaluation, so its efficiency findings should not be read as also proving completion quality was unaffected.
     quote: "this sanity check does not constitute a full correctness evaluation, it provides confidence that the efficiency measurements reported in this paper are not driven by obvious failures"
   - url: https://arxiv.org/abs/2602.11988
     kind: research
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: A different controlled study, on SWE-bench and a novel CTXbench, found context files did not generally improve task success while raising inference cost, holding for both LLM-generated and developer-committed files, the opposite cost direction from this practice's own source.
     quote: "providing context files does not generally improve task success rates, while increasing inference cost by over 20% on average. This observation holds across different LLMs, coding agents, and for both LLM-generated and developer-committed context files"
 ---

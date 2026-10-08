@@ -11,7 +11,7 @@ sources:
   - url: https://docs.claude.com/en/docs/claude-code/memory
     kind: primary
     confidence: verified
-    verified_on: "2026-09-19"
+    verified_on: "2026-10-05"
     summary: Claude Code's memory documentation gives a concrete size target for CLAUDE.md, stating that a longer file consumes more context and reduces how reliably Claude follows it.
     quote: "Size: target under 200 lines per CLAUDE.md file. Longer files consume more context and reduce adherence."
 ---

@@ -11,13 +11,13 @@ sources:
   - url: https://www.anthropic.com/engineering/claude-code-best-practices
     kind: primary
     confidence: verified
-    verified_on: "2026-09-17"
+    verified_on: "2026-10-05"
     summary: Anthropic's Claude Code best-practices guide recommends keeping CLAUDE.md concise, since a bloated always-loaded file causes Claude to ignore its actual instructions.
     quote: "Keep it concise. For each line, ask: \"Would removing this cause Claude to make mistakes?\" If not, cut it. Bloated CLAUDE.md files cause Claude to ignore your actual instructions!"
   - url: https://www.anthropic.com/engineering/claude-code-best-practices
     kind: primary
     confidence: verified
-    verified_on: "2026-09-17"
+    verified_on: "2026-10-05"
     summary: The same guide distinguishes CLAUDE.md's advisory instructions from hooks, which run deterministically and are guaranteed to happen.
     quote: "Use hooks for actions that must happen every time with zero exceptions."
 ---
