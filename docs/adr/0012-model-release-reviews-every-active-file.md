@@ -11,8 +11,6 @@ Date: 2026-10-08
 
 Frontmatter records which tool a file applies to (`applies_to`) and what kind each source is (`kind`). It does not record whether the claim depends on how a model behaves, and that is the property a model release changes. Two independent panels classified every active practice and antipattern by that property and agreed on all of them (the counts per candidate scope are recorded in the Issue above). Measured against that classification, every frontmatter-derived scope had both kinds of error: model-dependent files it left out, and files that do not depend on the model that it included. The previous scope left out most of the model-dependent files; adding a `kind: research` condition and a model-name condition reduced the misses without removing them and added more files that do not depend on the model; the model-name condition added nothing the research condition had not already selected.
 
-An explicit frontmatter field saying "this claim depends on the model" would remove the errors only if its value is right at the time it is written. Writing it moves the judgment to authoring time, and nothing re-checks that judgment later.
-
 ## Decision
 
 A model-release review covers every active practice and every active antipattern. `pnpm patrol:review-list` prints all of them and applies no narrowing condition. Adapters are out of scope: they describe other tools' mechanisms, which the weekly patrol covers.
@@ -23,4 +21,4 @@ This amends ADR-0006's sentence that a model release "calls for reviewing every 
 
 Reviewing every file is workable only because the re-verification procedure in `docs/maintain/model-release.md` checks each id independently and puts only the verdicts other than `holds` in front of a person; the human cost follows that procedure, not the size of the list.
 
-The list now grows with the corpus, so the cost of the re-verification grows with it. If a full pass stops being practical, the next candidate is an explicit frontmatter field marking model-dependent claims, with the authoring-time risk described above.
+The list now grows with the corpus, so the cost of the re-verification grows with it. If a full pass stops being practical, the next candidate is an explicit frontmatter field marking model-dependent claims. It would remove the errors only if its value is right when written, which moves the judgment to authoring time, where nothing re-checks it later.

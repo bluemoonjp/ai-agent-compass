@@ -23,18 +23,16 @@ by that confirmation.
 ## Procedure
 
 1. Run `pnpm patrol:review-list`. It prints, one per line, the id of
-   every active practice and every active antipattern. It does not narrow
-   by frontmatter, because frontmatter does not record whether a claim
-   depends on how a model behaves (ADR-0012). The script only prints ids —
-   no rule text, no prose — so the list can be reviewed without reading
-   anything sensitive out of context.
+   every active practice and every active antipattern (ADR-0012). The
+   script only prints ids — no rule text, no prose — so the list can be
+   reviewed without reading anything sensitive out of context.
 2. Re-verify each id on its own, one at a time and independent of the
    others (an agent per id is fine), against its cited source fetched per
    this repository's own `CLAUDE.md` and what the current model release
    notes say. A verdict is `holds` (the source still supports the file's
-   claim and its classification, if any, stands) or it is not. Give every verdict
-   other than `holds` to a separate adversarial reviewer; a person decides
-   only on the verdicts that are not `holds`.
+   claim and its classification, if any, stands) or it is not. Give every
+   verdict other than `holds` to a separate adversarial reviewer; a person
+   decides only on the verdicts that are not `holds`.
 3. Apply each verdict:
    - If the rule still holds, update `sources[].verified_on` to today and
      leave the rule text alone.
