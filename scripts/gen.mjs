@@ -37,7 +37,9 @@ export function renderAuthoringTable(checks) {
   const rows = checks.map((c) => {
     const blocking = c.blocking ? 'yes' : 'no'
     const enforces = (c.enforces ?? []).join(', ')
-    return `| \`${c.id}\` | ${blocking} | ${enforces} | ${c.protects} |`
+    // An empty cell must be `| |`, not `|  |`, to satisfy markdownlint MD060 (compact style).
+    const cell = (v) => (v === '' ? ' ' : ` ${v} `)
+    return `|${cell(`\`${c.id}\``)}|${cell(blocking)}|${cell(enforces)}|${cell(c.protects)}|`
   })
   return [TABLE_HEADER, TABLE_SEP, ...rows].join('\n')
 }
