@@ -1,6 +1,6 @@
 # ADR-0006: Weekly patrol separates unattended detection from human-approved advance
 
-Status: accepted
+Status: amended by ADR-0012
 
 Issue: #30
 Date: 2026-09-19

@@ -22,26 +22,28 @@ by that confirmation.
 
 ## Procedure
 
-1. Run `pnpm patrol:review-list`. It prints, one per line, the id of every
-   active practice whose `applies_to` includes `claude-code` (its rule may
-   describe a limitation the new model no longer has) and the id of every
-   antipattern still classified `undetermined` (the new model may resolve
-   the uncertainty). The script only prints ids — no rule text, no prose —
-   so the list can be reviewed without reading anything sensitive out of
-   context.
-2. For each id, re-fetch its cited source per this repository's own
-   `CLAUDE.md` — confirming a rule still holds needs the actual current
-   text, not a paraphrase of it.
-3. Judge each one against what the current model release notes say:
+1. Run `pnpm patrol:review-list`. It prints, one per line, the id of
+   every active practice and every active antipattern. It does not narrow
+   by frontmatter, because frontmatter does not record whether a claim
+   depends on how a model behaves (ADR-0012). The script only prints ids —
+   no rule text, no prose — so the list can be reviewed without reading
+   anything sensitive out of context.
+2. Re-verify each id on its own, one at a time and independent of the
+   others (an agent per id is fine), against its cited source fetched per
+   this repository's own `CLAUDE.md` and what the current model release
+   notes say. Give every verdict other than `holds` to a separate
+   adversarial reviewer; a person decides only on the verdicts that are not
+   `holds`.
+3. Apply each verdict:
    - If the rule still holds, update `sources[].verified_on` to today and
      leave the rule text alone.
    - If the underlying limitation is gone, retire the practice following
      `docs/maintain/authoring.md`'s retirement procedure: delete the
      practice file and add an antipattern with `classification: obsolete`
      pointing back at it, rather than editing the practice in place.
-   - For an `undetermined` antipattern, reclassify it to `harmful` or
-     `obsolete` if the new evidence settles it, or leave it `undetermined`
-     with an updated `verified_on` if it doesn't.
+   - For an antipattern, if the new evidence changes its classification,
+     set it to `harmful`, `obsolete`, or `undetermined` accordingly;
+     if it does not, update only `verified_on`.
 4. Run `pnpm gen && pnpm test && pnpm check`, then open a pull request like
    any other change to this repository.
 
