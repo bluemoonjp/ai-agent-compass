@@ -17,6 +17,18 @@ sources:
     verified_on: "2026-09-18"
     summary: Anthropic's Claude Code best-practices guide warns that emphasizing many lines in CLAUDE.md backfires, recommending emphasis such as "IMPORTANT" be reserved for the single line an agent keeps skipping.
     quote: "If Claude keeps skipping one instruction, add emphasis such as “IMPORTANT” to that line alone. If you emphasize many lines, none of them stands out."
+  - url: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices
+    kind: primary
+    confidence: verified
+    verified_on: "2026-10-08"
+    summary: Anthropic's prompting guide says Claude Opus 4.5 and Opus 4.6 are more responsive to the system prompt than earlier models, so prompts written to reduce undertriggering may now overtrigger, and tells authors to dial back aggressive language such as "CRITICAL" or "MUST".
+    quote: "The fix is to dial back any aggressive language."
+  - url: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5
+    kind: primary
+    confidence: verified
+    verified_on: "2026-10-08"
+    summary: Anthropic's Claude Sonnet 5 prompting guide says the model interprets prompts literally and does not silently generalize an instruction from one item to another, and that an instruction meant to apply broadly should have its scope stated explicitly.
+    quote: "If you need Claude to apply an instruction broadly, state the scope explicitly"
 ---
 
 ## Symptom
@@ -25,8 +37,8 @@ Many lines of an instruction file carry emphasis — bold text, "IMPORTANT," or 
 
 ## Cause
 
-Emphasis reads as a lever: when the agent skips an instruction, adding emphasis to that line looks like the fix, and it appears to work in isolation. An author who reaches for that lever once per skipped instruction ends up applying it wherever an instruction matters, which in most instruction files is nearly everywhere.
+Emphasis reads as a lever: when the agent skips an instruction, adding emphasis to that line looks like the fix, and it appears to work in isolation. An author who reaches for that lever once per skipped instruction ends up applying it wherever an instruction matters, which in most instruction files is nearly everywhere. Emphasis can also overshoot on newer models: Anthropic's prompting guide reports that Claude Opus 4.5 and Opus 4.6 respond more strongly to the system prompt than earlier models, so wording written to push an under-followed instruction can make it over-apply, and the guide's fix is to dial the aggressive language back.
 
 ## Remedy
 
-Reserve emphasis for the one instruction the agent actually keeps skipping, and leave the rest of the file at normal weight. Anthropic's own CLAUDE.md guidance is explicit that emphasizing many lines leaves none of them standing out — emphasis only works as a contrast against a plain background, and a file that is emphasis-everywhere has no background left to contrast against. See the sibling practice on keeping always-loaded instructions minimal for the companion problem of length, distinct from the density of emphasis addressed here.
+Reserve emphasis for the one instruction the agent actually keeps skipping, and leave the rest of the file at normal weight. Anthropic's own CLAUDE.md guidance is explicit that emphasizing many lines leaves none of them standing out — emphasis only works as a contrast against a plain background, and a file that is emphasis-everywhere has no background left to contrast against. When the agent skips an instruction because it did not carry it over to a neighbouring case, which Anthropic's Claude Sonnet 5 guide describes as the model's literal reading of prompts, the guide's remedy is to state the scope the instruction should cover. See the sibling practice on keeping always-loaded instructions minimal for the companion problem of length, distinct from the density of emphasis addressed here.

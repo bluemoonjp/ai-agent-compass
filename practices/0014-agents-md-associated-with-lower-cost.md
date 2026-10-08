@@ -8,6 +8,12 @@ applies_to:
 rule: Do not assume a repository-level context file only affects correctness; a controlled comparison found its presence associated with lower runtime and token cost, at comparable task completion.
 license: CC-BY-4.0
 sources:
+  - url: https://arxiv.org/abs/2607.27250
+    kind: research
+    confidence: verified
+    verified_on: "2026-10-08"
+    summary: A July 2026 controlled ablation of context-injection strategy across Claude Code and Codex, with 17 real tasks and 288 gold-test runs, found no measurable effect of context strategy on correctness, within a bound of 10 to 15 percentage points.
+    quote: "Context strategy does not measurably move correctness on either agent (bounded to <=10-15pp via equivalence testing)."
   - url: https://arxiv.org/abs/2601.20404
     kind: research
     confidence: verified
@@ -30,7 +36,7 @@ sources:
 
 ## Why
 
-It is easy to treat a repository-level context file as a correctness-only lever: it either helps the agent get the task right or it doesn't. Each of 124 real pull request tasks across 10 repositories was executed once with and once without the repository's AGENTS.md file, in matched, isolated environments on the identical pre-merge commit; that paired comparison found AGENTS.md's presence associated with a lower median runtime (28.64%) and lower median output token consumption (16.58%), at comparable task completion. The study is explicit that its completion check was a sanity check for non-empty, non-trivial output rather than a full correctness evaluation — so the finding supports treating AGENTS.md as an efficiency lever worth measuring, not a settled claim that completion quality was unaffected.
+It is easy to treat a repository-level context file as a correctness-only lever: it either helps the agent get the task right or it doesn't. Each of 124 real pull request tasks across 10 repositories was executed once with and once without the repository's AGENTS.md file, in matched, isolated environments on the identical pre-merge commit; that paired comparison found AGENTS.md's presence associated with a lower median runtime (28.64%) and lower median output token consumption (16.58%), at comparable task completion. The study is explicit that its completion check was a sanity check for non-empty, non-trivial output rather than a full correctness evaluation — so the finding supports treating AGENTS.md as an efficiency lever worth measuring, not a settled claim that completion quality was unaffected. A later controlled ablation on Claude Code and Codex, which did evaluate correctness against gold tests, found no measurable effect of context strategy on it, within a 10 to 15 percentage-point bound; that is consistent with reading the context file as an efficiency lever, though its abstract reports no runtime or token-cost result.
 
 ## When it applies
 
