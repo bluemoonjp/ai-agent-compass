@@ -98,5 +98,4 @@ by that confirmation.
 Run once against the model this repository's own working sessions use at
 the time, before relying on this page for a real model release. Record what
 `pnpm patrol:review-list` printed and what each id's judgment was in the
-tracking issue, without any path or other private information. The
-candidate conclusions the search step asks for belong in that record too.
+tracking issue, without any path or other private information.
