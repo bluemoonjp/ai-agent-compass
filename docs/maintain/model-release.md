@@ -46,13 +46,14 @@ by that confirmation.
      `docs/maintain/authoring.md` requires.
    - Give every candidate to a separate reviewer who fetches it again and
      tries to reject it for one of four reasons: the quote is not in the
-     fetched text; it duplicates a source the file already cites, the same
-     work at another address included; it does not bear on the sentence
+     fetched text; it adds nothing to a source the file already cites, the
+     same work at another address included; it does not bear on the sentence
      named in the relation named; or it is confounded, meaning its result
      comes from a factor other than the one the sentence concerns.
-   - Check the host of each candidate that survives or contradicts, yourself
-     and not through an agent: it must be the host of a registered anchor or
-     of one of its `covers` entries in `sources/registry.json`. A candidate
+   - Check the host of each candidate that survives or contradicts by
+     comparing it with the registry, not by an agent's judgment: it must be
+     the host of a registered anchor or of one of its `covers` entries in
+     `sources/registry.json`. A candidate
      on any other host goes no further, a contradicting one included; the
      registry changes outside this procedure.
    - A candidate that contradicts the file goes to a person with the
@@ -60,7 +61,8 @@ by that confirmation.
      round as the verdicts that are not `holds`. The person chooses to
      record it under Conflicting guidance (practices), retire the practice,
      reclassify the antipattern, or not adopt it, and that choice goes into
-     the verdict pull request.
+     the verdict pull request, with the source entry and Output review the
+     next step gives.
    - Record in the tracking issue the conclusion for every id and candidate
      pair, the reason for each rejection or host that was not covered, and
      which ids had no candidate.
