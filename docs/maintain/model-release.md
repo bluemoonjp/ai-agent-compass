@@ -50,17 +50,20 @@ by that confirmation.
      work at another address included; it does not bear on the sentence
      named in the relation named; or it is confounded, meaning its result
      comes from a factor other than the one the sentence concerns.
-   - Check each surviving candidate's host yourself, not through an agent:
-     it must be the host of a registered anchor or of one of its `covers`
-     entries in `sources/registry.json`. A candidate on any other host is
-     recorded in the tracking issue and goes no further; the registry
-     changes outside this procedure.
+   - Check the host of each candidate that survives or contradicts, yourself
+     and not through an agent: it must be the host of a registered anchor or
+     of one of its `covers` entries in `sources/registry.json`. A candidate
+     on any other host goes no further, a contradicting one included; the
+     registry changes outside this procedure.
    - A candidate that contradicts the file goes to a person with the
      reviewer's opinion, even when the reviewer rejected it, in the same
      round as the verdicts that are not `holds`. The person chooses to
      record it under Conflicting guidance (practices), retire the practice,
-     reclassify the antipattern, or not adopt it, and that choice is made as
-     its own change.
+     reclassify the antipattern, or not adopt it, and that choice goes into
+     the verdict pull request.
+   - Record in the tracking issue the conclusion for every id and candidate
+     pair, the reason for each rejection or host that was not covered, and
+     which ids had no candidate.
    - Apply no verdict until every id's search and review is finished.
 4. Apply each verdict:
    - If the rule still holds, update `sources[].verified_on` to today and
@@ -76,15 +79,16 @@ by that confirmation.
      gives.
 5. Add the sources that supported or narrowed a rule and survived review, in
    a second pull request that branches from the verdict changes and leaves
-   out any file those verdicts retired. `docs/maintain/authoring.md` states
-   what a source entry must carry under its sourcing, confidence, and
+   out any file the verdict pull request retires. `docs/maintain/authoring.md`
+   states what a source entry must carry under its sourcing, confidence, and
    verbatim-quote headings. Extend only the body section that holds the
    sentence the source bears on (`Why` or `When it applies` for a
-   practice), and only as far as the source says; if the rule, title, or
-   classification would have to change, hand the candidate to a person
-   instead. Run the Output review in `docs/maintain/review.md` on each
-   changed file. The pull request body gives, for every id and candidate
-   pair, the conclusion and, for a rejection, the reason.
+   practice, a section of its current heading set for an antipattern), and
+   only as far as the source says; if the rule, title, or classification
+   would have to change, hand the candidate to a person instead. Run the
+   Output review in `docs/maintain/review.md` on each changed file. The pull
+   request body repeats the conclusion for each id and candidate pair it
+   adopts.
 6. Run `pnpm gen && pnpm test && pnpm check` on each branch, then open its
    pull request like any other change to this repository, the verdict
    pull request first.
@@ -94,6 +98,5 @@ by that confirmation.
 Run once against the model this repository's own working sessions use at
 the time, before relying on this page for a real model release. Record what
 `pnpm patrol:review-list` printed and what each id's judgment was in the
-tracking issue, without any path or other private information. Record the
-candidates found, which were adopted, and the reason for each rejection the
-same way.
+tracking issue, without any path or other private information. The
+candidate conclusions the search step asks for belong in that record too.
