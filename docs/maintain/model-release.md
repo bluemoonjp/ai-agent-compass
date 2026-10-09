@@ -34,7 +34,40 @@ by that confirmation.
    verdict, `holds` included, to a separate adversarial reviewer who tries
    to show it is wrong. A person decides only on the verdicts that are not
    `holds` or that the reviewer overturned.
-3. Apply each verdict:
+3. Search for new sources, with a searcher per id that is separate from the
+   one that re-verified it and never sees its verdict; this may run
+   alongside the previous step. The release is only the occasion to search,
+   so a candidate need not concern the new model or be recent.
+   - A candidate is a `primary` or `research` source the file does not
+     already cite. The searcher names the sentence of the file's rule or
+     body it bears on and whether it supports, narrows, or contradicts that
+     sentence; without a named sentence it is not a candidate. Fetch it per
+     this repository's own `CLAUDE.md` and take a verbatim quote as
+     `docs/maintain/authoring.md` requires.
+   - Give every candidate to a separate reviewer who fetches it again and
+     tries to reject it for one of four reasons: the quote is not in the
+     fetched text; it adds nothing to a source the file already cites, the
+     same work at another address included; it does not bear on the sentence
+     named in the relation named; or it is confounded, meaning its result
+     comes from a factor other than the one the sentence concerns.
+   - Check the host of each candidate that survives or contradicts by
+     comparing it with the registry, not by an agent's judgment: it must be
+     the host of a registered anchor or of one of its `covers` entries in
+     `sources/registry.json`. A candidate
+     on any other host goes no further, a contradicting one included; the
+     registry changes outside this procedure.
+   - A candidate that contradicts the file goes to a person with the
+     reviewer's opinion, even when the reviewer rejected it, in the same
+     round as the verdicts that are not `holds`. The person chooses to
+     record it under Conflicting guidance (practices), retire the practice,
+     reclassify the antipattern, or not adopt it, and that choice goes into
+     the verdict pull request, with the source entry and Output review the
+     next step gives.
+   - Record in the tracking issue the conclusion for every id and candidate
+     pair, the reason for each rejection or host that was not covered, and
+     which ids had no candidate.
+   - Apply no verdict until every id's search and review is finished.
+4. Apply each verdict:
    - If the rule still holds, update `sources[].verified_on` to today and
      leave the rule text alone.
    - If the underlying limitation is gone, retire the practice following
@@ -46,8 +79,21 @@ by that confirmation.
      if it does not, update only `verified_on`. When the classification
      changes, rewrite the body to its heading set, which `authoring.md`
      gives.
-4. Run `pnpm gen && pnpm test && pnpm check`, then open a pull request like
-   any other change to this repository.
+5. Add the sources that supported or narrowed a rule and survived review, in
+   a second pull request that branches from the verdict changes and leaves
+   out any file the verdict pull request retires. `docs/maintain/authoring.md`
+   states what a source entry must carry under its sourcing, confidence, and
+   verbatim-quote headings. Extend only the body section that holds the
+   sentence the source bears on (`Why` or `When it applies` for a
+   practice, a section of its current heading set for an antipattern), and
+   only as far as the source says; if the rule, title, or classification
+   would have to change, hand the candidate to a person instead. Run the
+   Output review in `docs/maintain/review.md` on each changed file. The pull
+   request body repeats the conclusion for each id and candidate pair it
+   adopts.
+6. Run `pnpm gen && pnpm test && pnpm check` on each branch, then open its
+   pull request like any other change to this repository, the verdict
+   pull request first.
 
 ## Rehearsal record
 
