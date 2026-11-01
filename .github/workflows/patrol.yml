@@ -17,13 +17,13 @@ jobs:
   patrol:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-node-pnpm
 
       - name: Checkout patrol-state
         id: checkout-patrol-state
         continue-on-error: true
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: patrol-state
           path: patrol-state
@@ -133,12 +133,12 @@ jobs:
     needs: patrol
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         with:
           ref: patrol-state
           path: patrol-state
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
       - run: node scripts/patrol-health.mjs --state patrol-state/state.json
