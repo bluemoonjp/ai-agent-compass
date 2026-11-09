@@ -3,139 +3,140 @@
     "claude-code-docs-llms": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:27.811Z",
+      "checkedAt": "2026-11-09T10:30:33.246Z",
       "http": 200,
-      "md5": "21af86412e0c07466488789a149e74ac",
-      "bytes": 93771,
+      "md5": "fa22cdda54306ffc9d7f2fbc5552082c",
+      "bytes": 97976,
       "firstChangedAt": "2026-09-28"
     },
     "claude-code-whats-new": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:27.913Z",
+      "checkedAt": "2026-11-09T10:30:33.343Z",
       "http": 200,
-      "md5": "b88d894074312084c8cd1c2edb09cda5",
-      "bytes": 285858,
+      "md5": "a3faf205be49819a03790ffdd1dc1bb9",
+      "bytes": 293612,
       "firstChangedAt": "2026-09-21"
     },
     "claude-code-docs-changelog": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:28.271Z",
+      "checkedAt": "2026-11-09T10:30:33.697Z",
       "http": 200,
-      "md5": "ef26ec15972f79431b561cd96a48e719",
-      "bytes": 4535259,
+      "md5": "9c0926810314e928fb3671356d8fd403",
+      "bytes": 4679584,
       "firstChangedAt": "2026-09-21"
     },
     "claude-code-changelog-raw": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:28.294Z",
+      "checkedAt": "2026-11-09T10:30:33.743Z",
       "http": 200,
-      "etag": "W/\"5d9d662990bd5d9ef938ead6eec4444af0459ba7eb9503a9d1c53e2520922970\"",
-      "bytes": 1130515,
+      "etag": "W/\"4ed6e5544f7227668f7a3f9473ef1b3a41ae6839f578ec4a6f89191efb880385\"",
+      "bytes": 1176779,
       "firstChangedAt": "2026-09-21"
     },
     "agents-md-site": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:28.615Z",
+      "checkedAt": "2026-11-09T10:30:33.884Z",
       "http": 200,
-      "etag": "W/\"nd381sifxc1r0m\"",
+      "etag": "W/\"12clpwbipov1r0m\"",
       "bytes": 81690,
       "firstChangedAt": "2026-09-21"
     },
     "agents-md-commits": {
       "role": "source",
       "state": "not-modified",
-      "checkedAt": "2026-11-02T10:11:28.949Z",
+      "checkedAt": "2026-11-09T10:30:34.073Z",
       "http": 304,
       "bytes": 0
     },
     "agent-skills-llms": {
       "role": "source",
-      "state": "unchanged",
-      "checkedAt": "2026-11-02T10:11:29.598Z",
+      "state": "changed",
+      "checkedAt": "2026-11-09T10:30:34.209Z",
       "http": 200,
-      "md5": "05c6aca7c0f5987cbb8ff0deaabe8b93",
-      "bytes": 1374
+      "md5": "8533b8bda99b7dc63ec3da5c8369307f",
+      "bytes": 1365,
+      "firstChangedAt": "2026-11-09"
     },
     "codex-llms": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:29.835Z",
+      "checkedAt": "2026-11-09T10:30:34.432Z",
       "http": 200,
-      "md5": "7407aaf5b627e4255713331ff2ff9444",
-      "bytes": 33930,
+      "md5": "8f3fea355ca470f0010b38ef7393f27a",
+      "bytes": 34343,
       "firstChangedAt": "2026-09-21"
     },
     "codex-agents-md-chatgpt": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:29.868Z",
+      "checkedAt": "2026-11-09T10:30:34.456Z",
       "http": 200,
-      "md5": "7407aaf5b627e4255713331ff2ff9444",
-      "bytes": 33930,
+      "md5": "8f3fea355ca470f0010b38ef7393f27a",
+      "bytes": 34343,
       "firstChangedAt": "2026-09-21"
     },
     "copilot-docs-commits": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:30.157Z",
+      "checkedAt": "2026-11-09T10:30:34.677Z",
       "http": 200,
-      "etag": "\"1f2b9d2639a3b3558aaca7b741243af1\"",
-      "bytes": 27729,
+      "etag": "\"205a8620f749ead11493eaaa092ed63f\"",
+      "bytes": 19338,
       "firstChangedAt": "2026-09-28"
     },
     "copilot-changelog-feed": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:30.207Z",
+      "checkedAt": "2026-11-09T10:30:34.808Z",
       "http": 200,
-      "etag": "W/\"c36e88332cc82cf72486623d5910cee9\"",
-      "bytes": 71051,
+      "etag": "W/\"b0f60c47feafc6f31503a1d686c2a088\"",
+      "bytes": 62868,
       "firstChangedAt": "2026-09-21"
     },
     "cursor-docs-llms": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:30.454Z",
+      "checkedAt": "2026-11-09T10:30:34.984Z",
       "http": 200,
-      "md5": "e89f45f5547bac288c52eb3616688cdb",
-      "bytes": 27651,
+      "md5": "7d2c51cd0689d22c690368f25d6a9c02",
+      "bytes": 27834,
       "firstChangedAt": "2026-09-28"
     },
     "gemini-cli-changelog": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:30.556Z",
+      "checkedAt": "2026-11-09T10:30:35.090Z",
       "http": 200,
-      "etag": "W/\"57172fe035c9ff344ef29a794c05712183fbe6cd61cdcd0097107201b981b49a\"",
-      "bytes": 5522,
+      "etag": "W/\"34f821daafe0ff02bb2dbd9f841689089df7322490ac6eb6b0081ecfda280c0d\"",
+      "bytes": 5901,
       "firstChangedAt": "2026-09-28"
     },
     "chroma-context-rot": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:30.747Z",
+      "checkedAt": "2026-11-09T10:30:35.332Z",
       "http": 200,
-      "etag": "W/\"91c3fc32462f2eec01ac511db58fe14c\"",
+      "etag": "W/\"462cda53a673ff8a784955d1724eea67\"",
       "bytes": 269462,
       "firstChangedAt": "2026-10-26"
     },
     "grafana-alerting-docs": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:30.872Z",
+      "checkedAt": "2026-11-09T10:30:35.481Z",
       "http": 200,
-      "etag": "W/\"6ae85b4e-e8a7\"",
-      "bytes": 348322,
+      "etag": "W/\"6af1962c-e8a7\"",
+      "bytes": 348836,
       "firstChangedAt": "2026-09-21"
     },
     "sre-google-workbook": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:31.079Z",
+      "checkedAt": "2026-11-09T10:30:35.676Z",
       "http": 200,
       "md5": "78e492659e8e50cd2eebfc1b75574240",
       "bytes": 70976,
@@ -144,25 +145,25 @@
     "arxiv-coding-agent": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:31.367Z",
+      "checkedAt": "2026-11-09T10:30:36.154Z",
       "http": 200,
-      "md5": "3a2260141ee7fa4cafc2f73d7a91678d",
-      "bytes": 14934,
+      "md5": "42aa9f0227ac8cc241ead1475c21a5fe",
+      "bytes": 14066,
       "firstChangedAt": "2026-09-21"
     },
     "anthropic-engineering": {
       "role": "source",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:31.509Z",
+      "checkedAt": "2026-11-09T10:30:36.276Z",
       "http": 200,
-      "md5": "fcaf74077575cabf8b183bc9aba3cbcf",
-      "bytes": 325227,
+      "md5": "7fbc623357157a520dd6eab4ae4611e9",
+      "bytes": 335453,
       "firstChangedAt": "2026-09-28"
     },
     "control-static-rfc2119": {
       "role": "control-static",
       "state": "unchanged",
-      "checkedAt": "2026-11-02T10:11:31.788Z",
+      "checkedAt": "2026-11-09T10:30:36.696Z",
       "http": 200,
       "md5": "42f1e4edffdfec8db0ac811adfd13ce1",
       "bytes": 4723
@@ -170,10 +171,10 @@
     "control-changing-time": {
       "role": "control-changing",
       "state": "changed",
-      "checkedAt": "2026-11-02T10:11:32.598Z",
+      "checkedAt": "2026-11-09T10:30:37.403Z",
       "http": 200,
-      "md5": "d0f139d12591d08802fba59c1e74694f",
-      "bytes": 218
+      "md5": "91cce9c341575e3740f7f1da77b0791b",
+      "bytes": 217
     }
   },
   "run": {
